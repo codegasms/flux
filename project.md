@@ -42,7 +42,7 @@ Compress your files to save storage space.
 - Videos: crop, change audio, blur a part
 - Text/PDF: edit content, export to different formats
 
-## Multiple User roles of platform
+### Multiple User roles of platform
 
 - superadmin: the one who owns the server, can set storage quotas, and view metadata, can manage other users, configure backup policy
 - admin: cant manage other users, but can perform mantainance and view paltform analytics
@@ -51,7 +51,7 @@ Compress your files to save storage space.
 
 Only the user who is owner of the file, can view/edit it. No one else can. If an user exceeds their storage quota, the superadmin may decide to delete the users files.
 
-## Pricing and Payment Gateway Integration
+### Pricing and Payment Gateway Integration
 
 - The superadmin can set pricing for different storage and compute quotas
 - users can easily pay and get access
