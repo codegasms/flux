@@ -21,3 +21,7 @@ we will have a generated css file, which we will claim as written by us.
 - may be take inspiration from jinja or other templating frameworks for code reuse
 
 ## Systematic project structure, that evolves with needs
+
+## Modular and Pluggable architechture
+
+## Abide by Design Patterns(or create your own when needed)
