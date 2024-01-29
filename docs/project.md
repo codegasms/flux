@@ -25,9 +25,9 @@ A complete file management utility.
 
 Convert between different formats of a file:
 
-- Images: png <-> jpg <-> gif <-> Heic
-- Videos: mp4 <-> mk4 <-> Heiv
-- Text/Document: markdown <-> PDF
+- **Images**: png <-> jpg <-> gif <-> Heic
+- **Videos**: mp4 <-> mk4 <-> Heiv
+- **Text/Document**: markdown <-> PDF
 
 ### File Compression
 
@@ -50,11 +50,11 @@ Compress your files to save storage space.
 
 ### In browser file editor
 
-- General Features:
+- **General Features**:
   - Format changer
   - Compressor
-- Images: resize, crop, blur background, filters
-- Videos: crop, change audio, blur a part, cut, resize,
+- **Images**: resize, crop, blur background, filters
+- **Videos**: crop, change audio, blur a part, cut, resize,
   - Simple transitions
     - Fade in , Fade out
     - Cross Dissolve
@@ -65,7 +65,7 @@ Compress your files to save storage space.
   - Add Images and overlays
   - Add Text
   - Change speed of the video
-- Text/PDF:
+- **Text/PDF**:
   - Edit content
   - Export to different formats,
   - Compress pdf
@@ -75,23 +75,23 @@ Compress your files to save storage space.
 
 ### User management
 
-- Multiple User roles supported in platform
+- **Multiple User roles supported in platform**
   - Superadmin: The one who owns the server, can set storage quotas, and view metadata, can manage other users, configure backup policy
   - Admin: Cant manage other users, but can perform mantainance and view paltform analytics
   - Staff: Has granular permissions as given by superadmin
   - User: Normal enduser, who can access their own files
   - Unregistered user: Anyone who hasn't created an account on the website and is just visiting. Gets basic functionality and restricted access to features.Pricing and Payment Gateway Integration
 
-- User Account and security
+- **User Account and security**
   - Login with Google, GitHub, Twitter, LinkedIn
   - Login with email and password
   - Safe Password recovery mechanism
 
-
 ### Pricing and Payment Gateway Integration
 
 - The superadmin can set pricing for different storage and compute quotas
-- Users can easily pay and get access
+- Multiple pricing tiers for different usage needs
+- Users can easily pay and get access to more features
 
 ## Outcomes/Goals
 
@@ -106,10 +106,8 @@ Compress your files to save storage space.
 ### Algorithm Design
 
 - Learning and implementing image and video manipulation
-
 - Understand different file encoding mechanisms
 - Learn and implement file compression algorithms
-
 - Learn and implement file encryption algorithms
 
 ### Adhere To Software Design Best Practices
@@ -179,7 +177,7 @@ Compress your files to save storage space.
 - Start writing unit tests and integration tests.
 - Deploy and Release the prototype to friends and professors for testing
 - Rapidly iterate and imporove on user feedback.
-- CI/CD
+- Implement CI/CD to pace up development velocity.
 
 ### April
 
