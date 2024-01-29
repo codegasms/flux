@@ -25,7 +25,7 @@ A complete file management utility.
 
 Convert between different formats of a file:
 
-- Images: png <-> jpg <-> gif <-> heic
+- Images: png <-> jpg <-> gif <-> Heic
 - Videos: mp4 <-> mk4 <-> Heiv
 - Text/Document: markdown <-> PDF
 
@@ -112,21 +112,35 @@ Compress your files to save storage space.
 
 - Learn and implement file encryption algorithms
 
-### Software Design
+### Adhere To Software Design Best Practices
 
-- Implement custom state management solution for building complex ui, with pure JS
-
-- DRY, KISS, YAGNI, SOLID
+- **YAGNI (You Ain't Gonna Need It):** Avoid code for potential future use; prioritize current requirements and design extensible APIs.
+- **Test Infrastructure, not External Code:** Focus on testing your code over external libraries; ensure infrastructure, frameworks, and testing libraries are well-tested.
+- **Extract Repeated Code After Third Use:** Create general-purpose helpers after the third occurrence of similar code; test them when reused elsewhere.
+- **API Design: Simple Things First, Complex Things Possible:** Design external and object APIs for simplicity; add options for complexity as needed.
+- **Fail Fast:** Check input validity early, providing clear error responses; allow innovative use cases but avoid unnecessary type checking.
+- **Unit Testing Principles:** Test behavior, not implementation details; treat test objects as black boxes; consider writing tests first for modular code.
+- **Aim for 100% Code Coverage:** Ensure unit tests cover all code paths; lack of time is not an excuse; measure and reject PRs reducing coverage.
+- **Code is the Enemy:** Write less, delete unnecessary code; prioritize simplicity and readability.
+- **Be Cautious with Comments:** Prioritize self-documenting code; if necessary, focus on explaining intent rather than detailing code actions.
+- **Write Defensively:** Consider potential issues, invalid input, and failure scenarios; catch bugs early by anticipating problems.
 
 ### API Design
 
-- Design the API with good RestFull api practices
--
+- Design the API with good RESTfull api practices
+- Accept and respond with JSON
+- Use nouns instead of verbs in endpoint paths
+- Name collections with plural nouns
+- Nesting resources for hierarchical objects
+- Handle errors gracefully and return standard error codes
+- Allow filtering, sorting, and pagination
+- Maintain Good Security Practices
+- Cache data to improve performance
+- Versioning our APIs
 
 ### Database Design
 
 - Implement a mechanism to store files on disk and their metadata on DB
-
 - Design an efficient schema and indexes, such that DB access has least possible latency
 - Analyze access patterns and optimize schema and implement indexes for improved response times
 
