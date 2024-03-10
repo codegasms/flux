@@ -1,1 +1,4 @@
 /* custom global css */
+* {
+    font-family: poppins, sans-serif;
+}
