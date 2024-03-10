@@ -2,9 +2,14 @@
 module.exports = {
     content: ["./views/**/*.{html,js,ejs}"],
     theme: {
-      extend: {},
+      extend: {
+        colors: {
+          'footer-bg': '#323B4B',
+        },
+      },
     },
     plugins: [
         require('@tailwindcss/forms'),
+        require('daisyui'),
     ],
   }
