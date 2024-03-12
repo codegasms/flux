@@ -18,6 +18,7 @@
     "daisyui": "^4.7.3",
     "ejs-lint": "^2.0.0",
     "prettier": "^3.2.5",
-    "prettier-plugin-ejs": "^1.0.3"
+    "prettier-plugin-ejs": "^1.0.3",
+    "tailwindcss": "^3.4.1"
   }
 }
