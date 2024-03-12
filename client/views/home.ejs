@@ -1,5 +1,15 @@
 <%- await include("layouts/header.ejs", {title : "FLUX"}) %>
 
-<%- await include("partials/home/scroll-trigger.ejs") %>
+<div id="main" class="relative overflow-hidden">
 
-<%- await include("layouts/footer.ejs") %>
+    <%- await include("partials/home/scroll-trigger.ejs") %>
+
+    <%- await include("layouts/footer.ejs") %>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js" integrity="sha512-cOH8ndwGgPo+K7pTvMrqYbmI8u8k6Sho3js0gOqVWTmQMlLIi6TbqGWRTpf1ga8ci9H3iPsvDLr4X7xwhC/+DQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js" integrity="sha512-AMl4wfwAmDM1lsQvVBBRHYENn1FR8cfOTpt8QVbb/P55mYOdahHD4LmHM1W55pNe3j/3od8ELzPf/8eNkkjISQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="module" src="js/home/scroll-trigger.js"></script>
+
+<%- await include("layouts/end.ejs") %>
