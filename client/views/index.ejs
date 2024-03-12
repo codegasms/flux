@@ -1,14 +1,7 @@
-<!-- home page here -->
+<%- await include("layouts/header.ejs", {title : "FLUX"}) %>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="vendor/tailwind.css">
-    <title>Document</title>
-</head>
-<body>
-    <%- await include("card.ejs", {title : "doc ↔ pdf", description : "Converter", imagepath : "images/flux-io/card-img/pdf.png", linktext : "Check Out"}) %>
-</body>
-</html>
+<!--TODO Remove This-->
+<input type="checkbox" value="light" class="toggle theme-controller"/>
+<!--TODO Remove This-->
+
+<%- await include("layouts/footer.ejs") %>

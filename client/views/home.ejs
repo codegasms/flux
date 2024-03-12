@@ -1,0 +1,34 @@
+<%- await include("layouts/header.ejs", {title : "FLUX"}) %>
+
+<div id="main" class="relative overflow-hidden">
+    <div id="page" class="relative h-screen w-screen">
+        <h1 class="absolute z-50 text-nowrap text-9xl text-center top-[40%] sm:top-1/2 sm:text-[240px] md:top-1/3 lg:top-1/2 font-[500] transform -translate-x-1/2 -translate-y-1/2 left-1/2">FLUX</h1>
+        <h4 class="absolute z-50 text-pretty text-sm text-center top-[70%] sm:top-2/3 sm:text-2xl md:top-2/3 lg:top-3/4 font-[400] transform -translate-x-1/2 -translate-y-1/2 left-1/2">LOREM IPSUM DOLOR SIT AMET CONSECTETUR ADIPISICING ELIT. RECUSANDAE COMMODI ULLAM CUPIDITATE AT QUOS IURE ACCUSANTIUM TEMPORA CONSECTETUR NECESSITATIBUS, SIT BLANDITIIS QUOD, DOLORES MODI ENIM DOLORE QUIBUSDAM PERSPICIATIS SINT EXERCITATIONEM?</h4>
+        <canvas class="relative h-screen w-screen z-10"></canvas>
+    </div>
+                
+    <div id="page2" class="relative h-screen w-screen bg-transparent">
+        <!--Blank Page [To Create An Delay Illusion]-->
+    </div>
+    
+    <div id="page1" class="relative h-screen w-screen bg-home-bg">
+        <h1 class="absolute z-50 text-pretty text-6xl text-center top-[40%] sm:top-1/2 sm:text-8xl md:top-1/3 lg:top-1/2 font-[500] transform -translate-x-1/2 -translate-y-1/2 left-1/2">LOREM IPSUM DOLOR SIT</h1>
+        <h4 class="absolute z-50 text-pretty text-lg text-center top-[70%] sm:top-2/3 sm:text-2xl md:top-2/3 lg:top-3/4 font-[400] transform -translate-x-1/2 -translate-y-1/2 left-1/2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, non explicabo?</h4>
+    </div>
+    
+    <div id="page3" class="relative h-screen w-screen bg-transparent">
+        <!--Blank Page [To Create An Delay Illusion]-->
+    </div>
+    
+    <div id="page4" class="h-screen w-screen flex items-center justify-center flex-col relative z-50 bg-home-bg-light">
+        <h1 class="font-semibold text-4xl text-center">Lorem Ipsum Dolor Sit</h1>
+        <h4 class="font-medium text-md text-center my-4 text-pretty">Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, non explicabo?</h4>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js" integrity="sha512-cOH8ndwGgPo+K7pTvMrqYbmI8u8k6Sho3js0gOqVWTmQMlLIi6TbqGWRTpf1ga8ci9H3iPsvDLr4X7xwhC/+DQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js" integrity="sha512-AMl4wfwAmDM1lsQvVBBRHYENn1FR8cfOTpt8QVbb/P55mYOdahHD4LmHM1W55pNe3j/3od8ELzPf/8eNkkjISQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="module" src="js/home/scroll-trigger.js"></script>
+
+<%- await include("layouts/footer.ejs") %>
