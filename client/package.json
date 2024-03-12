@@ -15,6 +15,7 @@
     "nodemon": "^3.1.0"
   },
   "devDependencies": {
+    "daisyui": "^4.7.3",
     "ejs-lint": "^2.0.0",
     "prettier": "^3.2.5",
     "prettier-plugin-ejs": "^1.0.3"
