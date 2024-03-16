@@ -14,10 +14,6 @@ import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/public.decorator';
 import { UserProfileOutDto } from './dto/user-profile-out.dto';
-import { Roles } from 'src/auth/roles.decorator';
-import { URoles } from 'src/users/users.schema';
-
-
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -26,13 +22,11 @@ export class UsersController {
   constructor(private readonly service: UsersService) {}
 
   @Post()
-  @Roles(URoles.lead, URoles.colead)
   create(@Body() createUserDto: CreateUserDto) {
     return this.service.create(createUserDto);
   }
 
   @Get()
-  @Roles(URoles.lead, URoles.colead, URoles.domain_lead)
   findAll() {
     return this.service.findAll();
   }
@@ -44,7 +38,6 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @Roles(URoles.lead, URoles.colead)
   update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserProfileDto,
@@ -53,7 +46,6 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @Roles(URoles.lead, URoles.colead)
   remove(@Param('id') id: string) {
     return this.service.remove(id);
   }
