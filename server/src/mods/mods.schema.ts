@@ -23,6 +23,9 @@ export class Mods {
 
   @Prop()
   approxTokens: number;
+
+  @Prop({ default: true })
+  enabled: true;
 }
 
 @Schema()
