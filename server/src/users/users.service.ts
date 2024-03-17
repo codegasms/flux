@@ -32,10 +32,6 @@ export class UsersService {
     return await this.model.findById(id, project);
   }
 
-  async findOneByUsername(username: string): Promise<User | undefined> {
-    return await this.model.findOne({ username: username });
-  }
-
   async findOneByEmail(email: string): Promise<User | undefined> {
     return await this.model.findOne({ email: email });
   }
@@ -45,7 +41,7 @@ export class UsersService {
   ): Promise<UserPermsOutDto | undefined> {
     return await this.model
       .findOne({ username: username })
-      .select('role isSuperUser isStaff');
+      .select('role isActive');
   }
 
   async findProfile(id: string): Promise<UserProfileOutDto | undefined> {

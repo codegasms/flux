@@ -15,9 +15,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(username: string, password: string): Promise<SignInResponseDto> {
-    // TODO: support both username and email
-    const user = await this.usersService.findOneByUsername(username);
+  async login(email: string, password: string): Promise<SignInResponseDto> {
+    const user = await this.usersService.findOneByEmail(email);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
@@ -26,7 +25,7 @@ export class AuthService {
     if (!match) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.email, username: user.username };
+    const payload = { sub: user.email };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
@@ -35,13 +34,12 @@ export class AuthService {
   async register(registerDto: RegisterDto): Promise<RegisterResponseDto> {
     const hashedPassword = await bcrypt.hash(registerDto.password, saltRounds);
     const user = await this.usersService.create({
-      username: registerDto.username,
       email: registerDto.email,
       fullName: registerDto.fullName,
       hashedPassword: hashedPassword,
     });
 
-    const payload = { sub: user.email, username: user.username };
+    const payload = { sub: user.email };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
