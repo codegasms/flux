@@ -1,14 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import {
-  CreateSpaceDto,
-  CreateSpacesQuotaDto,
-} from './dto/create-spaces-quota.dto';
-import {
-  UpdateSpaceDto,
-  UpdateSpacesQuotaDto,
-} from './dto/update-spaces-quota.dto';
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { CreateSpacesQuotaDto } from './dto/create-spaces-quota.dto';
+import { UpdateSpacesQuotaDto } from './dto/update-spaces-quota.dto';
 import { CreateFileDto } from './dto/create-file.dto';
-import { FileObject, FileObjectDocument } from './files.schema';
+import { FileObject, FileObjectDocument } from './spaces.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { SpaceQuotas, SpaceQuotasDocument } from './spaces.schema';
@@ -20,6 +14,34 @@ export class SpacesService {
     @InjectModel(SpaceQuotas.name)
     private spacesQuotaModel: Model<SpaceQuotasDocument>,
   ) {}
+
+  async createFile(createFileDto): Promise<FileObject> {
+    const existingFileObject = await this.filesModel.findOne({
+      spacePath: createFileDto.spacePath,
+    });
+
+    if (existingFileObject && existingFileObject.isDir)
+      throw new ForbiddenException('Directory exists with same name');
+    else if (existingFileObject) {
+      let i: number = 1;
+      while (true) {
+        const attempt = createFileDto.spacePath + `(${i})`;
+        const existingAttempt = await this.filesModel.findOne({
+          spacePath: attempt,
+        });
+        if (existingAttempt) {
+          i++;
+          continue;
+        }
+        createFileDto.spacePath = attempt;
+        break;
+      }
+    }
+    const createdFileObject = new this.filesModel(createFileDto);
+    return await createdFileObject.save();
+  }
+
+  async findFile(filename) {}
 
   async findAllSpaceQuotas() {
     return await this.spacesQuotaModel.find().exec();
