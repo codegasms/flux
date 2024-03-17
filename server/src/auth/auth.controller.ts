@@ -9,7 +9,7 @@ import {
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { SingInDto } from './dto/sign-in.dto';
+import { SingInDto as LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RegisterResponseDto } from './dto/register-response.dto';
 import { Public } from './public.decorator';
@@ -22,8 +22,8 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  login(@Body() signInDto: SingInDto) {
-    return this.service.login(signInDto.username, signInDto.password);
+  login(@Body() loginDto: LoginDto) {
+    return this.service.login(loginDto.email, loginDto.password);
   }
 
   @Public()
