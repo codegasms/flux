@@ -1,9 +1,5 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { FileMeta as FileMetaEntity } from './entities/file-meta.entity';
-
-@Schema()
-export class FileMeta extends FileMetaEntity {}
 
 enum FileVisibility {
   public = 'public',
@@ -18,12 +14,12 @@ export class FileObject {
     index: true,
     unique: true,
   })
-  fileName: string;
+  virtualPath: string;
   // full path to file in user's drive
   // example: /Projects/Node/hello.js
 
-  @Prop()
-  purpose: string;
+  @Prop({ required: true, default: false })
+  isDirectory: boolean;
 
   @Prop({
     required: true,
@@ -37,7 +33,11 @@ export class FileObject {
   @Prop({ required: true })
   lastEdited: Date;
 
-  @Prop({ required: true, default: false, enum: FileVisibility })
+  @Prop({
+    required: true,
+    enum: FileVisibility,
+    default: FileVisibility.private,
+  })
   visibility: string;
 
   @Prop({ required: true, default: [] })
@@ -47,7 +47,10 @@ export class FileObject {
   editors: string[];
 
   @Prop({ required: true })
-  meta: FileMeta;
+  mimeType: string;
+
+  @Prop({ required: true })
+  size: number;
 }
 
 export type FileObjectDocument = HydratedDocument<FileObject>;
