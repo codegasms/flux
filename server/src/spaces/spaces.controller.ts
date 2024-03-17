@@ -26,7 +26,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { fileStorageRootDir, multerOptions, oneMB } from './constants';
+import { fileStorageRootDir, oneMB } from './constants';
 
 import { createReadStream, fstat } from 'fs';
 import { join } from 'path';

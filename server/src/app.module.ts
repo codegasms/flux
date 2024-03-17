@@ -10,9 +10,9 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { RolesGuard } from './auth/roles.guard';
-import { FilesModule } from './files/files.module';
+
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { fileStorageRootDir } from './files/constants';
+import { fileStorageRootDir } from './spaces/constants';
 import { ModsModule } from './mods/mods.module';
 import { SpacesModule } from './spaces/spaces.module';
 
@@ -43,7 +43,6 @@ if (!process.env.MONGO_CON_STR) {
     }),
     AuthModule,
     UsersModule,
-    FilesModule,
     ModsModule,
     SpacesModule,
   ],
