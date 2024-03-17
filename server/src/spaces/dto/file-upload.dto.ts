@@ -2,11 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class FileUploadDto {
   @ApiProperty({
-    type: 'string',
-    format: 'binary',
-    required: true,
+    type: 'array',
+    required: false,
+    items: {
+      type: 'file',
+      format: 'binary',
+    },
   })
-  file: Express.Multer.File;
-
-  purpose?: string;
+  files: Array<Express.Multer.File>;
 }
