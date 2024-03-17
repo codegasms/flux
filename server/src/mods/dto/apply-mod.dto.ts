@@ -1,5 +1,5 @@
 export class ApplyModDto {
   fileID: string;
-  modID: string;
+  override: boolean;
   modParams: any;
 }
