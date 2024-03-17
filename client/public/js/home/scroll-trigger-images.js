@@ -119,5 +119,5 @@ export const data = `
   ../../images/home/scroll-trigger/118.webp`;
 
 export function files(index) {
-    return data.split("\n")[index];
+  return data.split("\n")[index];
 }
