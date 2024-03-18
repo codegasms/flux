@@ -1,4 +1,14 @@
 /* custom global css */
 * {
-    font-family: poppins, sans-serif;
+  font-family: poppins, sans-serif;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
