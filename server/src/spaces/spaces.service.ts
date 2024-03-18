@@ -41,6 +41,12 @@ export class SpacesService {
     return await createdFileObject.save();
   }
 
+  async findMeta(userId: string, spacePath: string) {
+    const regexp = new RegExp('^', spacePath);
+    return await this.filesModel
+      .find({ owner: userId, spacePath: regexp })
+      .exec();
+  }
   async findFile(filename) {}
 
   async findAllSpaceQuotas() {

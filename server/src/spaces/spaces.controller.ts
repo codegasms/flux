@@ -108,30 +108,54 @@ export class SpacesController {
     summary: 'Share a file with others.',
     description: 'You change the editors and viewers of current file',
   })
-  async shareFile(@Param('spacePath') spacePath: string) {}
+  async shareFile(
+    @Request() request,
+    @Param('spacePath') spacePath: string,
+    @Body() shareFileDto: ShareFileDto,
+  ) {
+    await this.service.shareFile(
+      String(request.permissions._id),
+      spacePath,
+      shareFileDto,
+    );
+  }
 
   @Patch('trash/:spacePath')
   @ApiOperation({
     summary:
       'Send a directory and all its subdirectories and files within them to trash',
   })
-  async moveToTrash(@Param('spacePath') spacePath: string) {}
-  // @Get('fetch/:filename')
-  // @ApiOperation({ summary: 'Stream/download a file' })
-  // async getFile(@Param('filename') filename: string): Promise<StreamableFile> {
-  //   console.log(filename);
-  //   const fileObject = this.service.findFile(filename);
-  //   // check if current user is owner or has access
-  //   const file = createReadStream(
-  //     join(fileStorageRootDir, (await fileObject).fileName),
-  //   );
-  //   return new StreamableFile(file);
-  // }
+  async moveToTrash(@Request() request, @Param('spacePath') spacePath: string) {
+    return await this.service.moveToTrash(
+      String(request.permissions._id),
+      spacePath,
+    );
+  }
 
-  // @Delete(':id')
-  // async remove(@Param('id') id: string) {
-  //   return this.service.remove(id);
-  // }
+  @Get('meta/:spacePath')
+  @ApiOperation({
+    summary: 'Get metadata about a file or directory in user space',
+  })
+  async getMeta(@Request() request, @Param('spacePath') spacePath: string) {
+    return await this.service.findMeta(
+      String(request.permissions._id),
+      spacePath,
+    );
+  }
+
+  async streamFile(
+    @Request() request,
+    @Param('fileID') fileID: string,
+  ): Promise<StreamableFile> {
+    const canRead = await this.service.checkReadPerms(
+      String(request.permissions._id),
+      fileID,
+    );
+    const file = createReadStream(
+      join(fileStorageRootDir, (await fileObject).fileName),
+    );
+    return new StreamableFile(file);
+  }
 
   /*
    * endpoints related to spaces quota
