@@ -18,6 +18,9 @@ export class User {
   email: string;
 
   @Prop({ required: true })
+  fullName: string;
+
+  @Prop({ required: true })
   hashedPassword: string;
 
   @Prop({
@@ -35,6 +38,12 @@ export class User {
 
   @Prop()
   lastLogin: Date;
+
+  @Prop({ required: true, default: true })
+  isActive: boolean;
+  // if a user deletes their account we will perform  a soft delete by setting isActive=false
+  // after 30 days, all inactive accounts will automatically be deleted
+  // during these 30 day of safety-net period a user will be able to recover their account by contacting a system admin
 }
 
 export type UserDocument = HydratedDocument<User>;

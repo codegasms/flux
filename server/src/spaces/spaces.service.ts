@@ -1,26 +1,191 @@
-import { Injectable } from '@nestjs/common';
-import { CreateSpaceDto } from './dto/create-space.dto';
-import { UpdateSpaceDto } from './dto/update-space.dto';
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { CreateSpacesQuotaDto } from './dto/create-spaces-quota.dto';
+import { UpdateSpacesQuotaDto } from './dto/update-spaces-quota.dto';
+import { CreateFileDto } from './dto/create-file.dto';
+import {
+  FileObject,
+  FileObjectDocument,
+  SpaceQuotas,
+  SpaceQuotasDocument,
+} from './spaces.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { ShareFileDto } from './dto/share-file-dto';
+import { startsWith } from 'src/utils/regex';
+import { splitSpacePath } from 'src/utils/space-paths';
 
 @Injectable()
 export class SpacesService {
-  create(createSpaceDto: CreateSpaceDto) {
-    return 'This action adds a new space';
+  constructor(
+    @InjectModel(FileObject.name) private filesModel: Model<FileObjectDocument>,
+    @InjectModel(SpaceQuotas.name)
+    private spacesQuotaModel: Model<SpaceQuotasDocument>,
+  ) {}
+
+  async createFile(createFileDto: CreateFileDto): Promise<FileObject> {
+    const { sParent, fileName } = splitSpacePath(createFileDto.spaceParent);
+    console.log('***** in createFile service');
+    console.log(sParent);
+    console.log(fileName);
+    if (sParent == '/' && !fileName) {
+      // creation of new stuff in root dir
+      console.log('creating stuff in root dir');
+    } else {
+      const parentDir = await this.filesModel.findOne({
+        spaceParent: sParent,
+        fileName: fileName,
+        isDir: true,
+      });
+      if (!parentDir)
+        throw new ForbiddenException('Parent Directory does not exist');
+    }
+
+    const existingFileObject = await this.filesModel.findOne({
+      spaceParent: createFileDto.spaceParent,
+      fileName: createFileDto.fileName,
+    });
+
+    if (existingFileObject && existingFileObject.isDir)
+      throw new ForbiddenException('Directory already exists with same name');
+    else if (existingFileObject) {
+      let i: number = 1;
+      while (true) {
+        const attempt = createFileDto.fileName + `(${i})`;
+        const existingAttempt = await this.filesModel.findOne({
+          spaceParent: createFileDto.spaceParent,
+          fileName: attempt,
+        });
+        if (existingAttempt) {
+          i++;
+          continue;
+        }
+        createFileDto.fileName = attempt;
+        break;
+      }
+    }
+    const createdFileObject = new this.filesModel(createFileDto);
+    return await createdFileObject.save();
   }
 
-  findAll() {
-    return `This action returns all spaces`;
+  async findMeta(ownerId: string, spaceParent: string, fileName: string) {
+    const query = {
+      owner: ownerId,
+      spaceParent: spaceParent,
+      inTrash: false,
+    };
+    if (fileName !== '/') query['fileName'] = fileName;
+
+    return await this.filesModel.find({ ...query }).exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} space`;
+  async shareFile(
+    ownerId: string,
+    spaceParent: string,
+    fileName: string,
+    shareFileDto: ShareFileDto,
+  ) {
+    return await this.filesModel.findOneAndUpdate(
+      {
+        owner: ownerId,
+        spaceParent: spaceParent,
+        fileName: fileName,
+      },
+      { ...shareFileDto },
+    );
   }
 
-  update(id: number, updateSpaceDto: UpdateSpaceDto) {
-    return `This action updates a #${id} space`;
+  async moveToTrash(ownerId: string, spaceParent: string, fileName: string) {
+    const fileObj = await this.filesModel.findOne({
+      owner: ownerId,
+      spaceParent: spaceParent,
+      fileName: fileName,
+    });
+
+    if (fileObj.isDir) {
+      const children = await this.filesModel
+        .find({
+          owner: ownerId,
+          spaceParent: startsWith(spaceParent),
+        })
+        .exec();
+      for (const fileObjItem of children) {
+        fileObjItem.inTrash = true;
+        await fileObjItem.save();
+      }
+    } else {
+      fileObj.inTrash = true;
+      await fileObj.save();
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} space`;
+  async checkReadPerms(
+    userId: string,
+    fileId: string,
+    isDir: boolean,
+  ): Promise<string | null> {
+    let fileObj = await this.filesModel.findOne({
+      _id: fileId,
+      isDir: isDir,
+      inTrash: false,
+    });
+    console.log(fileObj);
+    if (
+      fileObj.owner === userId ||
+      fileObj.viewers.includes(userId) ||
+      fileObj.editors.includes(userId)
+    )
+      return fileObj.fileName;
+
+    // check parent dirs for access
+    const actualName = fileObj.fileName;
+    console.log('checking parent dires for acc');
+    while (fileObj.spaceParent != '/') {
+      const { sParent, fileName } = splitSpacePath(fileObj.spaceParent);
+      console.log(sParent);
+      console.log(fileName);
+      fileObj = await this.filesModel.findOne({
+        spaceParent: sParent,
+        fileName: fileName,
+        isDir: true,
+        inTrash: false,
+      });
+      console.log(fileObj);
+      if (fileObj.viewers.includes(userId) || fileObj.editors.includes(userId))
+        return actualName;
+    }
+    return null;
+  }
+
+  async findAllSpaceQuotas() {
+    return await this.spacesQuotaModel.find().exec();
+  }
+
+  async findSpacesQuota(quotaID: string) {
+    return await this.spacesQuotaModel.findOne({ quotaID: quotaID });
+  }
+
+  async createSpacesQuota(
+    quotaID: string,
+    createSpacesQuotaDto: CreateSpacesQuotaDto,
+  ) {
+    const createdSpacesQuota = new this.spacesQuotaModel({
+      quotaID: quotaID,
+      ...createSpacesQuotaDto,
+    });
+    return await createdSpacesQuota.save();
+  }
+
+  async updateSpacesQuota(
+    quotaID: string,
+    updateSpacesQuotaDto: UpdateSpacesQuotaDto,
+  ) {
+    return await this.spacesQuotaModel.findOneAndUpdate(
+      { quotaID: quotaID },
+      updateSpacesQuotaDto,
+    );
+  }
+
+  async removeSpacesQuota(quotaID: string) {
+    return await this.spacesQuotaModel.findOneAndDelete({ quotaID: quotaID });
   }
 }
