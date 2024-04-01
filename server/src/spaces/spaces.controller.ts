@@ -6,37 +6,38 @@ import {
   Patch,
   Param,
   Delete,
-  UploadedFile,
-  ParseFilePipe,
-  MaxFileSizeValidator,
-  FileTypeValidator,
+  Header,
+  Res,
   Request,
   StreamableFile,
   UseInterceptors,
   UploadedFiles,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { SpacesService } from './spaces.service';
 import { CreateSpacesQuotaDto } from './dto/create-spaces-quota.dto';
 import { UpdateSpacesQuotaDto } from './dto/update-spaces-quota.dto';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiConsumes,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { Response } from 'express';
 
-import { fileStorageRootDir, oneMB } from './constants';
+import { fileStorageRootDir } from './constants';
 
-import { createReadStream, fstat } from 'fs';
+import { createReadStream } from 'fs';
 import { join } from 'path';
-import { FileUploadResponseDto } from './dto/file-upload-response';
 import { FileUploadDto } from './dto/file-upload.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { URoles } from 'src/users/users.schema';
 import { Public } from 'src/auth/public.decorator';
-import { readFile, writeFile } from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import * as path from 'path';
+import { ShareFileDto } from './dto/share-file-dto';
+import { splitSpacePath, trimSlashes } from 'src/utils/space-paths';
 
 @ApiBearerAuth()
 @ApiTags('spaces')
@@ -48,14 +49,9 @@ export class SpacesController {
    * endpoints related to files upload and access
    */
 
-  @Post('create/:spacePath')
+  @Post('create/:spaceParent')
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(
-    FilesInterceptor(
-      'files',
-      // multerOptions
-    ),
-  )
+  @UseInterceptors(FilesInterceptor('files'))
   @ApiOperation({
     summary: 'Create a directory or upload files',
     description:
@@ -63,20 +59,24 @@ export class SpacesController {
   })
   async createFile(
     @Request() request,
-    @Param('spacePath') spacePath: string,
+    @Param('spaceParent') spaceParent: string,
     @Body() data: FileUploadDto,
     @UploadedFiles()
     files: Array<Express.Multer.File>,
   ): Promise<any> {
     console.log(files);
     console.log(request.permissions._id);
-    console.log(spacePath);
+    spaceParent = trimSlashes(spaceParent);
+    console.log(spaceParent);
 
     const now = new Date();
     if (files.length == 0) {
       console.log('no files received, create a dir');
+
+      const { sParent, fileName } = splitSpacePath(spaceParent);
       return await this.service.createFile({
-        spacePath: spacePath,
+        spaceParent: sParent,
+        fileName: fileName,
         isDir: true,
         created: now,
         owner: request.permissions._id,
@@ -85,17 +85,17 @@ export class SpacesController {
 
     const createdFiles = [];
     for (const file of files) {
-      const virtualPath = path.join(spacePath, file.originalname);
-      console.log(virtualPath);
       const createdFile = await this.service.createFile({
         mimeType: file.mimetype,
         size: file.size,
-        spacePath: virtualPath,
+        spaceParent: spaceParent,
+        fileName: file.originalname,
         created: now,
         lastEdited: now,
         owner: request.permissions._id,
       });
       createdFiles.push(createdFile);
+      console.log(createdFile._id);
       const diskPath = path.join(fileStorageRootDir, String(createdFile._id));
       await writeFile(diskPath, file.buffer);
     }
@@ -103,57 +103,90 @@ export class SpacesController {
     return createdFiles;
   }
 
-  @Post('share/:spacePath')
+  /*
+  file access logic
+  if request for path then  search in self drive, and check that path
+  if request for id then search by id and check access
+  */
+
+  @Post('share/:spaceParent/:fileName')
   @ApiOperation({
     summary: 'Share a file with others.',
     description: 'You change the editors and viewers of current file',
   })
   async shareFile(
     @Request() request,
-    @Param('spacePath') spacePath: string,
+    @Param('spaceParent') spaceParent: string,
+    @Param('fileName') fileName: string,
     @Body() shareFileDto: ShareFileDto,
   ) {
+    spaceParent = trimSlashes(spaceParent);
     await this.service.shareFile(
       String(request.permissions._id),
-      spacePath,
+      spaceParent,
+      fileName,
       shareFileDto,
     );
   }
 
-  @Patch('trash/:spacePath')
+  @Patch('trash/:spaceParent/:fileName')
   @ApiOperation({
     summary:
       'Send a directory and all its subdirectories and files within them to trash',
   })
-  async moveToTrash(@Request() request, @Param('spacePath') spacePath: string) {
+  async moveToTrash(
+    @Request() request,
+    @Param('spaceParent') spaceParent: string,
+    @Param('fileName') fileName: string,
+  ) {
+    spaceParent = trimSlashes(spaceParent);
     return await this.service.moveToTrash(
       String(request.permissions._id),
-      spacePath,
+      spaceParent,
+      fileName,
     );
   }
 
-  @Get('meta/:spacePath')
+  @Get('meta/:spaceParent/:fileName')
   @ApiOperation({
     summary: 'Get metadata about a file or directory in user space',
   })
-  async getMeta(@Request() request, @Param('spacePath') spacePath: string) {
+  async getMeta(
+    @Request() request,
+    @Param('spaceParent') spaceParent?: string,
+    @Param('fileName') fileName?: string,
+  ) {
+    spaceParent = trimSlashes(spaceParent);
     return await this.service.findMeta(
       String(request.permissions._id),
-      spacePath,
+      spaceParent,
+      fileName,
     );
   }
 
+  @Get('stream/:fileID')
+  @ApiOperation({
+    summary: 'Stream a file by ID if user has access',
+  })
+  @Header('Content-Type', 'application/octet-stream')
   async streamFile(
     @Request() request,
     @Param('fileID') fileID: string,
+    @Res({ passthrough: true }) res: Response,
   ): Promise<StreamableFile> {
     const canRead = await this.service.checkReadPerms(
       String(request.permissions._id),
       fileID,
+      false,
     );
-    const file = createReadStream(
-      join(fileStorageRootDir, (await fileObject).fileName),
-    );
+    console.log(canRead);
+
+    if (!canRead) throw new UnauthorizedException();
+
+    const file = createReadStream(join(fileStorageRootDir, fileID));
+    res.set({
+      'Content-Disposition': `attachment; filename="${canRead}"`,
+    });
     return new StreamableFile(file);
   }
 
