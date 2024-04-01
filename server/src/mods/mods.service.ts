@@ -33,7 +33,6 @@ export class ModsService {
     return await this.modsModel.findOneAndUpdate(
       { modID: modID },
       updateModDto,
-      { upsert: true },
     );
   }
 
@@ -67,7 +66,6 @@ export class ModsService {
     return await this.modTokenPlansModel.findOneAndUpdate(
       { planID: planID },
       updateTokenPlanDto,
-      { upsert: true },
     );
   }
 
