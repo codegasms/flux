@@ -36,12 +36,8 @@ export class UsersService {
     return await this.model.findOne({ email: email });
   }
 
-  async findPermissions(
-    username: string,
-  ): Promise<UserPermsOutDto | undefined> {
-    return await this.model
-      .findOne({ username: username })
-      .select('role isActive');
+  async findPermissions(email: string): Promise<UserPermsOutDto | undefined> {
+    return await this.model.findOne({ email: email }).select('role isActive');
   }
 
   async findProfile(id: string): Promise<UserProfileOutDto | undefined> {
@@ -55,7 +51,6 @@ export class UsersService {
     updateUserProfileDto: UpdateUserProfileDto,
   ): Promise<UserProfileOutDto | undefined> {
     return await this.model.findByIdAndUpdate(id, updateUserProfileDto, {
-      upsert: true,
       projection: 'profile',
     });
     // TODO: project so that only needed things come

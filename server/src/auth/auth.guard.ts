@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate {
         secret: jwtConstants.secret,
       });
       const userPermissions = await this.userService.findPermissions(
-        payload.username,
+        payload.sub,
       );
 
       // 💡 We're assigning the payload to the request object here
