@@ -1,11 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-enum FileVisibility {
-  public = 'public',
-  shared = 'shared',
-  private = 'private',
-}
+import { FileVisibility } from './entities/file-visibility.enum';
 
 @Schema()
 export class FileObject {
@@ -14,9 +10,14 @@ export class FileObject {
     required: true,
     index: true,
   })
-  spacePath: string;
-  // full path to file in user's space
-  // example: /Projects/Node/hello.js
+  spaceParent: string;
+  // full path to file/dir's parent directory in user's space
+  // example: /Projects/Node
+
+  @Prop({ required: true, index: true, default: '' })
+  fileName: string;
+  // name of the file/dir in user's space
+  // example: hello.js
 
   @Prop({ required: true, default: false })
   isDir: boolean;
