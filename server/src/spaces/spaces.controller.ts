@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Patch,
+  Put,
   Param,
   Delete,
   Header,
@@ -38,6 +39,10 @@ import { writeFile } from 'fs/promises';
 import * as path from 'path';
 import { ShareFileDto } from './dto/share-file-dto';
 import { splitSpacePath, trimSlashes } from 'src/utils/space-paths';
+import { SpacePath } from './dto/space-path.dto';
+import { CopyFileDto } from './dto/copy-file.dto';
+import { MoveFileDto } from './dto/move-file.dto';
+import { FileIdentifier } from './dto/file-id.dto';
 
 @ApiBearerAuth()
 @ApiTags('spaces')
@@ -49,7 +54,7 @@ export class SpacesController {
    * endpoints related to files upload and access
    */
 
-  @Post('create/:spaceParent')
+  @Post('create/')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor('files'))
   @ApiOperation({
@@ -59,11 +64,11 @@ export class SpacesController {
   })
   async createFile(
     @Request() request,
-    @Param('spaceParent') spaceParent: string,
     @Body() data: FileUploadDto,
     @UploadedFiles()
     files: Array<Express.Multer.File>,
   ): Promise<any> {
+    let spaceParent = data.spaceParent;
     console.log(files);
     console.log(request.permissions._id);
     spaceParent = trimSlashes(spaceParent);
@@ -109,81 +114,100 @@ export class SpacesController {
   if request for id then search by id and check access
   */
 
-  @Post('share/:spaceParent/:fileName')
+  @Post('share/')
   @ApiOperation({
     summary: 'Share a file with others.',
     description: 'You change the editors and viewers of current file',
   })
   async shareFile(
     @Request() request,
-    @Param('spaceParent') spaceParent: string,
-    @Param('fileName') fileName: string,
+    // @Param('spaceParent') spaceParent: string,
+    // @Param('fileName') fileName: string,
     @Body() shareFileDto: ShareFileDto,
   ) {
-    spaceParent = trimSlashes(spaceParent);
-    await this.service.shareFile(
-      String(request.permissions._id),
-      spaceParent,
-      fileName,
-      shareFileDto,
-    );
+    shareFileDto.spaceParent = trimSlashes(shareFileDto.spaceParent);
+    await this.service.shareFile(String(request.permissions._id), shareFileDto);
   }
 
-  @Patch('trash/:spaceParent/:fileName')
+  @Patch('trash/')
   @ApiOperation({
     summary:
       'Send a directory and all its subdirectories and files within them to trash',
   })
-  async moveToTrash(
-    @Request() request,
-    @Param('spaceParent') spaceParent: string,
-    @Param('fileName') fileName: string,
-  ) {
-    spaceParent = trimSlashes(spaceParent);
+  async moveToTrash(@Request() request, @Body() spacePath: SpacePath) {
+    spacePath.spaceParent = trimSlashes(spacePath.spaceParent);
     return await this.service.moveToTrash(
       String(request.permissions._id),
-      spaceParent,
-      fileName,
+      spacePath,
     );
   }
 
-  @Get('meta/:spaceParent/:fileName')
+  @Get('meta/')
   @ApiOperation({
     summary: 'Get metadata about a file or directory in user space',
   })
-  async getMeta(
-    @Request() request,
-    @Param('spaceParent') spaceParent?: string,
-    @Param('fileName') fileName?: string,
-  ) {
-    spaceParent = trimSlashes(spaceParent);
+  async getMeta(@Request() request, @Body() spacePath: SpacePath) {
+    spacePath.spaceParent = trimSlashes(spacePath.spaceParent);
     return await this.service.findMeta(
       String(request.permissions._id),
-      spaceParent,
-      fileName,
+      spacePath,
     );
   }
 
-  @Get('stream/:fileID')
+  @Put('cp/')
+  @ApiOperation({
+    summary: 'Copy a file or directory in user space',
+  })
+  async copyFile(
+    @Request() request,
+    @Body() copyFileDto: CopyFileDto,
+
+    // @Query('destParent') destParent: string,
+  ) {
+    copyFileDto.spaceParent = trimSlashes(copyFileDto.spaceParent);
+    return await this.service.copyFile(
+      String(request.permissions._id),
+      copyFileDto,
+    );
+  }
+
+  @Patch('mv/')
+  @ApiOperation({
+    summary: 'Move a file or directory in user space',
+  })
+  async moveFile(@Request() request, @Body() moveFileDto: MoveFileDto) {
+    moveFileDto.sourcePath.spaceParent = trimSlashes(
+      moveFileDto.sourcePath.spaceParent,
+    );
+    moveFileDto.destPath.spaceParent = trimSlashes(
+      moveFileDto.destPath.spaceParent,
+    );
+    return await this.service.moveFile(
+      String(request.permissions._id),
+      moveFileDto,
+    );
+  }
+
+  @Get('stream/')
   @ApiOperation({
     summary: 'Stream a file by ID if user has access',
   })
   @Header('Content-Type', 'application/octet-stream')
   async streamFile(
     @Request() request,
-    @Param('fileID') fileID: string,
+    @Body() data: FileIdentifier,
     @Res({ passthrough: true }) res: Response,
   ): Promise<StreamableFile> {
     const canRead = await this.service.checkReadPerms(
       String(request.permissions._id),
-      fileID,
+      data.fileID,
       false,
     );
     console.log(canRead);
 
     if (!canRead) throw new UnauthorizedException();
 
-    const file = createReadStream(join(fileStorageRootDir, fileID));
+    const file = createReadStream(join(fileStorageRootDir, data.fileID));
     res.set({
       'Content-Disposition': `attachment; filename="${canRead}"`,
     });

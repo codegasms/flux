@@ -1,7 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { FileVisibility } from '../entities/file-visibility.enum';
+import { SpacePath } from './space-path.dto';
 
-export class ShareFileDto {
+export class ShareFileDto extends PartialType(SpacePath) {
   @ApiProperty({
     type: 'string',
     enum: FileVisibility,

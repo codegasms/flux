@@ -13,6 +13,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ShareFileDto } from './dto/share-file-dto';
 import { startsWith } from 'src/utils/regex';
 import { splitSpacePath } from 'src/utils/space-paths';
+import { SpacePath } from './dto/space-path.dto';
+import { CopyFileDto } from './dto/copy-file.dto';
+import { MoveFileDto } from './dto/move-file.dto';
 
 @Injectable()
 export class SpacesService {
@@ -67,45 +70,40 @@ export class SpacesService {
     return await createdFileObject.save();
   }
 
-  async findMeta(ownerId: string, spaceParent: string, fileName: string) {
+  async findMeta(ownerId: string, spacePath: SpacePath) {
     const query = {
       owner: ownerId,
-      spaceParent: spaceParent,
+      spaceParent: spacePath.spaceParent,
       inTrash: false,
     };
-    if (fileName !== '/') query['fileName'] = fileName;
+    if (spacePath.fileName !== '/') query['fileName'] = spacePath.fileName;
 
     return await this.filesModel.find({ ...query }).exec();
   }
 
-  async shareFile(
-    ownerId: string,
-    spaceParent: string,
-    fileName: string,
-    shareFileDto: ShareFileDto,
-  ) {
+  async shareFile(ownerId: string, shareFileDto: ShareFileDto) {
     return await this.filesModel.findOneAndUpdate(
       {
         owner: ownerId,
-        spaceParent: spaceParent,
-        fileName: fileName,
+        spaceParent: shareFileDto.spaceParent,
+        fileName: shareFileDto.fileName,
       },
       { ...shareFileDto },
     );
   }
 
-  async moveToTrash(ownerId: string, spaceParent: string, fileName: string) {
+  async moveToTrash(ownerId: string, spacePath: SpacePath) {
     const fileObj = await this.filesModel.findOne({
       owner: ownerId,
-      spaceParent: spaceParent,
-      fileName: fileName,
+      spaceParent: spacePath.spaceParent,
+      fileName: spacePath.fileName,
     });
 
     if (fileObj.isDir) {
       const children = await this.filesModel
         .find({
           owner: ownerId,
-          spaceParent: startsWith(spaceParent),
+          spaceParent: startsWith(spacePath.spaceParent),
         })
         .exec();
       for (const fileObjItem of children) {
@@ -154,6 +152,18 @@ export class SpacesService {
         return actualName;
     }
     return null;
+  }
+
+  async copyFile(ownerId: string, copyFileDto: CopyFileDto) {
+    console.log(ownerId);
+    console.log(copyFileDto);
+    return 'done';
+  }
+
+  async moveFile(ownerId: string, moveFileDto: MoveFileDto) {
+    console.log(ownerId);
+    console.log(moveFileDto);
+    return 'done';
   }
 
   async findAllSpaceQuotas() {
