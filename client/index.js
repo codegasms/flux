@@ -30,6 +30,13 @@ function dynamicRoutes(directory, route) {
 
     if (dirent.isDirectory()) {
       let newRouteComponent = dirent.name;
+      let match;
+
+      // TODO: Add support for catch-all and optional route parameters.
+      if (match = dirent.name.match(/^\[([_0-9A-Za-z]+)\]$/)) {
+        newRouteComponent = `:${match[1]}`;
+      }
+
       const newRoute = path.join(`${route}/${newRouteComponent}`);
       const childrenRoutes = dynamicRoutes(filePath, newRoute);
 
