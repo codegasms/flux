@@ -20,42 +20,39 @@ server.engine('ejs', async (path, data, cb) => {
   }
 });
 
-function filesToRender(dir) {
-  function readDirRecursive(dir, fileList) {
-    fileList = fileList ?? [];
+function dynamicRoutes(directory, route) {
+  const dirents = fs.readdirSync(directory, { withFileTypes: true });
 
-    const dirents = fs.readdirSync(dir, { withFileTypes: true });
+  let routeList = [];
 
-    dirents.map((dirent) => {
-      const filePath = path.join(dir, dirent.name);
-      if (dirent.isDirectory()) {
-        fileList = readDirRecursive(filePath, fileList);
-      } else {
-        fileList.push(filePath);
-      }
-    });
+  dirents.map(dirent => {
+    const filePath = path.join(directory, dirent.name);
 
-    return fileList;
-  }
+    if (dirent.isDirectory()) {
+      let newRouteComponent = dirent.name;
+      const newRoute = path.join(`${route}/${newRouteComponent}`);
+      const childrenRoutes = dynamicRoutes(filePath, newRoute);
 
-  return readDirRecursive(dir)
-    .filter((file) => path.extname(file) === '.ejs')
-    .map((file) => file.substring(dir.length, file.length - 4));
-}
-
-function renderFile(file) {
-  server.get(file, (_req, res) => {
-    return res.render(file.slice(1));
+      childrenRoutes.forEach(([childPath, childRoute]) => {
+        routeList.push([childPath, childRoute])
+      });
+    } else if (dirent.isFile() && dirent.name == 'index.ejs') {
+      routeList.push([filePath, route]);
+    }
   });
 
-  if (file.slice(-5) === 'index') {
-    server.get(file.substring(0, file.length - 5), (_req, res) => {
-      return res.render(file.slice(1));
-    });
-  }
+  return routeList;
 }
 
-filesToRender('views').forEach(renderFile);
+function renderEjsAt(filePath, route) {
+  server.get(route, (req, res) => {
+    return res.render(filePath.slice('views/'.length, filePath.length - 4), {params: req.params});
+  });
+}
+
+const routes = dynamicRoutes('views', '/')
+console.log(routes);
+routes.forEach(([file, route]) => renderEjsAt(file, route))
 
 server.use(express.static('public'));
 
