@@ -1,8 +1,8 @@
-<%- await include("layouts/header.ejs", {title: 'Flux Mods'}) %>
+<%- await include("../layouts/header.ejs", {title: 'Flux Mods'}) %>
 
-    <%- await include("layouts/flux-mods/navbar.ejs") %>
-    <%- await include("components/flux-mods/info-container.ejs",{fileType: "FREE"}) %>
-    <%- await include("components/flux-mods/searchbox.ejs") %>
+    <%- await include("../layouts/flux-mods/navbar.ejs") %>
+    <%- await include("../components/flux-mods/info-container.ejs",{fileType: "FREE"}) %>
+    <%- await include("../components/flux-mods/searchbox.ejs") %>
     <div class="py-20 flex items-center justify-around flex-wrap" style='perspective: 1000px;'>
         <% const items = [
         { imagepath: "/images/flux-mods/head-card-img/placeholder.avif", title: "PDF",},
@@ -15,16 +15,16 @@
     ];
     %>
     <% for (const item of items) { %>
-        <%- await include("components/flux-mods/main-card.ejs", {item: item}) %>
+        <%- await include("../components/flux-mods/main-card.ejs", {item: item}) %>
     <% } %>
     
 </div>
 
     <script src="/js/flux-mods/card-anim.js"></script>
 
-     <%- await include("layouts/footer.ejs") %>
+     <%- await include("../layouts/footer.ejs") %>
 
-    <%- await include("layouts/end.ejs") %>
+    <%- await include("../layouts/end.ejs") %>
 
 
 

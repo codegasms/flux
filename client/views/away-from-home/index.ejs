@@ -1,4 +1,4 @@
-<%- await include("layouts/header.ejs", {title : "FLUX" }) %>
+<%- await include("../layouts/header.ejs", {title : "FLUX" }) %>
 
     <div class="cursor h-20 w-20 rounded-full fixed bg-home-purple-light z-50 bg-center bg-cover mix-blend-difference">
     </div>
@@ -9,9 +9,9 @@
 
     <div class="main bg-zinc-900 cursor-none font-ppmori max-w-full">
 
-        <%- await include("partials/home/scroll-color-trigger.ejs") %>
+        <%- await include("../partials/home/scroll-color-trigger.ejs") %>
 
-            <%- await include("layouts/footer.ejs") %>
+            <%- await include("../layouts/footer.ejs") %>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.js"></script>
@@ -23,4 +23,4 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/js/home/scroll-color-trigger.js"></script>
 
-    <%- await include("layouts/end.ejs") %>
+    <%- await include("../layouts/end.ejs") %>

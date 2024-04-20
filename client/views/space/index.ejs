@@ -1,4 +1,4 @@
-<%- await include("layouts/header.ejs", {title: 'FLUX Space'}) %>
+<%- await include("../layouts/header.ejs", {title: 'FLUX Space'}) %>
 <div class="flex">
   <div class="flex flex-col flex-grow justify-start items-center box-content h-[100vh]">
     <div class="p-5">
@@ -13,7 +13,7 @@
         <div class="modal-box w-11/12 max-w-5xl">
           <h3 class="font-bold text-lg">Upload Files</h3>
           <p class="py-4">Please upload your files!</p>
-          <%- await include('components/upload-file.ejs', {props: {
+          <%- await include('../components/upload-file.ejs', {props: {
                 title: 'Upload file',
                 description: 'Separate one page or a whole set for easy conversion into independent PDF files.',
                 description: 'Upload one file at a time or multiple files at once.',
@@ -286,4 +286,4 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/space/space.js"></script>
-<%- await include("layouts/end.ejs") %>
+<%- await include("../layouts/end.ejs") %>

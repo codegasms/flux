@@ -1,10 +1,10 @@
-<%- await include("layouts/header.ejs", {title : "FLUX" }) %>
+<%- await include("../layouts/header.ejs", {title : "FLUX" }) %>
 
     <div id="main" class="relative overflow-hidden">
 
-        <%- await include("partials/home/scroll-trigger.ejs") %>
+        <%- await include("../partials/home/scroll-trigger.ejs") %>
 
-            <%- await include("layouts/footer.ejs") %>
+            <%- await include("../layouts/footer.ejs") %>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.js"></script>
@@ -16,4 +16,4 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module" src="/js/home/scroll-trigger.js"></script>
 
-    <%- await include("layouts/end.ejs") %>
+    <%- await include("../layouts/end.ejs") %>
