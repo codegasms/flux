@@ -216,6 +216,17 @@ export class SpacesController {
     );
   }
 
+  @Post('shared/')
+  @ApiOperation({
+    summary: 'Get metadata about a file or directory shared with user',
+  })
+  async getShared(@Request() request, @Body() fileId: FileIdentifier) {
+    return await this.service.findShared(
+      String(request.permissions._id),
+      fileId,
+    );
+  }
+
   @Put('cp/')
   @ApiOperation({
     summary: 'Copy a file or directory in user space',

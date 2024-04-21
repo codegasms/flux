@@ -38,6 +38,7 @@ import { IFileObjectQuery } from './entities/file-object-query.interface';
 import { UsersService } from 'src/users/users.service';
 import { pushUnique, removeItem } from 'src/utils/array';
 import { RevokeFileAccessDto } from './dto/revoke-file-access.dto';
+import { FileIdentifier } from './dto/file-id.dto';
 
 @Injectable()
 export class SpacesService {
@@ -140,6 +141,7 @@ export class SpacesService {
     ownerId: string,
     spacePath: SpacePath,
     inTrash: boolean = false,
+    showSpaceParent: boolean = true,
   ) {
     const query: IFileObjectQuery = {
       owner: ownerId,
@@ -148,22 +150,50 @@ export class SpacesService {
     };
     // when spacePath is root, skip adding fileName to query
     if (isSpaceRoot(spacePath)) {
-      return await this.filesModel.find({ ...query }).exec();
+      return await this.filesModel
+        .find({ ...query }, { spaceParent: showSpaceParent })
+        .exec();
     }
     query['fileName'] = spacePath.fileName;
 
-    const fileObj = await this.filesModel.findOne({ ...query }).exec();
+    const fileObj = await this.filesModel.findOne(
+      { ...query },
+      { spaceParent: showSpaceParent },
+    );
     if (!fileObj)
       throw new NotFoundException('No such file or directory found');
     if (fileObj.isDir) {
       delete query['fileName'];
-      query['spaceParent'] = startsWith(joinSpacePath(spacePath));
+      query['spaceParent'] = joinSpacePath(spacePath);
       // console.log(query);
-      const children = await this.filesModel.find({ ...query }).exec();
+      const children = await this.filesModel
+        .find({ ...query }, { spaceParent: showSpaceParent })
+        .exec();
       console.log(children);
       return [fileObj, ...children];
     }
     return fileObj;
+  }
+
+  async findShared(userId: string, fileId: FileIdentifier) {
+    const fileObj = await this.filesModel.findOne({
+      _id: fileId.fileID,
+      $or: [{ viewers: userId }, { editors: userId }, { managers: userId }],
+    });
+    if (!fileObj)
+      throw new NotFoundException(
+        'File with given id not found, or not shared with you',
+      );
+
+    return await this.findMeta(
+      fileObj.owner,
+      {
+        spaceParent: fileObj.spaceParent,
+        fileName: fileObj.fileName,
+      },
+      false,
+      false,
+    );
   }
 
   removeUserIdFromAccessLists(fileObj: FileObject, userId: string) {
