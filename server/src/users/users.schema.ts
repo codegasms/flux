@@ -44,6 +44,17 @@ export class User {
   // if a user deletes their account we will perform  a soft delete by setting isActive=false
   // after 30 days, all inactive accounts will automatically be deleted
   // during these 30 day of safety-net period a user will be able to recover their account by contacting a system admin
+  @Prop({ required: false })
+  emailConfirmedAt: Date;
+
+  @Prop({ required: true, default: 0 })
+  storageUsed: number;
+
+  @Prop({ required: true, default: 0 })
+  spacesQuota: string;
+  // quota id(mongo db id) of the quota currently subscribed;
+  @Prop({ required: true, default: 0 })
+  modTokensRemaining: number;
 }
 
 export type UserDocument = HydratedDocument<User>;
