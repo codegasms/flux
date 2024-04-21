@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { SpaceParent } from './space-path.dto';
 
-export class FileUploadDto {
+export class FileUploadDto extends PartialType(SpaceParent) {
   @ApiProperty({
     type: 'array',
     required: false,

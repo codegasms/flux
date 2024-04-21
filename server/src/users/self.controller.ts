@@ -15,6 +15,7 @@ import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserProfileOutDto } from './dto/user-profile-out.dto';
 import { UserAccountOutDto } from './dto/user-account-out.dto';
+import { StorageSpaceDto } from './dto/storage-space.dto';
 
 @ApiBearerAuth()
 @ApiTags('self')
@@ -25,6 +26,11 @@ export class SelfController {
   @Get('profile')
   async findProfile(@Request() req): Promise<UserProfileOutDto> {
     return await this.service.findProfile(req.permissions['id']);
+  }
+
+  @Get('storage')
+  async findStorage(@Request() req): Promise<StorageSpaceDto> {
+    return await this.service.findStorageSpace(req.permissions['id']);
   }
 
   @Patch('profile')
