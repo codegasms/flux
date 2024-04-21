@@ -1,13 +1,12 @@
 import * as lodash from 'lodash';
+import { SpacePath } from 'src/spaces/dto/space-path.dto';
+import * as path from 'path';
 
-export function splitSpacePath(spacePath: string): {
-  sParent: string;
-  fileName: string;
-} {
-  const sparent = spacePath.split('/');
+export function splitSpacePath(path: string): SpacePath {
+  const sparent = path.split('/');
   const fileName = sparent.pop();
   return {
-    sParent: sparent.join('/') || '/',
+    spaceParent: sparent.join('/') || '/',
     fileName: fileName,
   };
 }
@@ -15,4 +14,13 @@ export function splitSpacePath(spacePath: string): {
 export function trimSlashes(spacePath: string) {
   if (spacePath === '/') return spacePath;
   return lodash.trim(spacePath, '/');
+}
+
+export function joinSpacePath(spacePath: SpacePath): string {
+  return path.join(spacePath.spaceParent, spacePath.fileName);
+}
+
+export function isSpaceRoot(spacePath: SpacePath): boolean {
+  if (spacePath.spaceParent === '/' && spacePath.fileName === '') return true;
+  return false;
 }
