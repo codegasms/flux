@@ -37,13 +37,15 @@ import { URoles } from 'src/users/users.schema';
 import { Public } from 'src/auth/public.decorator';
 import { writeFile } from 'fs/promises';
 import * as path from 'path';
-import { ShareFileDto } from './dto/share-file-dto';
+import { ShareFileAccessDto } from './dto/share-file-access-dto';
 import { splitSpacePath, trimSlashes } from 'src/utils/space-paths';
 import { SpacePath } from './dto/space-path.dto';
 import { CopyFileDto } from './dto/copy-file.dto';
 import { MoveFileDto } from './dto/move-file.dto';
 import { FileIdentifier } from './dto/file-id.dto';
 import { UsersService } from 'src/users/users.service';
+import { RevokeFileAccessDto } from './dto/revoke-file-access.dto';
+import { UpdateFileAccessResponseDto } from './dto/update-file-access-response.dto';
 
 @ApiBearerAuth()
 @ApiTags('spaces')
@@ -140,12 +142,28 @@ export class SpacesController {
   })
   async shareFile(
     @Request() request,
-    // @Param('spaceParent') spaceParent: string,
-    // @Param('fileName') fileName: string,
-    @Body() shareFileDto: ShareFileDto,
-  ) {
+    @Body() shareFileDto: ShareFileAccessDto,
+  ): Promise<UpdateFileAccessResponseDto> {
     shareFileDto.spaceParent = trimSlashes(shareFileDto.spaceParent);
-    await this.service.shareFile(String(request.permissions._id), shareFileDto);
+    return await this.service.shareFileAccess(
+      String(request.permissions._id),
+      shareFileDto,
+    );
+  }
+
+  @Post('revoke/')
+  @ApiOperation({
+    summary: 'Revoke user access for a file',
+  })
+  async revokeAccess(
+    @Request() request,
+    @Body() revokeAccessDto: RevokeFileAccessDto,
+  ): Promise<UpdateFileAccessResponseDto> {
+    revokeAccessDto.spaceParent = trimSlashes(revokeAccessDto.spaceParent);
+    return await this.service.revokeFileAccess(
+      String(request.permissions._id),
+      revokeAccessDto,
+    );
   }
 
   @Post('trash/')
@@ -232,7 +250,7 @@ export class SpacesController {
     );
   }
 
-  @Get('stream/')
+  @Post('stream/')
   @ApiOperation({
     summary: 'Stream a file by ID if user has access',
   })
