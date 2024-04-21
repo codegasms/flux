@@ -2,6 +2,7 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
 import { FileVisibility } from './entities/file-visibility.enum';
+import { dayInfinity } from './constants';
 
 @Schema()
 export class FileObject {
@@ -50,6 +51,9 @@ export class FileObject {
   @Prop({ required: true, default: [] })
   editors: string[];
 
+  @Prop({ required: true, default: [] })
+  managers: string[];
+
   @Prop()
   mimeType: string;
 
@@ -60,6 +64,9 @@ export class FileObject {
   inTrash: boolean;
   // when a user deletes a file, we perform a soft delete by setting inTrash=true, and we do not delete the file from our server's disk
   // the user can restore files from their trash or delete them permanently
+
+  @Prop({ required: true, default: dayInfinity })
+  trashedOn: Date;
 }
 
 @Schema()
