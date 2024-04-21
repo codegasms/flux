@@ -37,6 +37,11 @@ export class UsersService {
     return await this.model.findById(id, project);
   }
 
+  async findIDFromEmail(email: string): Promise<string> {
+    const user = await this.model.findOne({ email: email });
+    return String(user._id);
+  }
+
   async findOneByEmail(email: string): Promise<User | undefined> {
     return await this.model.findOne({ email: email });
   }
