@@ -20,32 +20,31 @@ server.engine('ejs', async (path, data, cb) => {
   }
 });
 
-function dynamicRoutes(directory, route) {
+function dynamicRoutes(directory, route, routeList = []) {
   const dirents = fs.readdirSync(directory, { withFileTypes: true });
+  let genericRoutes = [];
 
-  let routeList = [];
-
-  dirents.map(dirent => {
+  dirents.map((dirent) => {
     const filePath = path.join(directory, dirent.name);
 
     if (dirent.isDirectory()) {
-      let newRouteComponent = dirent.name;
       let match;
 
       // TODO: Add support for catch-all and optional route parameters.
-      if (match = dirent.name.match(/^\[([_0-9A-Za-z]+)\]$/)) {
-        newRouteComponent = `:${match[1]}`;
+      if ((match = dirent.name.match(/^\[([_0-9A-Za-z]+)\]$/))) {
+        const newRoute = `${route}/:${match[1]}`;
+        genericRoutes.push([filePath, newRoute]);
+      } else {
+        const newRoute = `${route}/${dirent.name}`;
+        dynamicRoutes(filePath, newRoute, routeList);
       }
-
-      const newRoute = path.join(`${route}/${newRouteComponent}`);
-      const childrenRoutes = dynamicRoutes(filePath, newRoute);
-
-      childrenRoutes.forEach(([childPath, childRoute]) => {
-        routeList.push([childPath, childRoute])
-      });
     } else if (dirent.isFile() && dirent.name == 'index.ejs') {
-      routeList.push([filePath, route]);
+      routeList.push([filePath, route || '/']);
     }
+  });
+
+  genericRoutes.forEach(([filePath, newRoute]) => {
+    dynamicRoutes(filePath, newRoute, routeList);
   });
 
   return routeList;
@@ -53,13 +52,15 @@ function dynamicRoutes(directory, route) {
 
 function renderEjsAt(filePath, route) {
   server.get(route, (req, res) => {
-    return res.render(filePath.slice('views/'.length, filePath.length - 4), {params: req.params});
+    return res.render(filePath.slice('views/'.length, filePath.length - 4), {
+      params: req.params,
+    });
   });
 }
 
-const routes = dynamicRoutes('views', '/')
+const routes = dynamicRoutes('views', '');
 console.log(routes);
-routes.forEach(([file, route]) => renderEjsAt(file, route))
+routes.forEach(([file, route]) => renderEjsAt(file, route));
 
 server.use(express.static('public'));
 
