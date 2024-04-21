@@ -43,16 +43,31 @@ import { SpacePath } from './dto/space-path.dto';
 import { CopyFileDto } from './dto/copy-file.dto';
 import { MoveFileDto } from './dto/move-file.dto';
 import { FileIdentifier } from './dto/file-id.dto';
+import { UsersService } from 'src/users/users.service';
 
 @ApiBearerAuth()
 @ApiTags('spaces')
 @Controller('spaces')
 export class SpacesController {
-  constructor(private readonly service: SpacesService) {}
+  constructor(
+    private readonly service: SpacesService,
+    private usersService: UsersService,
+  ) {}
 
   /*
    * endpoints related to files upload and access
    */
+
+  @Post('usage/')
+  @ApiOperation({
+    summary: 'Get storage usage statistics of user',
+  })
+  async fetchUsage(@Request() request, @Body() spacePath: SpacePath) {
+    return await this.service.fetchUsage(
+      String(request.permissions._id),
+      spacePath,
+    );
+  }
 
   @Post('create/')
   @ApiConsumes('multipart/form-data')
@@ -78,10 +93,10 @@ export class SpacesController {
     if (files.length == 0) {
       console.log('no files received, create a dir');
 
-      const { sParent, fileName } = splitSpacePath(spaceParent);
+      const dirPath = splitSpacePath(spaceParent);
       return await this.service.createFile({
-        spaceParent: sParent,
-        fileName: fileName,
+        spaceParent: dirPath.spaceParent,
+        fileName: dirPath.fileName,
         isDir: true,
         created: now,
         owner: request.permissions._id,
@@ -103,6 +118,10 @@ export class SpacesController {
       console.log(createdFile._id);
       const diskPath = path.join(fileStorageRootDir, String(createdFile._id));
       await writeFile(diskPath, file.buffer);
+      await this.usersService.consumeStorageSpace(
+        request.permissions._id,
+        file.size,
+      );
     }
 
     return createdFiles;
@@ -129,7 +148,20 @@ export class SpacesController {
     await this.service.shareFile(String(request.permissions._id), shareFileDto);
   }
 
-  @Patch('trash/')
+  @Post('trash/')
+  @ApiOperation({
+    summary: 'Get contents of trash',
+  })
+  async getMetaFromTrash(@Request() request, @Body() spacePath: SpacePath) {
+    spacePath.spaceParent = trimSlashes(spacePath.spaceParent);
+    return await this.service.findMeta(
+      String(request.permissions._id),
+      spacePath,
+      true,
+    );
+  }
+
+  @Delete('trash/')
   @ApiOperation({
     summary:
       'Send a directory and all its subdirectories and files within them to trash',
@@ -142,7 +174,19 @@ export class SpacesController {
     );
   }
 
-  @Get('meta/')
+  @Post('trash/recover')
+  @ApiOperation({
+    summary: 'Recover items from trash',
+  })
+  async recoverFromTrash(@Request() request, @Body() spacePath: SpacePath) {
+    spacePath.spaceParent = trimSlashes(spacePath.spaceParent);
+    return await this.service.recoverFromTrash(
+      String(request.permissions._id),
+      spacePath,
+    );
+  }
+
+  @Post('meta/')
   @ApiOperation({
     summary: 'Get metadata about a file or directory in user space',
   })
