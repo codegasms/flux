@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -17,7 +18,9 @@ import {
 } from './spaces.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { ShareFileDto } from './dto/share-file-dto';
+import { UpdateFileAccessResponseDto } from './dto/update-file-access-response.dto';
+import { ShareFileAccessDto } from './dto/share-file-access-dto';
+import { FileAccessType } from './entities/file-access-type.enum';
 import { startsWith } from 'src/utils/regex';
 import {
   isSpaceRoot,
@@ -30,9 +33,11 @@ import { CopyFileDto } from './dto/copy-file.dto';
 import { MoveFileDto } from './dto/move-file.dto';
 import * as path from 'path';
 import * as fs from 'node:fs/promises';
-import { fileStorageRootDir } from './constants';
+import { dayInfinity, fileStorageRootDir } from './constants';
 import { IFileObjectQuery } from './entities/file-object-query.interface';
 import { UsersService } from 'src/users/users.service';
+import { pushUnique, removeItem } from 'src/utils/array';
+import { RevokeFileAccessDto } from './dto/revoke-file-access.dto';
 
 @Injectable()
 export class SpacesService {
@@ -146,32 +151,100 @@ export class SpacesService {
       return await this.filesModel.find({ ...query }).exec();
     }
     query['fileName'] = spacePath.fileName;
-    const fileObj = await this.filesModel.findOne({ ...query });
+
+    const fileObj = await this.filesModel.findOne({ ...query }).exec();
     if (!fileObj)
       throw new NotFoundException('No such file or directory found');
     if (fileObj.isDir) {
       delete query['fileName'];
       query['spaceParent'] = startsWith(joinSpacePath(spacePath));
+      // console.log(query);
       const children = await this.filesModel.find({ ...query }).exec();
+      console.log(children);
       return [fileObj, ...children];
     }
     return fileObj;
   }
 
-  async shareFile(ownerId: string, shareFileDto: ShareFileDto) {
-    return await this.filesModel.findOneAndUpdate(
-      {
-        owner: ownerId,
-        spaceParent: shareFileDto.spaceParent,
-        fileName: shareFileDto.fileName,
-      },
-      { ...shareFileDto },
-    );
+  removeUserIdFromAccessLists(fileObj: FileObject, userId: string) {
+    fileObj.viewers = removeItem(fileObj.viewers, userId);
+    fileObj.editors = removeItem(fileObj.editors, userId);
+    fileObj.managers = removeItem(fileObj.managers, userId);
+    return fileObj;
+  }
+
+  async shareFileAccess(
+    ownerId: string,
+    shareFileDto: ShareFileAccessDto,
+  ): Promise<UpdateFileAccessResponseDto> {
+    const fileObj = await this.filesModel.findOne({
+      owner: ownerId,
+      spaceParent: shareFileDto.spaceParent,
+      fileName: shareFileDto.fileName,
+    });
+    if (!fileObj)
+      throw new NotFoundException('File to be shared is not found!');
+    const missingUsers = [];
+    for (const item of shareFileDto.addOrChangeAccess) {
+      const userId = await this.usersService.findIDFromEmail(item.email);
+      if (!userId) {
+        missingUsers.push(item.email);
+        continue;
+      }
+      this.removeUserIdFromAccessLists(fileObj, userId);
+      switch (item.access) {
+        case FileAccessType.viewer:
+          fileObj.viewers = pushUnique(fileObj.viewers, userId);
+          break;
+        case FileAccessType.editor:
+          fileObj.editors = pushUnique(fileObj.editors, userId);
+          break;
+        case FileAccessType.manager:
+          fileObj.managers = pushUnique(fileObj.managers, userId);
+          break;
+        case FileAccessType.owner:
+          throw new NotImplementedException(
+            'Transfer of ownership is not yet implemented!',
+          );
+        default:
+          throw new BadRequestException('Invalid FileAccessType');
+      }
+    }
+    await fileObj.save();
+    return { missingUsers: missingUsers, fileObj: fileObj };
+  }
+
+  // TODO: shareFile endpoint for managers
+
+  async revokeFileAccess(
+    ownerId: string,
+    revokeAccessDto: RevokeFileAccessDto,
+  ): Promise<UpdateFileAccessResponseDto> {
+    const fileObj = await this.filesModel.findOne({
+      owner: ownerId,
+      spaceParent: revokeAccessDto.spaceParent,
+      fileName: revokeAccessDto.fileName,
+    });
+    if (!fileObj)
+      throw new NotFoundException(
+        'File whose access is to be revoked is not found!',
+      );
+    const missingUsers = [];
+    for (const email of revokeAccessDto.emails) {
+      const userId = await this.usersService.findIDFromEmail(email);
+      if (!userId) {
+        missingUsers.push(email);
+        continue;
+      }
+      this.removeUserIdFromAccessLists(fileObj, userId);
+    }
+    await fileObj.save();
+    return { missingUsers: missingUsers, fileObj: fileObj };
   }
 
   // moveToTrash and recoverFromTrash can have potential conflicts with same file poth in complement, which complementation is caused
   // think how to handle this
-
+  // inside the
   async moveToTrash(ownerId: string, spacePath: SpacePath) {
     const fileObj = await this.filesModel.findOne({
       owner: ownerId,
@@ -185,21 +258,36 @@ export class SpacesService {
       );
     }
 
+    const inTrashFileObj = await this.filesModel.findOne({
+      owner: ownerId,
+      spaceParent: spacePath.spaceParent,
+      fileName: spacePath.fileName,
+      inTrash: true,
+    });
+
+    if (inTrashFileObj) {
+      throw new ConflictException(
+        'An older file object exists in same path inside trash! Could not trash it. Delete the item in trash, or rename this object to trash it.',
+      );
+    }
+    const now = new Date();
+
     if (fileObj.isDir) {
       const children = await this.filesModel
         .find({
           owner: ownerId,
-          spaceParent: startsWith(spacePath.spaceParent),
+          spaceParent: startsWith(joinSpacePath(spacePath)),
         })
         .exec();
       for (const fileObjItem of children) {
         fileObjItem.inTrash = true;
+        fileObjItem.trashedOn = now;
         await fileObjItem.save();
       }
-    } else {
-      fileObj.inTrash = true;
-      await fileObj.save();
     }
+    fileObj.inTrash = true;
+    fileObj.trashedOn = now;
+    await fileObj.save();
   }
 
   async recoverFromTrash(ownerId: string, spacePath: SpacePath) {
@@ -213,21 +301,39 @@ export class SpacesService {
       throw new PreconditionFailedException('No such item exists in trash');
     }
 
+    const outOfTrashFileObj = await this.filesModel.findOne({
+      owner: ownerId,
+      spaceParent: spacePath.spaceParent,
+      fileName: spacePath.fileName,
+      inTrash: false,
+    });
+
+    if (outOfTrashFileObj) {
+      throw new ConflictException(
+        'A newer file object exists in same path inside your space! Could not take out of trash. Rename the newer object to take this item out of trash.',
+      );
+    }
+    console.log('recover from trash! ');
+    console.log(fileObj);
     if (fileObj.isDir) {
+      console.log(startsWith(joinSpacePath(spacePath)));
       const children = await this.filesModel
         .find({
           owner: ownerId,
-          spaceParent: startsWith(spacePath.spaceParent),
+          spaceParent: startsWith(joinSpacePath(spacePath)),
         })
         .exec();
+      console.log('printing fro recover from trash!');
+      console.log(children);
       for (const fileObjItem of children) {
-        fileObjItem.inTrash = true;
+        fileObjItem.inTrash = false;
+        fileObjItem.trashedOn = dayInfinity;
         await fileObjItem.save();
       }
-    } else {
-      fileObj.inTrash = false;
-      await fileObj.save();
     }
+    fileObj.inTrash = false;
+    fileObj.trashedOn = dayInfinity;
+    await fileObj.save();
   }
 
   async checkReadPerms(
@@ -244,7 +350,8 @@ export class SpacesService {
     if (
       fileObj.owner === userId ||
       fileObj.viewers.includes(userId) ||
-      fileObj.editors.includes(userId)
+      fileObj.editors.includes(userId) ||
+      fileObj.managers.includes(userId)
     )
       return fileObj.fileName;
 
