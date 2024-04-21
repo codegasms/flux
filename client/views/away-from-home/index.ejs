@@ -1,18 +1,17 @@
-<%- await include("layouts/header.ejs", {title : "FLUX" }) %>
+<%- await include("../layouts/header.ejs", {title : "FLUX" }) %>
+
+    <div class="cursor h-20 w-20 rounded-full fixed bg-home-purple-light z-50 bg-center bg-cover mix-blend-difference">
+    </div>
     <div class="h-16 w-full flex items-center justify-between px-8 py-0 fixed mix-blend-difference z-50">
         <img src="images/logo.png" alt="" class="h-8 contrast-0 brightness-200">
         <h1 class="font-medium text-4xl"> Flux </h1>
     </div>
-    <div class="cursor h-20 w-20 rounded-full fixed bg-home-purple-light z-50 bg-center bg-cover mix-blend-difference"
-        style="transition: background-image ease 0.5s;">
-    </div>
 
     <div class="main bg-zinc-900 cursor-none font-ppmori max-w-full">
 
-        <%- await include("partials/home/scroll-color-trigger.ejs") %>
+        <%- await include("../partials/home/scroll-color-trigger.ejs") %>
 
-            <%- await include("layouts/footer.ejs") %>
-
+            <%- await include("../layouts/footer.ejs") %>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.js"></script>
@@ -22,6 +21,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
         integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="js/home/scroll-color-trigger.js"></script>
+    <script src="/js/home/scroll-color-trigger.js"></script>
 
-    <%- await include("layouts/end.ejs") %>
+    <%- await include("../layouts/end.ejs") %>

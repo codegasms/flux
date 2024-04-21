@@ -1,8 +1,8 @@
-<%- await include("layouts/header.ejs", {title: 'FLUX Space'}) %>
+<%- await include("../layouts/header.ejs", {title: 'FLUX Space'}) %>
 <div class="flex">
   <div class="flex flex-col flex-grow justify-start items-center box-content h-[100vh]">
     <div class="p-5">
-      <img src="images/space/logo.png" class="dark:contrast-0" />
+      <img src="/images/space/logo.png" class="dark:contrast-0" />
     </div>
     <div class="flex flex-col p-8">
       <button class="btn btn-active btn-ghost my-4" onclick="my_modal_4.showModal()">
@@ -13,7 +13,7 @@
         <div class="modal-box w-11/12 max-w-5xl">
           <h3 class="font-bold text-lg">Upload Files</h3>
           <p class="py-4">Please upload your files!</p>
-          <%- await include('components/upload-file.ejs', {props: {
+          <%- await include('../components/upload-file.ejs', {props: {
                 title: 'Upload file',
                 description: 'Separate one page or a whole set for easy conversion into independent PDF files.',
                 description: 'Upload one file at a time or multiple files at once.',
@@ -32,29 +32,29 @@
       <ul class="menu w-56 flex gap-2">
         <li>
           <a class="active">
-            <img src="images/space/folder.png" class="dark:contrast-0" />
+            <img src="/images/space/folder.png" class="dark:contrast-0" />
             My Files
           </a>
         </li>
         <li>
           <a class="active:scale-[0.95]">
-            <img src="images/space/shared.png" class="dark:contrast-0" />
+            <img src="/images/space/shared.png" class="dark:contrast-0" />
             Shared Files
           </a>
         </li>
         <li>
           <a class="active:scale-[0.95]">
-            <img src="images/space/starred.png" class="dark:contrast-0" />Favorites</a>
+            <img src="/images/space/starred.png" class="dark:contrast-0" />Favorites</a>
         </li>
         <li>
           <a class="active:scale-[0.95]">
-            <img src="images/space/bin.png" class="dark:contrast-0" />
+            <img src="/images/space/bin.png" class="dark:contrast-0" />
             Recycle Bin
           </a>
         </li>
         <li>
           <a class="active:scale-[0.95]">
-            <img src="images/space/settings-cog.png" class="dark:contrast-0" />
+            <img src="/images/space/settings-cog.png" class="dark:contrast-0" />
             Settings
           </a>
         </li>
@@ -68,13 +68,13 @@
       <ul class="menu w-56 flex gap-2">
         <li>
           <a class="active:scale-[0.95]">
-            <img src="images/space/viewrecents.png" class="dark:contrast-0" />
+            <img src="/images/space/viewrecents.png" class="dark:contrast-0" />
             Viewed Recently
           </a>
         </li>
         <li>
           <a class="active:scale-[0.95]">
-            <img src="images/space/starred.png" class="dark:contrast-0" />
+            <img src="/images/space/starred.png" class="dark:contrast-0" />
             Favorites
           </a>
         </li>
@@ -86,7 +86,7 @@
     <!-- Search bar -->
     <div class="py-[18px] w-full bg-base-100 flex justify-center items-center">
       <div class="w-1/2">
-        <input type="text" class="w-full h-10 rounded-2xl bg-base-200 text-[17px] focus:outline-none focus:border-[#D2D4D7] pl-[40px] pr-[20px] bg-no-repeat bg-[10px] bg-[url('images/space/search.png')]" placeholder="Search" />
+        <input type="text" class="w-full h-10 rounded-2xl bg-base-200 text-[17px] focus:outline-none focus:border-[#D2D4D7] pl-[40px] pr-[20px] bg-no-repeat bg-[10px] bg-[url('/images/space/search.png')]" placeholder="Search" />
       </div>
     </div>
     <!-- Main page -->
@@ -113,27 +113,27 @@
           <!-- Folders -->
           <div class="flex flex-wrap mt-4 gap-x-4">
             <button class="btn btn-ghost border-2 border-base-200 w-[200px] h-[80px] flex gap-4 my-2">
-              <img src="images/space/folder_closed.png" />
+              <img src="/images/space/folder_closed.png" />
               Folder 1
             </button>
             <button class="btn btn-ghost border-2 border-base-200 w-[200px] h-[80px] flex gap-4 my-2">
-              <img src="images/space/folder_closed.png" />
+              <img src="/images/space/folder_closed.png" />
               Folder 2
             </button>
             <button class="btn btn-ghost border-2 border-base-200 w-[200px] h-[80px] flex gap-4 my-2">
-              <img src="images/space/folder_closed.png" />
+              <img src="/images/space/folder_closed.png" />
               Folder 3
             </button>
             <button class="btn btn-ghost border-2 border-base-200 w-[200px] h-[80px] flex gap-4 my-2">
-              <img src="images/space/folder_closed.png" />
+              <img src="/images/space/folder_closed.png" />
               Folder 4
             </button>
             <button class="btn btn-ghost border-2 border-base-200 w-[200px] h-[80px] flex gap-4 my-2">
-              <img src="images/space/folder_closed.png" />
+              <img src="/images/space/folder_closed.png" />
               Folder 5
             </button>
             <button class="btn btn-ghost border-2 border-base-200 w-[200px] h-[80px] flex gap-4 my-2">
-              <img src="images/space/folder_closed.png" />
+              <img src="/images/space/folder_closed.png" />
               Folder 6
             </button>
           </div>
@@ -202,17 +202,17 @@
         </svg>
       </label>
       <button class="btn btn-sm btn-ghost px-[6px]">
-        <img src="images/space/notifications.png" class="contrast-0" />
+        <img src="/images/space/notifications.png" class="contrast-0" />
       </button>
       <div>
         <div class="divider divider-horizontal mx-[2px] h-[24px]"></div>
       </div>
       <button class="btn btn-sm btn-ghost px-[6px]">
-        <img src="images/space/user.png" class="contrast-0" />
+        <img src="/images/space/user.png" class="contrast-0" />
         Team Codegasms
       </button>
       <button class="btn btn-sm btn-ghost px-[6px]">
-        <img src="images/space/logout.png" class="contrast-0" />
+        <img src="/images/space/logout.png" class="contrast-0" />
       </button>
     </div>
     <div class="w-full px-5">
@@ -226,7 +226,7 @@
         <ul class="w-full flex flex-col gap-2">
           <li>
             <a class="active:scale-[0.95] btn w-full btn-ghost border-2 border-base-200 rounded-md flex justify-start h-20" href="#">
-              <img src="images/space/shared.png" class="dark:contrast-0" />
+              <img src="/images/space/shared.png" class="dark:contrast-0" />
               <div class="flex flex-col items-start">
                 <div class="text-xl">Audios</div>
                 <div class="text-sm text-base-content/50">
@@ -237,7 +237,7 @@
           </li>
           <li>
             <a class="active:scale-[0.95] btn w-full btn-ghost border-2 border-base-200 rounded-md flex justify-start h-20" href="#">
-              <img src="images/space/shared.png" class="dark:contrast-0" />
+              <img src="/images/space/shared.png" class="dark:contrast-0" />
               <div class="flex flex-col items-start">
                 <div class="text-xl">Videos</div>
                 <div class="text-sm text-base-content/50">
@@ -248,7 +248,7 @@
           </li>
           <li>
             <a class="active:scale-[0.95] btn w-full btn-ghost border-2 border-base-200 rounded-md flex justify-start h-20" href="#">
-              <img src="images/space/shared.png" class="dark:contrast-0" />
+              <img src="/images/space/shared.png" class="dark:contrast-0" />
               <div class="flex flex-col items-start">
                 <div class="text-xl">Documents</div>
                 <div class="text-sm text-base-content/50">
@@ -259,7 +259,7 @@
           </li>
           <li>
             <a class="active:scale-[0.95] btn w-full btn-ghost border-2 border-base-200 rounded-md flex justify-start h-20" href="#">
-              <img src="images/space/shared.png" class="dark:contrast-0" />
+              <img src="/images/space/shared.png" class="dark:contrast-0" />
               <div class="flex flex-col items-start">
                 <div class="text-xl">Photos</div>
                 <div class="text-sm text-base-content/50">
@@ -270,7 +270,7 @@
           </li>
           <li>
             <a class="active:scale-[0.95] btn w-full btn-ghost border-2 border-base-200 rounded-md flex justify-start h-20" href="#">
-              <img src="images/space/shared.png" class="dark:contrast-0" />
+              <img src="/images/space/shared.png" class="dark:contrast-0" />
               <div class="flex flex-col items-start">
                 <div class="text-xl">Recycle bin</div>
                 <div class="text-sm text-base-content/50">
@@ -286,4 +286,4 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/space/space.js"></script>
-<%- await include("layouts/end.ejs") %>
+<%- await include("../layouts/end.ejs") %>

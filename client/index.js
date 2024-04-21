@@ -1,5 +1,6 @@
 import express from 'express';
 import fs from 'fs';
+import path from 'node:path';
 import ejs from 'ejs';
 import dotenv from 'dotenv';
 
@@ -19,41 +20,51 @@ server.engine('ejs', async (path, data, cb) => {
   }
 });
 
-function filesToRender(dir) {
-  function fileSubstring(file, dir) {
-    return file.substring(0, file.length - 4).replace(dir, '');
-  }
+function dynamicRoutes(directory, route, routeList = []) {
+  const dirents = fs.readdirSync(directory, { withFileTypes: true });
+  let genericRoutes = [];
 
-  function readDirRecursive(dir, filelist) {
-    let files = fs.readdirSync(dir);
-    filelist = filelist || [];
-    files.map((file) => {
-      if (fs.statSync(dir + '/' + file).isDirectory()) {
-        filelist = readDirRecursive(dir + '/' + file, filelist);
+  dirents.map((dirent) => {
+    const filePath = path.join(directory, dirent.name);
+
+    if (dirent.isDirectory()) {
+      let match;
+
+      // TODO: Add support for catch-all and optional route parameters.
+      if ((match = dirent.name.match(/^\[([_0-9A-Za-z]+)\]$/))) {
+        const newRoute = `${route}/:${match[1]}`;
+        genericRoutes.push([filePath, newRoute]);
       } else {
-        filelist.push(dir + '/' + file);
+        const newRoute = `${route}/${dirent.name}`;
+        dynamicRoutes(filePath, newRoute, routeList);
       }
-    });
-    return filelist;
-  }
+    } else if (dirent.isFile() && dirent.name == 'index.ejs') {
+      routeList.push([filePath, route || '/']);
+    }
+  });
 
-  return readDirRecursive(dir).map((file) => {
-    return fileSubstring(file, dir);
+  genericRoutes.forEach(([filePath, newRoute]) => {
+    dynamicRoutes(filePath, newRoute, routeList);
+  });
+
+  return routeList;
+}
+
+function renderEjsAt(filePath, route) {
+  server.get(route, (req, res) => {
+    return res.render(filePath.slice('views/'.length, filePath.length - 4), {
+      params: req.params,
+    });
   });
 }
 
-function renderFile(file) {
-  server.get(file, (req, res) => {
-    return res.render(file.slice(1));
-  });
-  if (file.slice(-5) === 'index') {
-    server.get(file.substring(0, file.length - 5), (req, res) => {
-      return res.render(file.slice(1));
-    });
-  }
-}
+// WARNING: The routes are ordered from most specific to least specific. Do not mess with the order.
+const routes = dynamicRoutes('views', '');
 
-filesToRender('views').map((file) => renderFile(file));
+// TODO: Remove this debug log.
+console.log(routes);
+
+routes.forEach(([file, route]) => renderEjsAt(file, route));
 
 server.use(express.static('public'));
 
