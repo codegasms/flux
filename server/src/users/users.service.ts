@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 import { User, UserDocument } from './users.schema';
@@ -7,6 +11,7 @@ import { Model } from 'mongoose';
 import { UserPermsOutDto } from './dto/user-perms-out.dto';
 import { UserProfileOutDto } from './dto/user-profile-out.dto';
 import { UserAccountOutDto } from './dto/user-account-out.dto';
+import { StorageSpaceDto } from './dto/storage-space.dto';
 // import { UpdateUserAccountDto } from './dto/update-user-account.dto';
 
 @Injectable()
@@ -74,5 +79,27 @@ export class UsersService {
   // update email and update username
   async remove(id: string) {
     return await this.model.findByIdAndDelete(id);
+  }
+
+  // users spaces
+  async consumeStorageSpace(ownerId: string, size: number) {
+    const user = await this.model.findById(ownerId);
+    if (!user)
+      throw new NotFoundException(
+        "Failed to change user's storage space consumption! User not found",
+      );
+    user.storageUsed += size;
+    if (user.storageUsed < 0)
+      throw new BadRequestException('Storage used can not be negative!');
+    await user.save();
+  }
+
+  async freeStorageSpace(ownerId: string, size: number) {
+    await this.consumeStorageSpace(ownerId, -1 * size);
+  }
+
+  async findStorageSpace(ownerId: string): Promise<StorageSpaceDto> {
+    const user = await this.model.findById(ownerId);
+    return { used: user.storageUsed };
   }
 }
