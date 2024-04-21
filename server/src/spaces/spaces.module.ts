@@ -8,15 +8,17 @@ import {
   SpaceQuotas,
   SpaceQuotasSchema,
 } from './spaces.schema';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  controllers: [SpacesController],
-  providers: [SpacesService],
   imports: [
+    UsersModule,
     MongooseModule.forFeature([
       { name: FileObject.name, schema: FileObjectSchema },
       { name: SpaceQuotas.name, schema: SpaceQuotasSchema },
     ]),
   ],
+  controllers: [SpacesController],
+  providers: [SpacesService],
 })
 export class SpacesModule {}
