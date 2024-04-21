@@ -17,7 +17,7 @@ export function trimSlashes(spacePath: string) {
 }
 
 export function joinSpacePath(spacePath: SpacePath): string {
-  return path.join(spacePath.spaceParent, spacePath.fileName);
+  return trimSlashes(path.join(spacePath.spaceParent, spacePath.fileName));
 }
 
 export function isSpaceRoot(spacePath: SpacePath): boolean {
