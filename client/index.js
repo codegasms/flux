@@ -58,8 +58,12 @@ function renderEjsAt(filePath, route) {
   });
 }
 
+// WARNING: The routes are ordered from most specific to least specific. Do not mess with the order.
 const routes = dynamicRoutes('views', '');
+
+// TODO: Remove this debug log.
 console.log(routes);
+
 routes.forEach(([file, route]) => renderEjsAt(file, route));
 
 server.use(express.static('public'));
