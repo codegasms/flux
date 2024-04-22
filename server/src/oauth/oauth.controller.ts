@@ -8,6 +8,7 @@ import { UsersService } from 'src/users/users.service';
 import { AuthService } from 'src/auth/auth.service';
 import { OAuthProvider } from 'src/users/dto/find-or-create-user.dto';
 import { Response } from 'express';
+import { oauthConfig } from './config';
 
 @ApiTags('oauth')
 @Public()
@@ -25,7 +26,10 @@ export class OauthController {
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
-  async googleOAuthCallback(@Req() req) {
+  async googleOAuthCallback(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     console.log(req.user);
     const user = await this.usersService.findOrCreate({
       provider: req.user.provider,
@@ -35,7 +39,8 @@ export class OauthController {
     });
 
     const token = await this.authService.generateJwtToken(user.email);
-    return { user: user, token: token };
+    res.cookie('accessToken', token);
+    res.redirect(oauthConfig.frontendUrl);
   }
 
   @Get('github')
@@ -44,7 +49,10 @@ export class OauthController {
 
   @Get('github/callback')
   @UseGuards(GithubOauthGuard)
-  async githubOAuthCallback(@Req() req, @Res() res: Response) {
+  async githubOAuthCallback(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     console.log(req.user);
     const user = await this.usersService.findOrCreate({
       provider: OAuthProvider.github,
@@ -53,7 +61,7 @@ export class OauthController {
       email: req.user.emails[0].value,
     });
     const token = await this.authService.generateJwtToken(user.email);
-    // res.status(200);
-    return { user: user, token: token };
+    res.cookie('accessToken', token);
+    res.redirect(oauthConfig.frontendUrl);
   }
 }
