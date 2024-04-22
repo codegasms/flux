@@ -6,19 +6,16 @@ import {
   Patch,
   Param,
   Delete,
-  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Public } from 'src/auth/public.decorator';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { UserProfileOutDto } from './dto/user-profile-out.dto';
 import { URoles } from './users.schema';
 import { Roles } from 'src/auth/roles.decorator';
-import { url } from 'inspector';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
 @ApiTags('users')
 @Controller('users')
 export class UsersController {

@@ -5,16 +5,17 @@ import {
   Post,
   Request,
   UseGuards,
+  Res,
 } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { SingInDto as LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RegisterResponseDto } from './dto/register-response.dto';
 import { Public } from './public.decorator';
 import { UserPermsOutDto } from 'src/users/dto/user-perms-out.dto';
-
+import { Response } from 'express';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -22,19 +23,27 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  login(@Body() loginDto: LoginDto) {
-    return this.service.login(loginDto.email, loginDto.password);
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const token = await this.service.login(loginDto.email, loginDto.password);
+    res.cookie('accessToken', token.access_token);
+    return token;
   }
 
   @Public()
   @Post('register')
   async register(
     @Body() registerDto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
   ): Promise<RegisterResponseDto> {
-    return await this.service.register(registerDto);
+    const token = await this.service.register(registerDto);
+    res.cookie('accessToken', token.access_token);
+    return token;
   }
 
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @UseGuards(AuthGuard)
   @Get('permissions')
   async getPermissions(@Request() req): Promise<UserPermsOutDto> {

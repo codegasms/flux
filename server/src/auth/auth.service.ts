@@ -25,9 +25,9 @@ export class AuthService {
     if (!match) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.email };
+
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.generateJwtToken(email),
     };
   }
 
@@ -39,9 +39,12 @@ export class AuthService {
       hashedPassword: hashedPassword,
     });
 
-    const payload = { sub: user.email };
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.generateJwtToken(user.email),
     };
+  }
+
+  async generateJwtToken(email: string) {
+    return await this.jwtService.signAsync({ sub: email });
   }
 }

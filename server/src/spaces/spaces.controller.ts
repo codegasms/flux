@@ -20,8 +20,8 @@ import { CreateSpacesQuotaDto } from './dto/create-spaces-quota.dto';
 import { UpdateSpacesQuotaDto } from './dto/update-spaces-quota.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import {
-  ApiBearerAuth,
   ApiConsumes,
+  ApiCookieAuth,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -47,7 +47,7 @@ import { UsersService } from 'src/users/users.service';
 import { RevokeFileAccessDto } from './dto/revoke-file-access.dto';
 import { UpdateFileAccessResponseDto } from './dto/update-file-access-response.dto';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
 @ApiTags('spaces')
 @Controller('spaces')
 export class SpacesController {

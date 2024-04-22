@@ -12,6 +12,7 @@ export enum URoles {
   free = 'free',
 }
 
+
 @Schema()
 export class User {
   @Prop({ required: true, index: true, unique: true })
@@ -20,7 +21,16 @@ export class User {
   @Prop({ required: true })
   fullName: string;
 
-  @Prop({ required: true })
+  // @Prop({ required: false })
+  // connectedOAuthProviders: OAuthProviders;
+
+  @Prop()
+  googleId: string;
+
+  @Prop()
+  githubId: string;
+
+  @Prop({ required: false })
   hashedPassword: string;
 
   @Prop({

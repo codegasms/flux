@@ -12,14 +12,14 @@ import { ModsService } from './mods.service';
 import { CreateModDto } from './dto/create-mod.dto';
 import { UpdateModDto } from './dto/update-mod.dto';
 import { ApplyModDto } from './dto/apply-mod.dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/public.decorator';
 import { CreateTokenPlanDto } from './dto/create-token-plan.dto';
 import { UpdateTokenPlanDto } from './dto/update-token-plan.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { URoles } from 'src/users/users.schema';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
 @ApiTags('mods')
 @Controller('mods')
 export class ModsController {
