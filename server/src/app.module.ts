@@ -15,6 +15,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { fileStorageRootDir } from './spaces/constants';
 import { ModsModule } from './mods/mods.module';
 import { SpacesModule } from './spaces/spaces.module';
+import { OauthModule } from './oauth/oauth.module';
 
 configDotenv();
 
@@ -42,6 +43,7 @@ if (!process.env.MONGO_CON_STR) {
       serveRoot: '/files',
     }),
     AuthModule,
+    OauthModule,
     UsersModule,
     ModsModule,
     SpacesModule,
