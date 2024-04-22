@@ -8,4 +8,10 @@ export const oauthConfig = {
     callbackUrl: fromEnv('GOOGLE_OAUTH_CALLBACK_URL'),
     scopes: ['profile', 'email'],
   },
+  github: {
+    clientID: fromEnv('GITHUB_OAUTH_CLIENT_ID'),
+    clientSecret: fromEnv('GITHUB_OAUTH_CLIENT_SECRET'),
+    callbackUrl: fromEnv('GITHUB_OAUTH_CALLBACK_URL'),
+    scopes: ['public_profile'],
+  },
 };
