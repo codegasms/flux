@@ -12,12 +12,12 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { UserProfileOutDto } from './dto/user-profile-out.dto';
 import { UserAccountOutDto } from './dto/user-account-out.dto';
 import { StorageSpaceDto } from './dto/storage-space.dto';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
 @ApiTags('self')
 @Controller('self')
 export class SelfController {
