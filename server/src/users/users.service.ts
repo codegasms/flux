@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -12,6 +13,8 @@ import { UserPermsOutDto } from './dto/user-perms-out.dto';
 import { UserProfileOutDto } from './dto/user-profile-out.dto';
 import { UserAccountOutDto } from './dto/user-account-out.dto';
 import { StorageSpaceDto } from './dto/storage-space.dto';
+import { FindOrCreateUserDto } from './dto/find-or-create-user.dto';
+import { assert } from 'console';
 // import { UpdateUserAccountDto } from './dto/update-user-account.dto';
 
 @Injectable()
@@ -20,6 +23,46 @@ export class UsersService {
     @InjectModel(User.name)
     private model: Model<UserDocument>,
   ) {}
+
+  /*
+  find if there is an existing user with given email, and provider id
+  if user with that email, does not exist, it is created, and corresponding provider is connected
+  if user with that email, exists, but not connected with provider, then, its connected with provider
+  if user with that email, exists and its also connected with given provider, then its returned
+  */
+  async findOrCreate(userDto: FindOrCreateUserDto) {
+    const now = new Date();
+
+    const query = {
+      email: userDto.email,
+    };
+    query[`${userDto.provider}Id`] = userDto.providerId;
+
+    const connectedUser = await this.model.findOne({ ...query });
+    if (!connectedUser) {
+      let user = await this.model.findOne({ email: userDto.email });
+      if (!user) {
+        const newUser = new this.model({
+          email: userDto.email,
+          fullName: userDto.fullName,
+          joined: now,
+        });
+        // newUser[`${userDto.provider}Id`] = userDto.providerId;
+        await newUser.save();
+        user = newUser;
+      }
+      if (user[`${userDto.provider}Id`] != null)
+        throw new ForbiddenException(
+          `This should not happen! User with given email exists and connected different id for provider ${userDto.provider}. Saved providerId in db=${user[`${userDto.provider}Id`]}. Received providerId for connection=${userDto.providerId}`,
+        );
+      user[`${userDto.provider}Id`] = userDto.providerId;
+      user.lastLogin = now;
+      return await user.save();
+    }
+    connectedUser.lastLogin = now;
+    await connectedUser.save();
+    return connectedUser;
+  }
 
   async create(createUserDto: CreateUserDto) {
     const createdUser = new this.model(createUserDto);
