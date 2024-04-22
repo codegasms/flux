@@ -1,18 +1,9 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { OauthService } from './oauth.service';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/public.decorator';
+import { GithubOauthGuard } from './guards/github-oauth.guard';
 
 @ApiTags('oauth')
 @Public()
@@ -23,11 +14,24 @@ export class OauthController {
   @Get('google')
   @UseGuards(GoogleOauthGuard)
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async googleAuth() {}
+  async googleOAuth() {}
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
-  async googleAuthCallback(@Req() req) {
+  async googleOAuthCallback(@Req() req) {
+    console.log(req.user);
+
+    return req.user;
+  }
+
+  @Get('github')
+  @UseGuards(GithubOauthGuard)
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async githubOAuth() {}
+
+  @Get('github/callback')
+  @UseGuards(GithubOauthGuard)
+  async githubOAuthCallback(@Req() req) {
     console.log(req.user);
 
     return req.user;
