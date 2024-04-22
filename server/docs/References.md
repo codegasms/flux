@@ -7,3 +7,4 @@
 - https://nodejs.org/api/path.html#pathjoinpaths
 - https://www.w3schools.com/js/js_loop_forof.asp
 - https://stackoverflow.com/questions/41553291/can-you-import-nodes-path-module-using-import-path-from-path
+- https://medium.com/@flavtech/google-oauth2-authentication-with-nestjs-explained-ab585c53edec
