@@ -16,6 +16,7 @@ import { fileStorageRootDir } from './spaces/constants';
 import { ModsModule } from './mods/mods.module';
 import { SpacesModule } from './spaces/spaces.module';
 import { OauthModule } from './oauth/oauth.module';
+import { OrdersModule } from './orders/orders.module';
 
 configDotenv();
 
@@ -47,6 +48,7 @@ if (!process.env.MONGO_CON_STR) {
     UsersModule,
     ModsModule,
     SpacesModule,
+    OrdersModule,
   ],
 })
 export class AppModule {}
