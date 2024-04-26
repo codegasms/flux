@@ -22,3 +22,18 @@
 ## cookies
 
 - https://portswigger.net/web-security/csrf/bypassing-samesite-restrictions
+- https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-cookie-same-site-00#section-4.1.1
+
+## fetch
+
+- https://apidog.com/blog/axios-vs-fetch
+- https://reqbin.com/code/javascript/lcpj87js/javascript-fetch-with-credentials
+- https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+- https://suhanwijaya.medium.com/missing-cookie-in-http-request-when-using-fetch-api-fc0199c3dc3c
+- https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#differences_from_jquery.ajax
+
+## cors
+
+- https://aws.amazon.com/what-is/cross-origin-resource-sharing
+- https://www.moesif.com/blog/technical/cors/Authoritative-Guide-to-CORS-Cross-Origin-Resource-Sharing-for-REST-APIs/
+- https://medium.com/@cybersphere/fetch-api-the-ultimate-guide-to-cors-and-no-cors-cbcef88d371e
