@@ -4,5 +4,5 @@ export class CreateOrderDto {
   amount: number;
   currency: SupportedCurrency;
   receipt: string;
-  notes: Record<string, string>;
+  notes?: Record<string, string>;
 }
