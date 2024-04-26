@@ -39,7 +39,7 @@ export class OrdersService {
   async verify(verifyPaymentDto: VerifyPaymentDto): Promise<boolean> {
     console.log(verifyPaymentDto);
     // TODO: fetch order id from db to check if it exists
-    validatePaymentVerification(
+    const validation = validatePaymentVerification(
       {
         order_id: verifyPaymentDto.razorpay_order_id,
         payment_id: verifyPaymentDto.razorpay_payment_id,
@@ -48,6 +48,6 @@ export class OrdersService {
       rzpConfig.keySecret,
     );
     // TODO: mark payment success in db
-    return true;
+    return validation;
   }
 }
