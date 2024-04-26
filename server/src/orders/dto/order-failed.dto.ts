@@ -11,7 +11,7 @@ export class RzpOrderFailure {
 }
 
 export class OrderFailedDto {
-  @ApiProperty({ default: 400 })
+  @ApiProperty({ default: 502 })
   statusCode: number;
   error: RzpOrderFailure;
 }

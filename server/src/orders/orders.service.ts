@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
 
 import Razorpay from 'razorpay';
 import { rzpConfig } from './config';
@@ -18,10 +18,12 @@ export class OrdersService {
     });
   }
   async create(createOrderDto: CreateOrderDto): Promise<OrderCreatedDto> {
+    console.log(createOrderDto);
     try {
       const response = await this.rzpClient.orders.create({
         ...createOrderDto,
       });
+      console.log(response);
       // TODO: save entry in db for future tracking
       return {
         key: rzpConfig.keyId,
@@ -29,7 +31,8 @@ export class OrdersService {
         verifyUrl: 'orders/verify',
       };
     } catch (err) {
-      throw new BadRequestException(err);
+      console.log(err);
+      throw new BadGatewayException(err);
     }
   }
 

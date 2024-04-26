@@ -2,9 +2,8 @@ import { Controller, Req, Post, Body, Query, Res } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 
 import {
-  ApiBadRequestResponse,
+  ApiBadGatewayResponse,
   ApiOperation,
-  ApiProperty,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -21,7 +20,7 @@ import { VerifyPaymentDto } from './dto/verify-payment.dto';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @ApiBadRequestResponse({
+  @ApiBadGatewayResponse({
     type: OrderFailedDto,
   })
   @Post('/create')
