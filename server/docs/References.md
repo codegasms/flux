@@ -37,3 +37,4 @@
 - https://aws.amazon.com/what-is/cross-origin-resource-sharing
 - https://www.moesif.com/blog/technical/cors/Authoritative-Guide-to-CORS-Cross-Origin-Resource-Sharing-for-REST-APIs/
 - https://medium.com/@cybersphere/fetch-api-the-ultimate-guide-to-cors-and-no-cors-cbcef88d371e
+- https://web.dev/articles/cross-origin-resource-sharing
