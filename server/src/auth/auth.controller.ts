@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { ApiCookieAuth, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { SingInDto as LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RegisterResponseDto } from './dto/register-response.dto';
@@ -28,7 +28,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const token = await this.service.login(loginDto.email, loginDto.password);
-    res.cookie('accessToken', token.access_token);
+    res.cookie('accessToken', token.access_token, { sameSite: 'strict' });
     return token;
   }
 
@@ -39,7 +39,9 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<RegisterResponseDto> {
     const token = await this.service.register(registerDto);
-    res.cookie('accessToken', token.access_token);
+    res.cookie('accessToken', token.access_token, {
+      sameSite: 'strict',
+    });
     return token;
   }
 

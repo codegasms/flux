@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<body>
+
+  <div class="m-12">
+    <button id="createOrder" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "> Create Order </button>
+    <button id="rzp-button1" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden">Pay with Razorpay</button>
+
+  </div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    let data = null;
+    document.getElementById('createOrder').addEventListener('click', async function postData(e) {
+      const baseUrl = 'http://localhost:3000/orders/create';
+
+      try {
+        const response = await fetch(baseUrl, {
+          method: 'POST',
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            amount: 200,
+            currency: "INR",
+            receipt: "receipt-hello"
+          })
+
+        });
+        console.log(response.status);
+        if (!response.ok) {
+          console.log(response.status);
+          console.log(response.statusText);
+          alert('Could not create order! Make sure setup is correct')
+        } else {
+          data = await response.json();
+          console.log(data);
+          console.log("end of flow");
+        }
+        // console.log(response.body);
+
+      } catch (err) {
+        console.log('error happened')
+        console.log(err);
+        if (err?.response) {
+          console.log(await err.response.json());
+        }
+
+      }
+      alert(`Order created: id: ${data.order.id}. Click on Pay with Razorpay`);
+      if (data != null) {
+        document.getElementById('rzp-button1').classList.remove('hidden');
+        document.getElementById('createOrder').classList.add('hidden');
+
+      }
+      var options = {
+        key: data.key,
+        amount: data.order.amount,
+        // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        currency: data.order.currency,
+        name: "Flux@Codegasms",
+        description: "Get your orgasms here!",
+        image: "https://i.ibb.co/ZJG2pG2/download-7.jpg",
+        order_id: data.order.id,
+        callback_url: `http://localhost:3000/${data.verifyUrl}?frontendBase=http://localhost:5501&successRedirect=/success&failureRedirect=/failure`,
+
+        "notes": {
+          "custom-data": "data"
+        },
+        "theme": {
+          "color": "#3399cc"
+        }
+      };
+      if (data.prefill) {
+        options['prefill'] = data.prefill;
+      }
+
+      var rzp1 = new Razorpay(options);
+      document.getElementById('rzp-button1').onclick = function(e) {
+        rzp1.open();
+        e.preventDefault();
+      }
+
+
+
+    });
+    console.log(data);
+  </script>
+</body>
+
+</html>
