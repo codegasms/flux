@@ -204,6 +204,16 @@ export class SpacesController {
     );
   }
 
+  @Get('meta/:fileID')
+  @ApiOperation({
+    summary: 'Get metadata about a file or directory identified by its ID',
+  })
+  async getMetaById(@Request() request, @Param('fileID') fileId: string) {
+    return await this.service.findFileById(String(request.permissions._id), {
+      fileID: fileId,
+    });
+  }
+
   @Post('meta/')
   @ApiOperation({
     summary: 'Get metadata about a file or directory in user space',
@@ -213,17 +223,6 @@ export class SpacesController {
     return await this.service.findMeta(
       String(request.permissions._id),
       spacePath,
-    );
-  }
-
-  @Post('shared/')
-  @ApiOperation({
-    summary: 'Get metadata about a file or directory shared with user',
-  })
-  async getShared(@Request() request, @Body() fileId: FileIdentifier) {
-    return await this.service.findShared(
-      String(request.permissions._id),
-      fileId,
     );
   }
 
