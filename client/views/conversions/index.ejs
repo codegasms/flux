@@ -1,10 +1,13 @@
 <%- await include("../layouts/header.ejs", {title: 'Conversions'}) %>
 
-    <%- await include("../layouts/flux-mods/navbar.ejs") %>
-    <%- await include("../components/flux-mods/info-container.ejs",{fileType: "PDF"}) %>
-    <%- await include("../components/flux-mods/searchbox.ejs") %>
-    <div class="py-20 flex items-center justify-around flex-wrap" style='perspective: 1000px;'>
-        <% const items = [
+<%- await include("../layouts/flux-mods/navbar.ejs") %>
+<%- await include("../components/flux-mods/info-container.ejs",{fileType: "PDF"}) %>
+<%- await include("../components/flux-mods/searchbox.ejs") %>
+<div
+  class="py-20 flex items-center justify-around flex-wrap"
+  style="perspective: 1000px"
+>
+  <% const items = [
             { imagepath: "/images/flux-mods/card-img/pdf.png", title: "IMG ↔ PDF", description: "Converter",},
             { imagepath: "/images/flux-mods/card-img/pdf.png", title: "MD ↔ PDF", description: "Converter",},
             { imagepath: "/images/flux-mods/card-img/pdf.png", title: "PDF ↔ JPG", description: "Converter",},
@@ -27,23 +30,21 @@
         ];
         %>
 
-        <% for (const item of items) { %>
-            <%- await include("../components/flux-mods/tool-card.ejs", {item: item}) %>
-        <% } %>
+  <% for (const item of items) { %>
+  <%- await include("../components/flux-mods/tool-card.ejs", {item: item}) %>
+  <% } %>
+</div>
 
-        
-    </div>
+<script src="/js/flux-mods/vanilla-tilt.js"></script>
+<script type="text/javascript">
+  VanillaTilt.init(document.querySelectorAll('.vanilla-tilt-card'), {
+    max: 10,
+    speed: 5000,
+    glare: true,
+    'max-glare': 0.3,
+  });
+</script>
 
-    <script src="/js/flux-mods/vanilla-tilt.js"></script>
-    <script type="text/javascript">
-        VanillaTilt.init(document.querySelectorAll(".vanilla-tilt-card"), {
-            max: 10,
-            speed: 5000,
-            glare: true,
-            'max-glare': 0.3,
-        });
-    </script>
+<%- await include("../layouts/footer.ejs") %>
 
-    <%- await include("../layouts/footer.ejs") %>
-    
-    <%- await include("../layouts/end.ejs") %>
+<%- await include("../layouts/end.ejs") %>

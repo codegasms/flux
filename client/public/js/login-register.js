@@ -7,22 +7,21 @@ const signupButton = document.querySelector('.signup-section header');
 const loginButton = document.querySelector('.login-section header');
 
 loginButton.addEventListener('click', () => {
-    containerLg.classList.add("active");
-    containerSm.classList.add('active');
+  containerLg.classList.add('active');
+  containerSm.classList.add('active');
 });
 
 signupButton.addEventListener('click', () => {
-    containerLg.classList.remove("active");
-    containerSm.classList.remove('active');
+  containerLg.classList.remove('active');
+  containerSm.classList.remove('active');
 });
 
-
 registerBtn.addEventListener('click', () => {
-    containerLg.classList.add("active");
-    containerSm.classList.add('active');
+  containerLg.classList.add('active');
+  containerSm.classList.add('active');
 });
 
 loginBtn.addEventListener('click', () => {
-    containerLg.classList.remove("active");
-    containerSm.classList.remove('active');
+  containerLg.classList.remove('active');
+  containerSm.classList.remove('active');
 });

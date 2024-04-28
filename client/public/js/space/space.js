@@ -87,3 +87,14 @@ const chart = new Chart(ctx, {
     },
   },
 });
+
+let analButton = document.getElementById('toggleAnalytics');
+analButton.addEventListener('click', () => {
+  let anal = document.getElementById('analytics');
+  if (anal.style.display === 'none') {
+    anal.style.display = 'block';
+  } else {
+    anal.style.display = 'none';
+  }
+  // anal.toggleClass('hidden');
+});
