@@ -15,7 +15,7 @@ import { fileStorageRootDir } from './spaces/constants';
 import { ModsModule } from './mods/mods.module';
 import { SpacesModule } from './spaces/spaces.module';
 import { OauthModule } from './oauth/oauth.module';
-import { OrdersModule } from './orders/orders.module';
+import { BillingModule } from './billing/billing.module';
 import { appConfig } from './config';
 
 @Module({
@@ -42,7 +42,7 @@ import { appConfig } from './config';
     UsersModule,
     ModsModule,
     SpacesModule,
-    OrdersModule,
+    BillingModule,
   ],
 })
 export class AppModule {}
