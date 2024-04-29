@@ -10,12 +10,13 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
-import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { UserProfileOutDto } from './dto/user-profile-out.dto';
 import { URoles } from './users.schema';
 import { Roles } from 'src/auth/roles.decorator';
 
 @ApiCookieAuth()
+@ApiBearerAuth()
 @ApiTags('users')
 @Controller('users')
 export class UsersController {

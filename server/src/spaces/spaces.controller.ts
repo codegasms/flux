@@ -20,6 +20,7 @@ import { CreateSpacesQuotaDto } from './dto/create-spaces-quota.dto';
 import { UpdateSpacesQuotaDto } from './dto/update-spaces-quota.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import {
+  ApiBearerAuth,
   ApiConsumes,
   ApiCookieAuth,
   ApiOperation,
@@ -49,6 +50,7 @@ import { UpdateFileAccessResponseDto } from './dto/update-file-access-response.d
 import { AuthorizedRequest } from 'src/auth/entities/authorized-request.entity';
 
 @ApiCookieAuth()
+@ApiBearerAuth()
 @ApiTags('spaces')
 @Controller('spaces')
 export class SpacesController {

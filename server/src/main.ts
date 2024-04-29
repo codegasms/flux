@@ -21,6 +21,7 @@ async function bootstrap() {
     .setDescription('@codegasms')
     .setVersion('1.0')
     .addCookieAuth('accessToken')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

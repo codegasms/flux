@@ -1,7 +1,7 @@
 import { Controller, Get, Body, Patch, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
-import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { UserProfileOutDto } from './dto/user-profile-out.dto';
 import { UserAccountOutDto } from './dto/user-account-out.dto';
 import { StorageSpaceDto } from './dto/storage-space.dto';
@@ -10,6 +10,7 @@ import { URoles } from './users.schema';
 import { AuthorizedRequest } from 'src/auth/entities/authorized-request.entity';
 
 @ApiCookieAuth()
+@ApiBearerAuth()
 @ApiTags('self')
 @Controller('self')
 export class SelfController {

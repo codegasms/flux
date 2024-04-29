@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { SingInDto as LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RegisterResponseDto } from './dto/register-response.dto';
@@ -17,6 +17,7 @@ import { Public } from './public.decorator';
 import { UserPermsOutDto } from 'src/users/dto/user-perms-out.dto';
 import { Response } from 'express';
 import { AuthorizedRequest } from './entities/authorized-request.entity';
+
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -47,6 +48,7 @@ export class AuthController {
   }
 
   @ApiCookieAuth()
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Get('perms')
   async getPerms(@Request() req: AuthorizedRequest): Promise<UserPermsOutDto> {

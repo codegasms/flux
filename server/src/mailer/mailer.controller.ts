@@ -4,9 +4,10 @@ import { MailerService } from './mailer.service';
 import { Roles } from 'src/auth/roles.decorator';
 import { SendMailDto } from './dto/send-mail.dto';
 import { URoles } from 'src/users/users.schema';
-import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiCookieAuth()
+@ApiBearerAuth()
 @ApiTags('mailer')
 @Controller('mailer')
 export class MailerController {
