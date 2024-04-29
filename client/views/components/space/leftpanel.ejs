@@ -1,14 +1,9 @@
-<div
-  class="flex-col justify-start items-center box-content h-[100vh] hidden sm:flex"
->
+<div class="flex-col justify-start items-center box-content h-[100vh] hidden md:flex">
   <div class="p-5">
     <img src="/images/space/logo.png" class="dark:contrast-0" />
   </div>
   <div class="flex flex-col p-8">
-    <button
-      class="btn btn-active btn-ghost my-4"
-      onclick="my_modal_4.showModal()"
-    >
+    <button class="btn btn-active btn-ghost my-4" onclick="my_modal_4.showModal()">
       <div class="text-2xl">+</div>
       <div class="text-lg">New</div>
     </button>
@@ -34,36 +29,52 @@
     </dialog>
     <ul class="menu w-56 flex gap-2">
       <li>
+        <% if(selected == "files"){%>
         <a class="active">
-          <img src="/images/space/folder.png" class="dark:contrast-0" />
-          My Files
-        </a>
+          <% } else { %>
+          <a class="active:scale-[0.95]" href="/space">
+            <% } %>
+            <img src="/images/space/folder.png" class="dark:contrast-0" />
+            My Files
+          </a>
       </li>
       <li>
-        <a class="active:scale-[0.95]">
-          <img src="/images/space/shared.png" class="dark:contrast-0" />
-          Shared Files
-        </a>
+        <% if(selected == "shared"){%>
+        <a class="active">
+          <% } else { %>
+          <a class="active:scale-[0.95]" href="/space/shared">
+            <% } %>
+            <img src="/images/space/shared.png" class="dark:contrast-0" />
+            Shared Files
+          </a>
       </li>
       <li>
-        <a class="active:scale-[0.95]">
-          <img
-            src="/images/space/starred.png"
-            class="dark:contrast-0"
-          />Favorites</a
-        >
+        <% if(selected == "favorites"){%>
+        <a class="active">
+          <% } else { %>
+          <a class="active:scale-[0.95]">
+            <% } %>
+            <img src="/images/space/starred.png" class="dark:contrast-0" />Favorites</a>
       </li>
       <li>
-        <a class="active:scale-[0.95]">
-          <img src="/images/space/bin.png" class="dark:contrast-0" />
-          Recycle Bin
-        </a>
+        <% if(selected == "trash"){%>
+        <a class="active">
+          <% } else { %>
+          <a class="active:scale-[0.95]">
+            <% } %>
+            <img src="/images/space/bin.png" class="dark:contrast-0" />
+            Recycle Bin
+          </a>
       </li>
       <li>
-        <a class="active:scale-[0.95]">
-          <img src="/images/space/settings-cog.png" class="dark:contrast-0" />
-          Settings
-        </a>
+        <% if(selected == "settings"){%>
+        <a class="active">
+          <% } else { %>
+          <a class="active:scale-[0.95]">
+            <% } %>
+            <img src="/images/space/settings-cog.png" class="dark:contrast-0" />
+            Settings
+          </a>
       </li>
     </ul>
   </div>
