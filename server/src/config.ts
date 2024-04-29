@@ -10,6 +10,12 @@ export const appConfig = {
     (x) => lodash.trim(x, '/'),
   ),
   mongoConStr: fromEnv('MONGO_CON_STR'),
+
+  mailer: {
+    senderEmail: fromEnv('MAILER_SENDER_EMAIL'),
+    passwd: fromEnv('MAILER_SENDER_PASS'),
+    host: fromEnv('MAILER_HOST'),
+  },
 };
 
 console.log(appConfig);

@@ -17,6 +17,7 @@ import { SpacesModule } from './spaces/spaces.module';
 import { OauthModule } from './oauth/oauth.module';
 import { BillingModule } from './billing/billing.module';
 import { appConfig } from './config';
+import { MailerModule } from './mailer/mailer.module';
 
 @Module({
   controllers: [AppController],
@@ -43,6 +44,7 @@ import { appConfig } from './config';
     ModsModule,
     SpacesModule,
     BillingModule,
+    MailerModule,
   ],
 })
 export class AppModule {}
