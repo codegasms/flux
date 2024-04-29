@@ -89,12 +89,19 @@ const chart = new Chart(ctx, {
 });
 
 let analButton = document.getElementById('toggleAnalytics');
+let anal = document.getElementById('analytics');
+
+if (
+  localStorage.getItem('analytics') == 'hidden' &&
+  !anal.classList.contains('hidden')
+) {
+  anal.classList.add('hidden');
+}
+
 analButton.addEventListener('click', () => {
-  let anal = document.getElementById('analytics');
-  if (anal.style.display === 'none') {
-    anal.style.display = 'block';
-  } else {
-    anal.style.display = 'none';
-  }
-  // anal.toggleClass('hidden');
+  if (localStorage.getItem('analytics') == 'hidden')
+    localStorage.setItem('analytics', 'visible');
+  else localStorage.setItem('analytics', 'hidden');
+
+  anal.classList.toggle('hidden');
 });
