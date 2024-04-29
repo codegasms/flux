@@ -94,18 +94,19 @@ export class UsersService {
   }
 
   async findProfile(id: string): Promise<UserProfileOutDto | undefined> {
-    return await this.model.findById(id, {
-      projection: { profile: true },
-    });
+    return await this.model.findById(id, { profile: true });
   }
 
   async updateProfile(
     id: string,
     updateUserProfileDto: UpdateUserProfileDto,
   ): Promise<UserProfileOutDto | undefined> {
-    return await this.model.findByIdAndUpdate(id, updateUserProfileDto, {
-      projection: { profile: true },
-    });
+    return await this.model
+      .findByIdAndUpdate(id, updateUserProfileDto, {
+        projection: { profile: true },
+        new: true,
+      })
+      .exec();
     // TODO: project so that only needed things come
     // dto based easy writing of projections figure out
   }
