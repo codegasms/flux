@@ -1,21 +1,12 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Put,
-  Param,
-  Delete,
-  Request,
-} from '@nestjs/common';
+import { Controller, Get, Body, Patch, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { UserProfileOutDto } from './dto/user-profile-out.dto';
 import { UserAccountOutDto } from './dto/user-account-out.dto';
 import { StorageSpaceDto } from './dto/storage-space.dto';
+import { Roles } from 'src/auth/roles.decorator';
+import { URoles } from './users.schema';
 
 @ApiCookieAuth()
 @ApiTags('self')
@@ -33,6 +24,7 @@ export class SelfController {
     return await this.service.findStorageSpace(req.permissions['id']);
   }
 
+  @Roles(URoles.superuser, URoles.admin, URoles.premium)
   @Patch('profile')
   async updateProfile(
     @Request() req,
@@ -47,15 +39,5 @@ export class SelfController {
   @Get('account')
   async getAccount(@Request() req): Promise<UserAccountOutDto> {
     return await this.service.findAccount(req.permissions['id']);
-  }
-
-  @Put('email')
-  async updateEmail(@Request() req) {
-    //   TODO: verify email, and update
-  }
-
-  @Put('username')
-  async updateUsername(@Request() req) {
-    // TODO: update self username
   }
 }
