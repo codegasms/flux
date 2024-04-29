@@ -1,5 +1,5 @@
 export class UserPermsOutDto {
+  _id: string;
   role: string;
-  isSuperUser: boolean;
-  isStaff: boolean;
+  isActive: boolean;
 }

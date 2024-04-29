@@ -148,18 +148,15 @@ export class SpacesService {
       spaceParent: spacePath.spaceParent,
       inTrash: inTrash,
     };
+    const projection = {};
+    if (!showSpaceParent) projection['spaceParent'] = false;
     // when spacePath is root, skip adding fileName to query
     if (isSpaceRoot(spacePath)) {
-      return await this.filesModel
-        .find({ ...query }, { spaceParent: showSpaceParent })
-        .exec();
+      return await this.filesModel.find({ ...query }, projection).exec();
     }
     query['fileName'] = spacePath.fileName;
 
-    const fileObj = await this.filesModel.findOne(
-      { ...query },
-      { spaceParent: showSpaceParent },
-    );
+    const fileObj = await this.filesModel.findOne({ ...query }, projection);
     if (!fileObj)
       throw new NotFoundException('No such file or directory found');
     if (fileObj.isDir) {
@@ -167,7 +164,7 @@ export class SpacesService {
       query['spaceParent'] = joinSpacePath(spacePath);
       // console.log(query);
       const children = await this.filesModel
-        .find({ ...query }, { spaceParent: showSpaceParent })
+        .find({ ...query }, projection)
         .exec();
       console.log(children);
       return [fileObj, ...children];
@@ -175,10 +172,15 @@ export class SpacesService {
     return fileObj;
   }
 
-  async findShared(userId: string, fileId: FileIdentifier) {
+  async findFileById(userId: string, fileId: FileIdentifier) {
     const fileObj = await this.filesModel.findOne({
       _id: fileId.fileID,
-      $or: [{ viewers: userId }, { editors: userId }, { managers: userId }],
+      $or: [
+        { owner: userId },
+        { viewers: userId },
+        { editors: userId },
+        { managers: userId },
+      ],
     });
     if (!fileObj)
       throw new NotFoundException(

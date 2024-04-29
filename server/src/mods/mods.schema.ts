@@ -1,6 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { ModTypes } from './entities/mod-types.enum';
+import { PricingPolicy } from 'src/entities/pricing.entity';
 
 @Schema()
 export class Mods {
@@ -46,8 +47,7 @@ export class ModTokenPlans {
   // no of tokens you receive per month, when you are subscribed to this plan
 
   @Prop({ required: true })
-  pricePerMo: number;
-  // price per mo in INR
+  pricing: PricingPolicy;
 }
 
 export type ModsDocument = HydratedDocument<Mods>;

@@ -22,6 +22,10 @@ _*For quick start, copy the `template.env` file to `.env`. The values given in `
 | RAZORPAY_KEY_ID            | Razorpay Dashboard >> Accounts & Settings >> Website & App Settings >> API Keys                |
 | RAZORPAY_KEY_SECRET        | ^^                                                                                             |
 | CORS_ALLOWED_ORIGINS       | Comma seperated list of allowed origins for CORS                                               |
+| MAILER_SENDER_EMAIL        | Email address for sending emails                                                               |
+| MAILER_SENDER_PASS         | Password for authenticating with SMTP Host                                                     |
+| MAILER_HOST                | SMTP Host supporting TLS which will send our emails                                            |
+
 
 ### Cors and Cookies
 
