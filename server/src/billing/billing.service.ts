@@ -7,8 +7,9 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderCreatedDto } from './dto/order-created.dto';
 import { VerifyPaymentDto } from './dto/verify-payment.dto';
 import { validatePaymentVerification } from 'razorpay/dist/utils/razorpay-utils';
+
 @Injectable()
-export class OrdersService {
+export class BillingService {
   rzpClient: Razorpay;
 
   constructor() {

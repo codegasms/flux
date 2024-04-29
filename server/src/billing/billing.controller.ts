@@ -1,5 +1,5 @@
 import { Controller, Req, Post, Body, Query, Res } from '@nestjs/common';
-import { OrdersService } from './orders.service';
+import { BillingService } from './billing.service';
 
 import {
   ApiBadGatewayResponse,
@@ -15,10 +15,10 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderCreatedDto } from './dto/order-created.dto';
 import { VerifyPaymentDto } from './dto/verify-payment.dto';
 
-@ApiTags('orders')
-@Controller('orders')
-export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+@ApiTags('billing')
+@Controller('billing')
+export class BillingController {
+  constructor(private readonly ordersService: BillingService) {}
 
   @ApiBadGatewayResponse({
     type: OrderFailedDto,
