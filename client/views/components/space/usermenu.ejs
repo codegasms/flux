@@ -32,8 +32,14 @@
   </div>
   <button class="btn btn-sm btn-ghost px-[6px]">
     <img src="/images/space/user.png" class="contrast-0" />
-    Team Codegasms
+    <% var user = "test"; async function fetchData() { const response = await
+    fetch(params.server_url + '/self/account', { method: 'GET', headers: {
+    'accept': 'application/json', 'Authorization': 'Bearer ' +
+    params.cookies.accessToken, }, }).then((res) => res.json()); user =
+    response.fullName; } await fetchData(); %>
+    <%= user %>
   </button>
+
   <button class="btn btn-sm btn-ghost px-[6px]">
     <img src="/images/space/logout.png" class="contrast-0" />
   </button>

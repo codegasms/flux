@@ -1,0 +1,19 @@
+<%- await include("../../layouts/header.ejs", {title: 'FLUX Space'}) %>
+<%- await include("../../components/space/contextmenu.ejs") %>
+<div class="flex w-full">
+  <%- await include("../../components/space/leftpanel.ejs", {selected: "files"})
+  %>
+  <div
+    class="bg-base-200 h-[100vh] flex flex-col justify-start items-center w-full"
+  >
+    <!-- Search bar -->
+    <%- await include("../../components/space/topbar.ejs", {username: params.fileID}) %>
+    <!-- Main page -->
+    <%- await include("../../components/space/main.ejs") %>
+    <!-- Right panel -->
+    <%#- await include("../components/space/rightpanel.ejs") %>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/space/space.js"></script>
+  <%- await include("../../layouts/end.ejs") %>
+</div>
