@@ -3,6 +3,7 @@ import { HydratedDocument } from 'mongoose';
 
 import { FileVisibility } from './entities/file-visibility.enum';
 import { dayInfinity } from './constants';
+import { PricingPolicy } from 'src/entities/pricing.entity';
 
 @Schema()
 export class FileObject {
@@ -84,7 +85,7 @@ export class SpaceQuotas {
   spaceGBs: number;
 
   @Prop({ required: true })
-  pricePerMo: number;
+  pricing: PricingPolicy;
 }
 
 export type FileObjectDocument = HydratedDocument<FileObject>;
