@@ -14,7 +14,7 @@ import { UserProfileOutDto } from './dto/user-profile-out.dto';
 import { UserAccountOutDto } from './dto/user-account-out.dto';
 import { StorageSpaceDto } from './dto/storage-space.dto';
 import { FindOrCreateUserDto } from './dto/find-or-create-user.dto';
-import { assert } from 'console';
+
 // import { UpdateUserAccountDto } from './dto/update-user-account.dto';
 
 @Injectable()
@@ -89,13 +89,13 @@ export class UsersService {
     return await this.model.findOne({ email: email });
   }
 
-  async findPermissions(email: string): Promise<UserPermsOutDto | undefined> {
+  async findPerms(email: string): Promise<UserPermsOutDto | undefined> {
     return await this.model.findOne({ email: email }).select('role isActive');
   }
 
   async findProfile(id: string): Promise<UserProfileOutDto | undefined> {
     return await this.model.findById(id, {
-      projection: 'profile',
+      projection: { profile: true },
     });
   }
 
@@ -104,7 +104,7 @@ export class UsersService {
     updateUserProfileDto: UpdateUserProfileDto,
   ): Promise<UserProfileOutDto | undefined> {
     return await this.model.findByIdAndUpdate(id, updateUserProfileDto, {
-      projection: 'profile',
+      projection: { profile: true },
     });
     // TODO: project so that only needed things come
     // dto based easy writing of projections figure out

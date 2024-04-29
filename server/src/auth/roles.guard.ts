@@ -22,10 +22,10 @@ export class RolesGuard implements CanActivate {
     }
     console.log('required roles: ' + requiredRoles);
     console.log(typeof requiredRoles);
-    const { permissions } = context.switchToHttp().getRequest();
-    console.log('user role: ' + permissions.role);
+    const { perms } = context.switchToHttp().getRequest();
+    console.log('user role: ' + perms.role);
 
-    const allowed = requiredRoles.some((role) => permissions.role === role);
+    const allowed = requiredRoles.some((role) => perms.role === role);
     if (!allowed) {
       throw new ForbiddenException(
         String(`Access to this resource is restricted to: ${requiredRoles}`),
