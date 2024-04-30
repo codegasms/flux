@@ -83,12 +83,18 @@ export class ModsService {
   }
 
   async applyMod(userId: string, modId: string, applyModDto: ApplyModDto) {
-    const file = await this.spacesService.findFileById(userId, {
-      fileId: applyModDto.fileId,
-    });
-    if (file instanceof Array) {
-      throw new Error('Not a file');
-    }
+    // const file = await this.spacesService.findFileById(userId, {
+    //   fileId: applyModDto.fileId,
+    // });
+    // if (file instanceof Array) {
+    //   throw new Error('Not a file');
+    // }
+
+    const file = await this.spacesService.checkReadPerms(
+      userId,
+      applyModDto.fileId,
+      'file',
+    );
 
     const [converter, ext] = converterFromName(modId);
 
