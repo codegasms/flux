@@ -11,13 +11,14 @@ import { AuthGuard } from './auth/auth.guard';
 import { RolesGuard } from './auth/roles.guard';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { fileStorageRootDir } from './spaces/constants';
 import { ModsModule } from './mods/mods.module';
 import { SpacesModule } from './spaces/spaces.module';
 import { OauthModule } from './oauth/oauth.module';
 import { BillingModule } from './billing/billing.module';
 import { appConfig } from './config';
 import { MailerModule } from './mailer/mailer.module';
+import { spacesConfig } from './spaces/config';
+import path from 'node:path';
 
 @Module({
   controllers: [AppController],
@@ -35,8 +36,8 @@ import { MailerModule } from './mailer/mailer.module';
   imports: [
     MongooseModule.forRoot(appConfig.mongoConStr),
     ServeStaticModule.forRoot({
-      rootPath: fileStorageRootDir,
-      serveRoot: '/files',
+      rootPath: path.resolve(spacesConfig.fileStorageRootDir, 'public'),
+      serveRoot: '/assets',
     }),
     AuthModule,
     OauthModule,
