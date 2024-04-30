@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { lstat, mkdtemp } from 'node:fs/promises';
+import { mkdtemp } from 'node:fs/promises';
 import path from 'node:path';
 
 /**
@@ -7,15 +7,6 @@ import path from 'node:path';
  */
 export async function markdownToPdf(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
@@ -39,15 +30,6 @@ export async function markdownToPdf(sourceFile: string, destinationFile: string,
  */
 export async function textToPdf(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
@@ -71,15 +53,6 @@ export async function textToPdf(sourceFile: string, destinationFile: string, _ar
  */
 export async function imageToPdf(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const proc = spawn(
             'convert',
             [sourceFile, '-quality', '100', destinationFile],
@@ -100,15 +73,6 @@ export async function imageToPdf(sourceFile: string, destinationFile: string, _a
  */
 export async function pdfToImage(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const tempDir = await mkdtemp('flux_mods_');
 
         const proc1 = spawn(
@@ -144,15 +108,6 @@ export async function pdfToImage(sourceFile: string, destinationFile: string, _a
  */
 export async function docToPdf(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
@@ -189,15 +144,6 @@ export async function docToPdf(sourceFile: string, destinationFile: string, _arg
  */
 export async function pdfToDoc(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
@@ -234,15 +180,6 @@ export async function pdfToDoc(sourceFile: string, destinationFile: string, _arg
  */
 export async function pptToPdf(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
@@ -279,15 +216,6 @@ export async function pptToPdf(sourceFile: string, destinationFile: string, _arg
  */
 export async function pdfToPpt(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
@@ -324,15 +252,6 @@ export async function pdfToPpt(sourceFile: string, destinationFile: string, _arg
  */
 export async function xlsToPdf(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
@@ -369,15 +288,6 @@ export async function xlsToPdf(sourceFile: string, destinationFile: string, _arg
  */
 export async function xlsToCsv(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
@@ -414,15 +324,6 @@ export async function xlsToCsv(sourceFile: string, destinationFile: string, _arg
  */
 export async function csvToXls(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
@@ -459,15 +360,6 @@ export async function csvToXls(sourceFile: string, destinationFile: string, _arg
  */
 export async function xlsToXml(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
@@ -505,15 +397,6 @@ export async function xlsToXml(sourceFile: string, destinationFile: string, _arg
  */
 export async function xmlToXls(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
