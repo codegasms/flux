@@ -30,7 +30,6 @@ import {
 import { Response } from 'express';
 
 import { createReadStream } from 'fs';
-import { join } from 'path';
 import { FileUploadDto } from './dto/file-upload.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { URoles } from 'src/users/users.schema';
@@ -42,13 +41,11 @@ import { splitSpacePath, trimSlashes } from 'src/utils/space-paths';
 import { SpacePath } from './dto/space-path.dto';
 import { CopyFileDto } from './dto/copy-file.dto';
 import { MoveFileDto } from './dto/move-file.dto';
-import { FileIdentifier } from './dto/file-id.dto';
 import { UsersService } from 'src/users/users.service';
 import { RevokeFileAccessDto } from './dto/revoke-file-access.dto';
 import { UpdateFileAccessResponseDto } from './dto/update-file-access-response.dto';
 import { AuthorizedRequest } from 'src/auth/entities/authorized-request.entity';
 import { spacesConfig } from './config';
-import fs from 'node:fs/promises';
 
 @ApiCookieAuth()
 @ApiBearerAuth()
