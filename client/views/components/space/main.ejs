@@ -28,75 +28,81 @@
       </div>
       <!-- Folders -->
       <div class="flex flex-wrap mt-4 gap-x-4">
-        <button class="btn btn-ghost btn-xs sm:btn-sm md:btn-md lg:btn-lg border-2 border-base-200 flex gap-4 my-2">
+        <%
+          var folderData = [];
+          async function fetchData1() { 
+            const response = await fetch(params.server_url + '/spaces/meta', { 
+              method: 'POST', 
+              headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + params.cookies.accessToken, 
+            },
+            body: JSON.stringify({spaceParent: path, fileName:""}),
+           })
+            .then((res) => res.json());
+            // console.log(response);
+            folderData = response;
+          }
+          async function fetchData2() {
+            const response = await fetch(params.server_url + '/spaces/meta/' + path, {
+              method: 'GET',
+              headers: {
+              'accept': 'application/json',
+              'Authorization': 'Bearer ' + params.cookies.accessToken,
+              },
+            })
+            .then((res) => res.json());
+            // console.log(response.slice(1));
+            folderData = response.slice(1);
+          }
+          if(path === "/"){
+            await fetchData1();
+          } else {
+            await fetchData2();
+          }
+
+          function formatBytes(bytes, decimals = 2) {
+          if (bytes === 0) return '0 Bytes';
+
+          const k = 1024;
+          const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+          const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+          return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
+          }
+
+        folderData.forEach(folder => { 
+            if(folder.isDir){ %>
+        <button class="btn btn-ghost btn-xs sm:btn-sm md:btn-md lg:btn-lg border-2 border-base-200 flex gap-4 my-2" onclick="window.location.href='/space/<%= folder._id %>'">
           <img src="/images/space/folder_closed.png" />
-          Folder 1
+          <%= folder.fileName %>
         </button>
-        <button class="btn btn-ghost btn-xs sm:btn-sm md:btn-md lg:btn-lg border-2 border-base-200 flex gap-4 my-2">
-          <img src="/images/space/folder_closed.png" />
-          Folder 2
-        </button>
-        <button class="btn btn-ghost btn-xs sm:btn-sm md:btn-md lg:btn-lg border-2 border-base-200 flex gap-4 my-2">
-          <img src="/images/space/folder_closed.png" />
-          Folder 3
-        </button>
-        <button class="btn btn-ghost btn-xs sm:btn-sm md:btn-md lg:btn-lg border-2 border-base-200 flex gap-4 my-2">
-          <img src="/images/space/folder_closed.png" />
-          Folder 4
-        </button>
-        <button class="btn btn-ghost btn-xs sm:btn-sm md:btn-md lg:btn-lg border-2 border-base-200 flex gap-4 my-2">
-          <img src="/images/space/folder_closed.png" />
-          Folder 5
-        </button>
-        <button class="btn btn-ghost btn-xs sm:btn-sm md:btn-md lg:btn-lg border-2 border-base-200 flex gap-4 my-2">
-          <img src="/images/space/folder_closed.png" />
-          Folder 6
-        </button>
+        <% }}); %>
+
       </div>
+      <!-- Files -->
       <div class="mt-2">
         <table class="table">
           <tr>
             <th>File Name</th>
             <th>Access</th>
-            <th>Date Modified</th>
+            <th>Date Created</th>
             <th>Folder</th>
             <th>Size</th>
           </tr>
+          <% folderData.forEach( entry => { %>
+          <% if(!entry.isDir){ %>
           <tr>
-            <td>image0302.jpeg</td>
-            <td>Only you</td>
-            <td>Today</td>
-            <td>Folder 01</td>
-            <td>3.1 mb</td>
+            <td><a class="download" href="#" id="<%= entry._id %>"><%= entry.fileName %></a></td>
+            <td><%= entry.visibility %></td>
+            <td><%= entry.created.slice(0, 10) %></td>
+            <td><%= entry.spaceParent %></td>
+            <td><%= formatBytes(entry.size)%> </td>
           </tr>
-          <tr>
-            <td>random.mp4</td>
-            <td>Only you</td>
-            <td>Today</td>
-            <td>Folder 03</td>
-            <td>323 mb</td>
-          </tr>
-          <tr>
-            <td>malware.exe</td>
-            <td>Only you</td>
-            <td>Yesterday</td>
-            <td>Folder 07</td>
-            <td>24.8 mb</td>
-          </tr>
-          <tr>
-            <td>confidential.pdf</td>
-            <td>Shared With You</td>
-            <td>Yesterday</td>
-            <td>Folder 04</td>
-            <td>12.6 mb</td>
-          </tr>
-          <tr>
-            <td>image3101.jpeg</td>
-            <td>Only you</td>
-            <td>08th March, 2024</td>
-            <td>Folder 01</td>
-            <td>3.2 mb</td>
-          </tr>
+          <% } %>
+          <% }); %>
         </table>
       </div>
     </div>

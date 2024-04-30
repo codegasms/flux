@@ -27,13 +27,11 @@
 <%# } else { %>
 <div class="flex w-full">
   <%- await include("../components/space/leftpanel.ejs", {selected: "files"}) %>
-  <div
-    class="bg-base-200 h-[100vh] flex flex-col justify-start items-center w-full"
-  >
+  <div class="bg-base-200 h-[100vh] flex flex-col justify-start items-center w-full">
     <!-- Search bar -->
     <%- await include("../components/space/topbar.ejs", {username:"test"}) %>
     <!-- Main page -->
-    <%- await include("../components/space/main.ejs") %>
+    <%- await include("../components/space/main.ejs", {path: "/"}) %>
     <!-- Right panel -->
     <%#- await include("../components/space/rightpanel.ejs") %>
   </div>
