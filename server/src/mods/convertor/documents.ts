@@ -277,7 +277,7 @@ export async function pptToPdf(sourceFile: string, destinationFile: string, _arg
 /**
  * Convert a PDF file into a ppt.
  */
-export async function pdfTpPpt(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
+export async function pdfToPpt(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
             const stat = await lstat(sourceFile);
