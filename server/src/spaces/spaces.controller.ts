@@ -353,27 +353,27 @@ export class SpacesController {
   @Roles(URoles.superuser, URoles.admin)
   @Post('/quotas/:quotaID')
   @ApiOperation({ summary: 'Create a new spaces quota' })
-  createSpacesQuota(
+  async createSpacesQuota(
     @Param('quotaID') quotaID: string,
     @Body() createSpacesQuotaDto: CreateSpacesQuotaDto,
   ) {
-    return this.service.createSpacesQuota(quotaID, createSpacesQuotaDto);
+    return await this.service.createSpacesQuota(quotaID, createSpacesQuotaDto);
   }
 
   @Roles(URoles.superuser, URoles.admin)
   @Patch('/quotas/:quotaID')
   @ApiOperation({ summary: 'Update and existing spaces quota' })
-  updateSpacesQuota(
+  async updateSpacesQuota(
     @Param('quotaID') quotaID: string,
     @Body() updateSpacesQuotaDto: UpdateSpacesQuotaDto,
   ) {
-    return this.service.updateSpacesQuota(quotaID, updateSpacesQuotaDto);
+    return await this.service.updateSpacesQuota(quotaID, updateSpacesQuotaDto);
   }
 
   @Roles(URoles.superuser, URoles.admin)
   @Delete('/quotas/:quotaID')
   @ApiOperation({ summary: 'Remove an existing spaces quota' })
-  removeSpacesQuota(@Param('quotaID') quotaID: string) {
-    return this.service.removeSpacesQuota(quotaID);
+  async removeSpacesQuota(@Param('quotaID') quotaID: string) {
+    return await this.service.removeSpacesQuota(quotaID);
   }
 }
