@@ -208,6 +208,24 @@ export class SpacesController {
     );
   }
 
+  @Post('get-id/')
+  @ApiOperation({
+    summary: 'Get the file id of a file in user space, from its space path',
+  })
+  async getIdBySpacePath(
+    @Req() req: AuthorizedRequest,
+    @Body() spacePath: SpacePath,
+  ) {
+    spacePath.spaceParent = trimSlashes(spacePath.spaceParent);
+    return await this.service.findIdBySpacePath(
+      String(req.perms._id),
+      spacePath,
+    );
+    // return await this.service.findFileById(String(req.perms._id), {
+    //   fileId: fileId,
+    // });
+  }
+
   @Get('meta/:fileId')
   @ApiOperation({
     summary: 'Get metadata about a file or directory identified by its ID',

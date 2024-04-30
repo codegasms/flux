@@ -139,6 +139,20 @@ export class SpacesService {
     return await createdFileObject.save();
   }
 
+  async findIdBySpacePath(ownerId: string, spacePath: SpacePath) {
+    const fileId = await this.filesModel.findOne(
+      {
+        owner: ownerId,
+        spaceParent: spacePath.spaceParent,
+        fileName: spacePath.fileName,
+        inTrash: false,
+      },
+      { _id: true },
+    );
+    if (!fileId)
+      throw new NotFoundException('No file found for requested space path');
+  }
+
   async findMeta(
     ownerId: string,
     spacePath: SpacePath,
