@@ -1,8 +1,14 @@
 <%- await include("../../layouts/header.ejs", {title: 'FLUX Mods Pricing' }) %>
 
 <% 
+const response = await fetch('http://localhost:3000/mods/token-plans', {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+  },
+});
 
-const plans = [
+const defaultPlans = [
   {
     planID: 'plan1',
     title: 'Basic',
@@ -60,7 +66,12 @@ function updateFeaturesArray(plans) {
   });
 }
 
+const responsePlans = await response.json();
+const plans = responsePlans || defaultPlans;
+// const plans = defaultPlans;
+
 const updatedPlans = updateFeaturesArray(plans);
+// console.log(updatedPlans);
 
 // Calculate average discounts
 const yearlyDiscounts = updatedPlans.reduce((total, plan) => total + plan.pricing.discounts.yearly, 0);
@@ -103,5 +114,5 @@ const averageHalfYearlyDiscount = parseInt(halfYearlyDiscounts / updatedPlans.le
   </div>
   </div>
 </section>
-<script src="/js/flux-mods/pricing.js"></script>
+<script type="module" src="/js/flux-mods/pricing.js"></script>
 <%- await include("../../layouts/end.ejs") %>
