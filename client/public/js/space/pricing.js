@@ -4,7 +4,7 @@ const plans = [
     icon: 'https://example.com/icon1.png',
     title: 'Basic',
     tokenCountPerMo: 100,
-    features: `Access all features\n5 watchlists included\nOptimize hashtags\n5 exclusive widgets`,
+    features: `Access all features\n5 watchlists included\nChat support\nOptimize hashtags\n5 exclusive widgets`,
     pricing: {
       pricePerMo: 9.99,
       discounts: {
