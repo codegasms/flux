@@ -1,0 +1,101 @@
+<div class="flex-col justify-start items-center box-content h-[100vh] hidden md:flex">
+  <div class="p-5">
+    <img src="/images/space/logo.png" class="dark:contrast-0" />
+  </div>
+  <div class="flex flex-col p-8">
+    <button class="btn btn-active btn-ghost my-4" onclick="my_modal_4.showModal()">
+      <div class="text-2xl">+</div>
+      <div class="text-lg">New</div>
+    </button>
+    <dialog id="my_modal_4" class="modal">
+      <div class="modal-box w-11/12 max-w-5xl">
+        <h3 class="font-bold text-lg">Upload Files</h3>
+        <p class="py-4">Please upload your files!</p>
+        <%- await include('../upload-file.ejs', {props: {
+                title: 'Upload file',
+                description: 'Separate one page or a whole set for easy conversion into independent PDF files.',
+                description: 'Upload one file at a time or multiple files at once.',
+                label: 'Select a file',
+                sublabel: '…or drag a file here',
+                accept: '.pdf, application/pdf, application/x-pdf application/x-bzpdf application/x-gzpdf',
+                multiple: true,
+              }});  %>
+        <div class="modal-action">
+          <form method="dialog">
+            <button class="btn">Close</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+    <ul class="menu w-56 flex gap-2">
+      <li>
+        <% if(selected == "files"){%>
+        <a class="active">
+          <% } else { %>
+          <a class="active:scale-[0.95]" href="/space">
+            <% } %>
+            <img src="/images/space/folder.png" class="dark:contrast-0" />
+            My Files
+          </a>
+      </li>
+      <li>
+        <% if(selected == "shared"){%>
+        <a class="active">
+          <% } else { %>
+          <a class="active:scale-[0.95]" href="/space/shared">
+            <% } %>
+            <img src="/images/space/shared.png" class="dark:contrast-0" />
+            Shared Files
+          </a>
+      </li>
+      <li>
+        <% if(selected == "favorites"){%>
+        <a class="active">
+          <% } else { %>
+          <a class="active:scale-[0.95]">
+            <% } %>
+            <img src="/images/space/starred.png" class="dark:contrast-0" />Favorites</a>
+      </li>
+      <li>
+        <% if(selected == "trash"){%>
+        <a class="active">
+          <% } else { %>
+          <a class="active:scale-[0.95]">
+            <% } %>
+            <img src="/images/space/bin.png" class="dark:contrast-0" />
+            Recycle Bin
+          </a>
+      </li>
+      <li>
+        <% if(selected == "settings"){%>
+        <a class="active">
+          <% } else { %>
+          <a class="active:scale-[0.95]">
+            <% } %>
+            <img src="/images/space/settings-cog.png" class="dark:contrast-0" />
+            Settings
+          </a>
+      </li>
+    </ul>
+  </div>
+  <div class="w-3/4">
+    <div class="divider divider-neutral my-0"></div>
+  </div>
+  <div class="flex justify-start flex-col">
+    <div class="text-xl text-center my-2">Quick Access</div>
+    <ul class="menu w-56 flex gap-2">
+      <li>
+        <a class="active:scale-[0.95]">
+          <img src="/images/space/viewrecents.png" class="dark:contrast-0" />
+          Viewed Recently
+        </a>
+      </li>
+      <li>
+        <a class="active:scale-[0.95]">
+          <img src="/images/space/starred.png" class="dark:contrast-0" />
+          Favorites
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

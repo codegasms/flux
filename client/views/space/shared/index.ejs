@@ -1,0 +1,21 @@
+<%- await include("../../layouts/header.ejs", {title: 'FLUX Space'}) %>
+<%- await include("../../components/space/contextmenu.ejs") %>
+<div class="flex w-full">
+  <%- await include("../../components/space/leftpanel.ejs", {selected: 'shared'}) %>
+  <div class="bg-base-200 h-[100vh] flex flex-col justify-start items-center w-full">
+    <!-- Search bar -->
+    <%- await include("../../components/space/topbar.ejs", {username: params.fileID}) %>
+    <!-- Main page -->
+    <%# await include("../../components/space/main.ejs") %>
+    <div class="w-full h-full flex justify-center items-center text-[32px] text-center">
+      Sharing feature is </br>
+      Coming soon...!
+    </div>
+    <!-- Right panel -->
+    <%#- await include("../components/space/rightpanel.ejs") %>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/space/space.js"></script>
+</div>
+
+<%- await include("../../layouts/end.ejs") %>

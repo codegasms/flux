@@ -3,11 +3,14 @@ import fs from 'fs';
 import path from 'node:path';
 import ejs from 'ejs';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 const server = express();
+
+server.use(cookieParser());
 
 server.set('view engine', 'ejs');
 
@@ -53,7 +56,11 @@ function dynamicRoutes(directory, route, routeList = []) {
 function renderEjsAt(filePath, route) {
   server.get(route, (req, res) => {
     return res.render(filePath.slice('views/'.length, filePath.length - 4), {
-      params: req.params,
+      params: {
+        ...req.params,
+        server_url: process.env.SERVER,
+        cookies: req.cookies,
+      },
     });
   });
 }
