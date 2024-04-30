@@ -108,38 +108,34 @@ analButton.addEventListener('click', () => {
   anal.classList.toggle('hidden');
 });
 
-let downloadButtons = document.querySelectorAll('.download');
-downloadButtons = Array.from(downloadButtons);
-downloadButtons.forEach((button) => {
-  button.addEventListener('click', async (e) => {
-    e.preventDefault();
-    let id = e.target.id;
-    await fetch(SERVER_URL + '/spaces/stream', {
-      method: 'POST',
-      credentials: 'include',
-      body: JSON.stringify({
-        fileID: id,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        accept: '*/*',
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          response.blob().then((blob) => {
-            let url = window.URL.createObjectURL(blob);
-            let a = document.createElement('a');
-            a.href = url;
-            a.download = id;
-            a.click();
-          });
-        } else {
-          console.error('Error:', response.status);
-        }
-      })
-      .catch((error) => {
-        console.error('Network Error:', error);
-      });
-  });
-});
+// let downloadButtons = document.querySelectorAll('.download');
+// downloadButtons = Array.from(downloadButtons);
+// downloadButtons.forEach((button) => {
+//   button.addEventListener('click', async (e) => {
+//     e.preventDefault();
+//     let id = e.target.id;
+//     await fetch(SERVER_URL + '/spaces/stream/' + id, {
+//       method: 'GET',
+//       credentials: 'include',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     })
+//       .then((response) => {
+//         if (response.ok) {
+//           response.blob().then((blob) => {
+//             let url = window.URL.createObjectURL(blob);
+//             let a = document.createElement('a');
+//             a.href = url;
+//             a.download = id;
+//             a.click();
+//           });
+//         } else {
+//           console.error('Error:', response.status);
+//         }
+//       })
+//       .catch((error) => {
+//         console.error('Network Error:', error);
+//       });
+//   });
+// });
