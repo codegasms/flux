@@ -1,4 +1,11 @@
-const plans = [
+const response = await fetch('http://localhost:3000/spaces/quotas', {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+  },
+});
+
+const defaultPlans = [
   {
     quotaID: 'quota1',
     title: 'Basic',
@@ -18,7 +25,7 @@ const plans = [
     spaceGBs: 200,
     summary: `Access all features\nUnlimited watchlists\nChat support\nOptimize hashtags\n10+ exclusive pro widgets`,
     pricing: {
-      pricePerMo: 999.99,
+      pricePerMo: 159.99,
       discounts: {
         halfYearly: 10,
         yearly: 20,
@@ -26,12 +33,12 @@ const plans = [
     },
   },
   {
-    quotaID: 'quota2',
+    quotaID: 'quota3',
     title: 'ProPlus',
     spaceGBs: 300,
     summary: `Access all features\nUnlimited watchlists\nChat support\nOptimize hashtags\n10+ exclusive pro widgets`,
     pricing: {
-      pricePerMo: 2999.99,
+      pricePerMo: 259.99,
       discounts: {
         halfYearly: 15,
         yearly: 25,
@@ -39,6 +46,9 @@ const plans = [
     },
   },
 ];
+const responsePlans = await response.json();
+// console.log(responsePlans);
+const plans = responsePlans || defaultPlans;
 
 function convertFeaturesStringToArray(featuresString) {
   return featuresString
@@ -58,7 +68,7 @@ function updateFeaturesArray(plans) {
 
 const updatedPlans = updateFeaturesArray(plans);
 
-document.addEventListener('DOMContentLoaded', () => {
+window.onload = () => {
   // Get references to the buttons and card elements
   const monthlyButton = document.querySelector('#monthlyButton');
   const biannuallyButton = document.querySelector('#biannuallyButton');
@@ -70,19 +80,20 @@ document.addEventListener('DOMContentLoaded', () => {
   annuallyButton.addEventListener('click', () => updatePrices('annually'));
 
   function updatePrices(subscriptionType) {
+    console.log('updatePrices');
     // Loop over the plans
     updatedPlans.forEach((plan) => {
-      const quotaID = plan.title;
-      const priceElement = document.querySelector(`#${quotaID}Price`);
-      const discountElement = document.querySelector(`#${quotaID}DiscPrice`);
+      const planID = plan.title;
+      const priceElement = document.querySelector(`#${planID}Price`);
+      const discountElement = document.querySelector(`#${planID}DiscPrice`);
 
       // Calculate prices based on subscription type
       const price = calculatePrice(plan, subscriptionType);
       const discountedPrice = calculateDiscountedPrice(plan, subscriptionType);
 
       // Update the price elements
-      priceElement.textContent = `$${price.toFixed(2)}`;
-      discountElement.textContent = `$${discountedPrice.toFixed(2)}`;
+      priceElement.textContent = `₹${price.toFixed(2)}`;
+      discountElement.textContent = `₹${discountedPrice.toFixed(2)}`;
     });
 
     // Highlight the selected button
@@ -133,4 +144,4 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-});
+};

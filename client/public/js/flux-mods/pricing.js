@@ -1,4 +1,11 @@
-const plans = [
+const response = await fetch('http://localhost:3000/mods/token-plans', {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+  },
+});
+
+const defaultPlans = [
   {
     planID: 'plan1',
     title: 'Basic',
@@ -56,9 +63,14 @@ function updateFeaturesArray(plans) {
   });
 }
 
-const updatedPlans = updateFeaturesArray(plans);
+const responsePlans = await response.json();
+const plans = responsePlans || defaultPlans;
+// const plans = defaultPlans;
 
-document.addEventListener('DOMContentLoaded', () => {
+const updatedPlans = updateFeaturesArray(plans);
+// console.log(updatedPlans);
+
+window.onload = () => {
   // Get references to the buttons and card elements
   const monthlyButton = document.querySelector('#monthlyButton');
   const biannuallyButton = document.querySelector('#biannuallyButton');
@@ -133,4 +145,4 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-});
+};
