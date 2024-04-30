@@ -20,5 +20,6 @@ import { UsersModule } from 'src/users/users.module';
   ],
   controllers: [SpacesController],
   providers: [SpacesService],
+  exports: [SpacesService],
 })
 export class SpacesModule {}
