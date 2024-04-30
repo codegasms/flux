@@ -78,6 +78,7 @@ export class SpacesService {
         owner: ownerID,
         spaceParent: spacePath.spaceParent,
         fileName: spacePath.fileName,
+        inTrash: false,
       });
     }
 
