@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { lstat, mkdtemp } from 'node:fs/promises';
+import { mkdtempSync } from 'node:fs';
 import path from 'node:path';
 
 /**
@@ -7,15 +7,6 @@ import path from 'node:path';
  */
 export async function imageToImage(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const proc = spawn(
             'convert',
             [sourceFile, '-quality', '100', destinationFile],
@@ -36,20 +27,11 @@ export async function imageToImage(sourceFile: string, destinationFile: string, 
  */
 export async function gifToPng(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
-        const tempDir = await mkdtemp('flux_mods_');
+        const tempDir = mkdtempSync('/tmp/flux_mods_');
 
         const proc1 = spawn(
             'convert',
-            [sourceFile, '-quality', '100', `${tempDir}/image.png`],
+            [sourceFile, '-quality', '100', path.join(tempDir, 'image.png')],
             { stdio: 'pipe' }
         );
 
@@ -80,20 +62,11 @@ export async function gifToPng(sourceFile: string, destinationFile: string, _arg
  */
 export async function pngToGif(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
-        const tempDir = await mkdtemp('flux_mods_');
+        const tempDir = mkdtempSync('flux_mods_');
 
         const proc1 = spawn(
             'unzip',
-            [destinationFile, '-d', tempDir],
+            [sourceFile, '-d', tempDir],
             { stdio: 'pipe' }
         );
 
@@ -124,15 +97,6 @@ export async function pngToGif(sourceFile: string, destinationFile: string, _arg
  */
 export async function showMetadata(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const proc = spawn(
             'exiftool',
             [sourceFile, '>', destinationFile],

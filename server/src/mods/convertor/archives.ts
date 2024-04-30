@@ -1,5 +1,4 @@
 import { spawn } from 'node:child_process';
-import { lstat, mkdtemp } from 'node:fs/promises';
 import path from 'node:path';
 
 /**
@@ -7,17 +6,6 @@ import path from 'node:path';
  */
 export async function createTar(sourceFile: string, destinationFile: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isDirectory) {
-                reject(new Error(`Directory '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
-        const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
         const proc = spawn(
@@ -39,16 +27,6 @@ export async function createTar(sourceFile: string, destinationFile: string): Pr
  */
 export async function extractTar(sourceFile: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isDirectory) {
-                reject(new Error(`Directory '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const proc = spawn(
             'tar',
             ['-xvf', sourceFile]
@@ -68,17 +46,6 @@ export async function extractTar(sourceFile: string): Promise<void> {
  */
 export async function createGzip(sourceFile: string, destinationFile: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isDirectory) {
-                reject(new Error(`Directory '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
-        const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
         const proc = spawn(
@@ -100,16 +67,6 @@ export async function createGzip(sourceFile: string, destinationFile: string): P
  */
 export async function extractGzip(sourceFile: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isDirectory) {
-                reject(new Error(`Directory '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const proc = spawn(
             'tar',
             ['-xzvf', sourceFile]
@@ -129,17 +86,6 @@ export async function extractGzip(sourceFile: string): Promise<void> {
  */
 export async function createBzip2(sourceFile: string, destinationFile: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isDirectory) {
-                reject(new Error(`Directory '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
-        const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
         const proc = spawn(
@@ -161,16 +107,6 @@ export async function createBzip2(sourceFile: string, destinationFile: string): 
  */
 export async function extractBzip2(sourceFile: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isDirectory) {
-                reject(new Error(`Directory '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const proc = spawn(
             'tar',
             ['-xjvf', sourceFile]
@@ -192,17 +128,6 @@ export async function extractBzip2(sourceFile: string): Promise<void> {
  */
 export async function createRar(sourceFile: string, destinationFile: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isDirectory) {
-                reject(new Error(`Directory '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
-        const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
         const proc = spawn(
@@ -228,15 +153,6 @@ export async function createRar(sourceFile: string, destinationFile: string): Pr
  */
 export async function extractRar(sourceFile: string, destinationFile: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
         const proc = spawn(
             'unrar',
             ['x', sourceFile, destinationFile]
@@ -256,16 +172,6 @@ export async function extractRar(sourceFile: string, destinationFile: string): P
  */
 export async function createZip(sourceFile: string, destinationFile: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
-        const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
         const proc = spawn(
@@ -287,16 +193,6 @@ export async function createZip(sourceFile: string, destinationFile: string): Pr
  */
 export async function extractZip(sourceFile: string, destinationFile: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        try {
-            const stat = await lstat(sourceFile);
-            if (!stat.isFile) {
-                reject(new Error(`File '${sourceFile}' does not exist`));
-            }
-        } catch (e) {
-            reject(e);
-        }
-
-        const cwd = path.dirname(sourceFile);
         destinationFile = path.resolve(path.normalize(destinationFile));
 
         const proc = spawn(
