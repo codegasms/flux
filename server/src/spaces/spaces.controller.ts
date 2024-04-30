@@ -276,7 +276,7 @@ export class SpacesController {
     const fileObj = await this.service.checkReadPerms(
       String(req.perms._id),
       fileId,
-      false,
+      'file',
     );
     console.log(fileObj);
 
@@ -306,7 +306,7 @@ export class SpacesController {
     const fileObj = await this.service.checkReadPerms(
       String(req.perms._id),
       fileId,
-      false,
+      'file',
     );
     console.log(fileObj);
     if (!fileObj) throw new UnauthorizedException();
