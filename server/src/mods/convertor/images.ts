@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process';
-import { mkdtemp } from 'node:fs/promises';
+import { mkdtempSync } from 'node:fs';
+import path from 'node:path';
 
 /**
  * Convert a Image format into another Image format.
@@ -26,11 +27,11 @@ export async function imageToImage(sourceFile: string, destinationFile: string, 
  */
 export async function gifToPng(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        const tempDir = await mkdtemp('flux_mods_');
+        const tempDir = mkdtempSync('/tmp/flux_mods_');
 
         const proc1 = spawn(
             'convert',
-            [sourceFile, '-quality', '100', `${tempDir}/image.png`],
+            [sourceFile, '-quality', '100', path.join(tempDir, 'image.png')],
             { stdio: 'pipe' }
         );
 
@@ -61,11 +62,11 @@ export async function gifToPng(sourceFile: string, destinationFile: string, _arg
  */
 export async function pngToGif(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        const tempDir = await mkdtemp('flux_mods_');
+        const tempDir = mkdtempSync('flux_mods_');
 
         const proc1 = spawn(
             'unzip',
-            [destinationFile, '-d', tempDir],
+            [sourceFile, '-d', tempDir],
             { stdio: 'pipe' }
         );
 

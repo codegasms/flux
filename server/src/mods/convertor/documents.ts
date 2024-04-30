@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { mkdtemp } from 'node:fs/promises';
+import { mkdtempSync } from 'node:fs';
 import path from 'node:path';
 
 /**
@@ -73,7 +73,7 @@ export async function imageToPdf(sourceFile: string, destinationFile: string, _a
  */
 export async function pdfToImage(sourceFile: string, destinationFile: string, _args?: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        const tempDir = await mkdtemp('flux_mods_');
+        const tempDir = mkdtempSync('flux_mods_');
 
         const proc1 = spawn(
             'convert',
