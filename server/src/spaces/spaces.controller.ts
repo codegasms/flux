@@ -290,7 +290,6 @@ export class SpacesController {
     console.log(fileObj.mimeType);
     res.set({
       'Content-Disposition': `inline; filename="${fileObj.fileName}"`,
-      'Content-Type': fileObj.mimeType,
     });
     return new StreamableFile(file);
   }
