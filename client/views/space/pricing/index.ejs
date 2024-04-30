@@ -1,8 +1,14 @@
 <%- await include("../../layouts/header.ejs", {title: 'FLUX Spaces Pricing' }) %>
 
 <% 
+const response = await fetch('http://localhost:3000/spaces/quotas', {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+  },
+});
 
-const plans = [
+const defaultPlans = [
   {
     quotaID: 'quota1',
     title: 'Basic',
@@ -22,7 +28,7 @@ const plans = [
     spaceGBs: 200,
     summary: `Access all features\nUnlimited watchlists\nChat support\nOptimize hashtags\n10+ exclusive pro widgets`,
     pricing: {
-      pricePerMo: 999.99,
+      pricePerMo: 159.99,
       discounts: {
         halfYearly: 10,
         yearly: 20,
@@ -35,7 +41,7 @@ const plans = [
     spaceGBs: 300,
     summary: `Access all features\nUnlimited watchlists\nChat support\nOptimize hashtags\n10+ exclusive pro widgets`,
     pricing: {
-      pricePerMo: 2999.99,
+      pricePerMo: 259.99,
       discounts: {
         halfYearly: 15,
         yearly: 25,
@@ -43,6 +49,9 @@ const plans = [
     },
   },
 ];
+const responsePlans = await response.json();
+// console.log(responsePlans);
+const plans = responsePlans || defaultPlans;
 
 function convertFeaturesStringToArray(featuresString) {
   return featuresString
@@ -61,6 +70,7 @@ function updateFeaturesArray(plans) {
 }
 
 const updatedPlans = updateFeaturesArray(plans);
+// console.log(updatedPlans);
 
 // Calculate average discounts
 const yearlyDiscounts = updatedPlans.reduce((total, plan) => total + plan.pricing.discounts.yearly, 0);
@@ -103,5 +113,5 @@ const averageHalfYearlyDiscount = parseInt(halfYearlyDiscounts / updatedPlans.le
   </div>
   </div>
 </section>
-<script src="/js/space/pricing.js"></script>
+<script type="module" src="/js/space/pricing.js"></script>
 <%- await include("../../layouts/end.ejs") %>
