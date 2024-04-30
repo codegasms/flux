@@ -7,6 +7,13 @@ import { ApplyModDto } from './dto/apply-mod.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Mods, ModTokenPlans, ModsDocument } from './mods.schema';
 import { Model } from 'mongoose';
+import { SpacesService } from '../spaces/spaces.service';
+import { converterFromName, setupConversion } from './convertor/main';
+import path from 'path';
+import fs from 'node:fs';
+import { fileStorageRootDir } from 'src/spaces/constants';
+import { UsersService } from 'src/users/users.service';
+import { lookup } from 'mime-types';
 
 @Injectable()
 export class ModsService {
@@ -14,6 +21,8 @@ export class ModsService {
     @InjectModel(Mods.name) private modsModel: Model<ModsDocument>,
     @InjectModel(ModTokenPlans.name)
     private modTokenPlansModel: Model<ModTokenPlans>,
+    private spacesService: SpacesService,
+    private usersService: UsersService,
   ) {}
 
   async findAllMods(tags: string[]) {
@@ -73,7 +82,72 @@ export class ModsService {
     return await this.modTokenPlansModel.findOneAndDelete({ planID: planID });
   }
 
-  async applyMod(modID: string, applyModDto: ApplyModDto) {
+  async applyMod(userId: string, modId: string, applyModDto: ApplyModDto) {
+    const file = await this.spacesService.findFileById(userId, {
+      fileId: applyModDto.fileId,
+    });
+    if (file instanceof Array) {
+      throw new Error('Not a file');
+    }
+
+    const [converter, ext] = converterFromName(modId);
+
+    try {
+      const [inputPath, outputPath, scratch] = setupConversion(
+        file.fileName,
+        path.join(fileStorageRootDir, String(file._id)),
+        ext,
+      );
+      console.log(inputPath, outputPath, scratch, ext);
+
+      await converter(inputPath, outputPath, null);
+
+      const baseName = path.basename(
+        file.fileName,
+        path.extname(file.fileName),
+      );
+      const outputFileName = `${baseName}${ext}`;
+
+      const now = new Date();
+      const outputFileSize = fs.statSync(outputPath).size;
+
+      const outputMimeType = lookup(outputPath);
+      if (outputMimeType === false) {
+        throw new Error('No valid MIME detected');
+      }
+      console.log(now, outputFileSize, file.spaceParent, outputMimeType);
+      console.log(file);
+
+      // Create an entry for the converted file in the database.
+      const createdFile = await this.spacesService.createFile({
+        mimeType: outputMimeType,
+        size: outputFileSize,
+        spaceParent: file.spaceParent,
+        fileName: outputFileName,
+        created: now,
+        lastEdited: now,
+        owner: userId,
+      });
+
+      console.log(createdFile);
+
+      // Write the converted file to the server storage.
+      const diskPath = path.join(fileStorageRootDir, String(createdFile._id));
+      fs.copyFileSync(outputPath, diskPath);
+
+      // Update the consumed storage data.
+      await this.usersService.consumeStorageSpace(userId, outputFileSize);
+
+      // Remove the scratch files and directory used for conversion.
+      fs.unlinkSync(inputPath);
+      fs.unlinkSync(outputPath);
+      fs.rmdirSync(scratch);
+
+      return createdFile;
+    } catch (err) {
+      console.error(err);
+    }
+
     // load the mod to apply
     // load the dto of mod params
     // check if user has rights to access fileID
@@ -81,8 +155,7 @@ export class ModsService {
     // return error if incorrect/insufficient mod params
     // create background task to process this mod
     // return task id so that people can get the status of the mod
-    console.log(applyModDto);
-    return modID;
+    return undefined;
   }
 
   async checkModOpStatus(taskID: string) {

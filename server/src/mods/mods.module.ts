@@ -8,11 +8,15 @@ import {
   Mods,
   ModsSchema,
 } from './mods.schema';
+import { SpacesModule } from '../spaces/spaces.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   controllers: [ModsController],
   providers: [ModsService],
   imports: [
+    SpacesModule,
+    UsersModule,
     MongooseModule.forFeature([
       { name: Mods.name, schema: ModsSchema },
       { name: ModTokenPlans.name, schema: ModTokenPlansSchema },

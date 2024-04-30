@@ -150,7 +150,10 @@ export class SpacesService {
       inTrash: inTrash,
     };
     const projection = {};
-    if (!showSpaceParent) projection['spaceParent'] = false;
+    if (!showSpaceParent) {
+      projection['spaceParent'] = false;
+    }
+
     // when spacePath is root, skip adding fileName to query
     if (isSpaceRoot(spacePath)) {
       return await this.filesModel.find({ ...query }, projection).exec();
@@ -158,8 +161,10 @@ export class SpacesService {
     query['fileName'] = spacePath.fileName;
 
     const fileObj = await this.filesModel.findOne({ ...query }, projection);
-    if (!fileObj)
+    if (!fileObj) {
       throw new NotFoundException('No such file or directory found');
+    }
+
     if (fileObj.isDir) {
       delete query['fileName'];
       query['spaceParent'] = joinSpacePath(spacePath);
@@ -167,15 +172,17 @@ export class SpacesService {
       const children = await this.filesModel
         .find({ ...query }, projection)
         .exec();
+
       console.log(children);
       return [fileObj, ...children];
     }
+
     return fileObj;
   }
 
   async findFileById(userId: string, fileId: FileIdentifier) {
     const fileObj = await this.filesModel.findOne({
-      _id: fileId.fileID,
+      _id: fileId.fileId,
       $or: [
         { owner: userId },
         { viewers: userId },
@@ -195,7 +202,7 @@ export class SpacesService {
         fileName: fileObj.fileName,
       },
       false,
-      false,
+      userId === String(fileObj.owner),
     );
   }
 

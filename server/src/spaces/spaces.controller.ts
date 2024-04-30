@@ -208,16 +208,16 @@ export class SpacesController {
     );
   }
 
-  @Get('meta/:fileID')
+  @Get('meta/:fileId')
   @ApiOperation({
     summary: 'Get metadata about a file or directory identified by its ID',
   })
   async getMetaById(
     @Req() req: AuthorizedRequest,
-    @Param('fileID') fileId: string,
+    @Param('fileId') fileId: string,
   ) {
     return await this.service.findFileById(String(req.perms._id), {
-      fileID: fileId,
+      fileId: fileId,
     });
   }
 
@@ -225,7 +225,7 @@ export class SpacesController {
   @ApiOperation({
     summary: 'Get metadata about a file or directory in user space',
   })
-  async getMeta(@Req() req, @Body() spacePath: SpacePath) {
+  async getMeta(@Req() req: AuthorizedRequest, @Body() spacePath: SpacePath) {
     spacePath.spaceParent = trimSlashes(spacePath.spaceParent);
     return await this.service.findMeta(String(req.perms._id), spacePath);
   }
@@ -273,7 +273,7 @@ export class SpacesController {
   ): Promise<any> {
     const fileObj = await this.service.checkReadPerms(
       String(req.perms._id),
-      fileID,
+      fileId,
       false,
     );
     console.log(fileObj);
@@ -325,6 +325,7 @@ export class SpacesController {
   //   console.log(fileObj.mimeType);
   //   return res.sendFile(diskPath);
   // }
+
 
   /*
    * endpoints related to spaces quota
