@@ -14,6 +14,7 @@ import fs from 'node:fs';
 import { UsersService } from 'src/users/users.service';
 import { lookup } from 'mime-types';
 import { spacesConfig } from 'src/spaces/config';
+import { TokenPlanOutDto } from './dto/token-plan-out.dto';
 
 @Injectable()
 export class ModsService {
@@ -49,18 +50,18 @@ export class ModsService {
     return await this.modsModel.findOneAndDelete({ modID: modID });
   }
 
-  async findAllTokenPlans() {
+  async findAllTokenPlans(): Promise<TokenPlanOutDto[]> {
     return await this.modTokenPlansModel.find().exec();
   }
 
-  async findTokenPlan(planID: string) {
+  async findTokenPlan(planID: string): Promise<TokenPlanOutDto> {
     return await this.modTokenPlansModel.findOne({ planID: planID });
   }
 
   async createTokenPlan(
     planID: string,
     createTokenPlanDto: CreateTokenPlanDto,
-  ) {
+  ): Promise<TokenPlanOutDto> {
     const createdModTokenPlan = new this.modTokenPlansModel({
       planID: planID,
       ...createTokenPlanDto,
@@ -71,14 +72,17 @@ export class ModsService {
   async updateTokenPlan(
     planID: string,
     updateTokenPlanDto: UpdateTokenPlanDto,
-  ) {
+  ): Promise<TokenPlanOutDto> {
     return await this.modTokenPlansModel.findOneAndUpdate(
       { planID: planID },
       updateTokenPlanDto,
+      {
+        new: true,
+      },
     );
   }
 
-  async removeTokenPlan(planID: string) {
+  async removeTokenPlan(planID: string): Promise<TokenPlanOutDto> {
     return await this.modTokenPlansModel.findOneAndDelete({ planID: planID });
   }
 

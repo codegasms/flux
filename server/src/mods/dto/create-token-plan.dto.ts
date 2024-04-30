@@ -1,7 +1,8 @@
+import { PricingPolicy } from 'src/entities/pricing.entity';
+
 export class CreateTokenPlanDto {
-  planID: string;
-  icon: string;
   title: string;
   tokenCountPerMo: number;
-  pricePerMo: number;
+  pricing: PricingPolicy;
+  summary: string;
 }
