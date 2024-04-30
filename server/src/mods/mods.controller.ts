@@ -25,6 +25,7 @@ import { UpdateTokenPlanDto } from './dto/update-token-plan.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { URoles } from 'src/users/users.schema';
 import { AuthorizedRequest } from 'src/auth/entities/authorized-request.entity';
+import { TokenPlanOutDto } from './dto/token-plan-out.dto';
 
 @ApiCookieAuth()
 @ApiBearerAuth()
@@ -65,24 +66,27 @@ export class ModsController {
   @Public()
   @Get('/token-plans')
   @ApiOperation({ summary: 'Get list of all token plans availaible.' })
-  async findAllTokenPlans() {
+  async findAllTokenPlans(): Promise<TokenPlanOutDto[]> {
     return await this.service.findAllTokenPlans();
   }
 
   @Roles(URoles.superuser, URoles.admin)
-  @Post('/token-plans')
+  @Post('/token-plans/:planID')
   @ApiOperation({ summary: '[superuser, admin] Create a new token plan.' })
   async createTokenPlan(
     @Param('planID') planID: string,
-    createTokenPlanDto: CreateTokenPlanDto,
-  ) {
+    @Body() createTokenPlanDto: CreateTokenPlanDto,
+  ): Promise<TokenPlanOutDto> {
+    console.log(createTokenPlanDto);
     return await this.service.createTokenPlan(planID, createTokenPlanDto);
   }
 
   @Public()
   @Get('/token-plans/:planID')
   @ApiOperation({ summary: 'Get all details of a specific token plan.' })
-  async findTokenPlan(@Param('planID') planID: string) {
+  async findTokenPlan(
+    @Param('planID') planID: string,
+  ): Promise<TokenPlanOutDto> {
     return await this.service.findTokenPlan(planID);
   }
 
@@ -93,8 +97,8 @@ export class ModsController {
   })
   async updateTokenPlan(
     @Param('planID') planID: string,
-    updateTokenPlanDto: UpdateTokenPlanDto,
-  ) {
+    @Body() updateTokenPlanDto: UpdateTokenPlanDto,
+  ): Promise<TokenPlanOutDto> {
     return await this.service.updateTokenPlan(planID, updateTokenPlanDto);
   }
 
@@ -103,7 +107,9 @@ export class ModsController {
   @ApiOperation({
     summary: '[superuser, admin] Delete an existing token plan.',
   })
-  async deleteTokenPlan(@Param('planID') planID: string) {
+  async deleteTokenPlan(
+    @Param('planID') planID: string,
+  ): Promise<TokenPlanOutDto> {
     return await this.service.removeTokenPlan(planID);
   }
 
