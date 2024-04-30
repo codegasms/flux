@@ -1,8 +1,8 @@
 const plans = [
   {
-    quotaID: 'quota1',
+    planID: 'plan1',
     title: 'Basic',
-    spaceGBs: 100,
+    tokenCountPerMo: 100,
     summary: `Access all features\n5 watchlists included\nChat support\nOptimize hashtags\n5 exclusive widgets`,
     pricing: {
       pricePerMo: 99.99,
@@ -13,9 +13,9 @@ const plans = [
     },
   },
   {
-    quotaID: 'quota2',
+    planID: 'plan2',
     title: 'Pro',
-    spaceGBs: 200,
+    tokenCountPerMo: 200,
     summary: `Access all features\nUnlimited watchlists\nChat support\nOptimize hashtags\n10+ exclusive pro widgets`,
     pricing: {
       pricePerMo: 999.99,
@@ -26,9 +26,9 @@ const plans = [
     },
   },
   {
-    quotaID: 'quota2',
+    planID: 'plan2',
     title: 'ProPlus',
-    spaceGBs: 300,
+    tokenCountPerMo: 300,
     summary: `Access all features\nUnlimited watchlists\nChat support\nOptimize hashtags\n10+ exclusive pro widgets`,
     pricing: {
       pricePerMo: 2999.99,
@@ -72,17 +72,17 @@ document.addEventListener('DOMContentLoaded', () => {
   function updatePrices(subscriptionType) {
     // Loop over the plans
     updatedPlans.forEach((plan) => {
-      const quotaID = plan.title;
-      const priceElement = document.querySelector(`#${quotaID}Price`);
-      const discountElement = document.querySelector(`#${quotaID}DiscPrice`);
+      const planID = plan.title;
+      const priceElement = document.querySelector(`#${planID}Price`);
+      const discountElement = document.querySelector(`#${planID}DiscPrice`);
 
       // Calculate prices based on subscription type
       const price = calculatePrice(plan, subscriptionType);
       const discountedPrice = calculateDiscountedPrice(plan, subscriptionType);
 
       // Update the price elements
-      priceElement.textContent = `$${price.toFixed(2)}`;
-      discountElement.textContent = `$${discountedPrice.toFixed(2)}`;
+      priceElement.textContent = `₹${price.toFixed(2)}`;
+      discountElement.textContent = `₹${discountedPrice.toFixed(2)}`;
     });
 
     // Highlight the selected button

@@ -1,12 +1,12 @@
-<%- await include("../../layouts/header.ejs", {title: 'FLUX Spaces Pricing' }) %>
+<%- await include("../../layouts/header.ejs", {title: 'FLUX Mods Pricing' }) %>
 
 <% 
 
 const plans = [
   {
-    quotaID: 'quota1',
+    planID: 'plan1',
     title: 'Basic',
-    spaceGBs: 100,
+    tokenCountPerMo: 100,
     summary: `Access all features\n5 watchlists included\nChat support\nOptimize hashtags\n5 exclusive widgets`,
     pricing: {
       pricePerMo: 99.99,
@@ -17,9 +17,9 @@ const plans = [
     },
   },
   {
-    quotaID: 'quota2',
+    planID: 'plan2',
     title: 'Pro',
-    spaceGBs: 200,
+    tokenCountPerMo: 200,
     summary: `Access all features\nUnlimited watchlists\nChat support\nOptimize hashtags\n10+ exclusive pro widgets`,
     pricing: {
       pricePerMo: 999.99,
@@ -30,9 +30,9 @@ const plans = [
     },
   },
   {
-    quotaID: 'quota2',
+    planID: 'plan2',
     title: 'ProPlus',
-    spaceGBs: 300,
+    tokenCountPerMo: 300,
     summary: `Access all features\nUnlimited watchlists\nChat support\nOptimize hashtags\n10+ exclusive pro widgets`,
     pricing: {
       pricePerMo: 2999.99,
@@ -103,5 +103,5 @@ const averageHalfYearlyDiscount = parseInt(halfYearlyDiscounts / updatedPlans.le
   </div>
   </div>
 </section>
-<script src="/js/space/pricing.js"></script>
+<script src="/js/flux-mods/pricing.js"></script>
 <%- await include("../../layouts/end.ejs") %>
