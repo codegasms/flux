@@ -1,0 +1,107 @@
+<%- await include("../../layouts/header.ejs", {title: 'FLUX Spaces Pricing' }) %>
+
+<% 
+
+const plans = [
+  {
+    quotaID: 'quota1',
+    title: 'Basic',
+    spaceGBs: 100,
+    summary: `Access all features\n5 watchlists included\nChat support\nOptimize hashtags\n5 exclusive widgets`,
+    pricing: {
+      pricePerMo: 99.99,
+      discounts: {
+        halfYearly: 5,
+        yearly: 10,
+      },
+    },
+  },
+  {
+    quotaID: 'quota2',
+    title: 'Pro',
+    spaceGBs: 200,
+    summary: `Access all features\nUnlimited watchlists\nChat support\nOptimize hashtags\n10+ exclusive pro widgets`,
+    pricing: {
+      pricePerMo: 999.99,
+      discounts: {
+        halfYearly: 10,
+        yearly: 20,
+      },
+    },
+  },
+  {
+    quotaID: 'quota2',
+    title: 'ProPlus',
+    spaceGBs: 300,
+    summary: `Access all features\nUnlimited watchlists\nChat support\nOptimize hashtags\n10+ exclusive pro widgets`,
+    pricing: {
+      pricePerMo: 2999.99,
+      discounts: {
+        halfYearly: 15,
+        yearly: 25,
+      },
+    },
+  },
+];
+
+function convertFeaturesStringToArray(featuresString) {
+  return featuresString
+    .split('\n')
+    .map((summary) => summary.trim())
+    .filter((summary) => summary !== '');
+}
+
+function updateFeaturesArray(plans) {
+  return plans.map((plan) => {
+    return {
+      ...plan,
+      summary: convertFeaturesStringToArray(plan.summary),
+    };
+  });
+}
+
+const updatedPlans = updateFeaturesArray(plans);
+
+// Calculate average discounts
+const yearlyDiscounts = updatedPlans.reduce((total, plan) => total + plan.pricing.discounts.yearly, 0);
+const halfYearlyDiscounts = updatedPlans.reduce((total, plan) => total + plan.pricing.discounts.halfYearly, 0);
+
+const averageYearlyDiscount = parseInt(yearlyDiscounts / updatedPlans.length);
+const averageHalfYearlyDiscount = parseInt(halfYearlyDiscounts / updatedPlans.length);
+%>
+
+<section class="bg-white dark:bg-gray-900">
+  <div class="container px-6 py-8 mx-auto">
+    <div class="max-w-2xl p-1.5 mx-auto overflow-hidden bg-gray-100 rounded-lg dark:bg-gray-800">
+      <div class="grid gap-3 md:grid-cols-3">
+        <button id="monthlyButton" class="px-3 py-2 font-medium text-gray-800 uppercase transition-colors duration-300 transform bg-gray-200 rounded-lg dark:bg-gray-700 focus:outline-none dark:text-gray-200">Monthly</button>
+
+          <button id="biannuallyButton" class="flex items-center justify-center px-3 py-2 font-medium text-gray-800 uppercase transition-colors duration-300 transform bg-transparent rounded-lg focus:outline-none dark:text-gray-200 dark:hover:bg-gray-600 hover:bg-gray-200">
+          <span class="mx-1">Biannually</span>
+          <span class="text-xs mx-1 font-normal text-white bg-blue-500 rounded-full py-0.5 px-1.5">save
+            <%= averageHalfYearlyDiscount %>%
+          </span>
+        </button>
+
+        <button id="annuallyButton" class="flex items-center justify-center px-3 py-2 font-medium text-gray-800 uppercase transition-colors duration-300 transform bg-transparent rounded-lg focus:outline-none dark:text-gray-200 dark:hover:bg-gray-600 hover:bg-gray-200">
+          <span class="mx-1">Annually</span>
+          <span class="text-xs mx-1 font-normal text-white bg-blue-500 rounded-full py-0.5 px-1.5">save
+            <%= averageYearlyDiscount %>%
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex flex-col items-center justify-center mt-16 space-y-6 md:items-end md:-mx-5 md:space-y-0 md:flex-row">
+
+      <% for (const plan of updatedPlans) { %>
+      <%- await include('../../components/pricings/price-card', { plan: plan }) %>
+      <% } %>
+
+
+    </div>
+  </div>
+  </div>
+</section>
+<script src="/js/space/pricing.js"></script>
+<%- await include("../../layouts/end.ejs") %>
