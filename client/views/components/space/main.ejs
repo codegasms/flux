@@ -23,6 +23,22 @@
           var folderData = [];
           var pwd = null;
           var response = null;
+          async function fetchData(parentPath, currentDir) { 
+            const response = await fetch(params.server_url + '/spaces/get-id', { 
+              method: 'POST', 
+              headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + params.cookies.accessToken, 
+            },
+            body: JSON.stringify({spaceParent: parentPath, fileName:currentDir}),
+           })
+           .then((res) => res.json()).then((data) => {
+              // console.log(data);
+              return data;
+            });
+            return response;
+          }
           async function fetchData1() { 
             response = await fetch(params.server_url + '/spaces/meta', { 
               method: 'POST', 
@@ -47,7 +63,7 @@
             })
             .then((res) => res.json());
             folderData = response.slice(1);
-            console.log(response[0].spaceParent);
+            // console.log(response[0].spaceParent);
             if (response[0].spaceParent === "/") {
               pwd = response[0].fileName;
             }else{
@@ -65,10 +81,15 @@
           <% 
             if(path !== "/"){
               pwd = pwd.split("/");
-              pwd.forEach((dir) => {
+              let prevdir = "/";
+              
+              for( dir of pwd) {
+                let id = await fetchData(prevdir, dir);
           %>
-          <li><a href="/space"><%= dir %></a></li>
-          <%})} %>
+          <li><a href="/space/<%= id._id%>"><%= dir %></a></li>
+          <%
+          prevdir = prevdir+dir+"/";
+            }} %>
         </ul>
       </div>
       <!-- Folders -->
