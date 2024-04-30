@@ -518,6 +518,7 @@ export class SpacesService {
     return await this.spacesQuotaModel.findOneAndUpdate(
       { quotaID: quotaID },
       updateSpacesQuotaDto,
+      { new: true },
     );
   }
 
