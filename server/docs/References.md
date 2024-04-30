@@ -7,6 +7,10 @@
 - https://www.w3schools.com/js/js_loop_forof.asp
 - https://stackoverflow.com/questions/41553291/can-you-import-nodes-path-module-using-import-path-from-path
 
+## express
+
+- https://stackoverflow.com/questions/48616368/what-is-the-best-way-to-conditionally-serve-static-files-in-express
+
 ## oauth
 
 - https://dev.to/tugascript/nestjs-authentication-with-oauth20-adding-external-providers-2kj
@@ -38,3 +42,7 @@
 - https://www.moesif.com/blog/technical/cors/Authoritative-Guide-to-CORS-Cross-Origin-Resource-Sharing-for-REST-APIs/
 - https://medium.com/@cybersphere/fetch-api-the-ultimate-guide-to-cors-and-no-cors-cbcef88d371e
 - https://web.dev/articles/cross-origin-resource-sharing
+
+## http
+
+- https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition

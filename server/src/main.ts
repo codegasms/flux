@@ -4,6 +4,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { OpenAPIObject } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { appConfig } from './config';
+import fs from 'node:fs/promises';
+import { spacesConfig } from './spaces/config';
 
 declare const module: any;
 
@@ -38,6 +40,9 @@ async function bootstrap() {
   });
 
   SwaggerModule.setup('docs', app, document);
+
+  await fs.mkdir(spacesConfig.fileStorageRootDir, { recursive: true });
+  // will succeed even if directory exists
 
   await app.listen(process.env.SERVER_PORT || 3000);
 

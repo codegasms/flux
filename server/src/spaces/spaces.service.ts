@@ -33,12 +33,13 @@ import { CopyFileDto } from './dto/copy-file.dto';
 import { MoveFileDto } from './dto/move-file.dto';
 import * as path from 'path';
 import * as fs from 'node:fs/promises';
-import { dayInfinity, fileStorageRootDir } from './constants';
+import { dayInfinity } from './constants';
 import { IFileObjectQuery } from './entities/file-object-query.interface';
 import { UsersService } from 'src/users/users.service';
 import { pushUnique, removeItem } from 'src/utils/array';
 import { RevokeFileAccessDto } from './dto/revoke-file-access.dto';
 import { FileIdentifier } from './dto/file-id.dto';
+import { spacesConfig } from './config';
 
 @Injectable()
 export class SpacesService {
@@ -372,7 +373,7 @@ export class SpacesService {
     userId: string,
     fileId: string,
     isDir: boolean,
-  ): Promise<string | null> {
+  ): Promise<FileObject | null> {
     let fileObj = await this.filesModel.findOne({
       _id: fileId,
       isDir: isDir,
@@ -385,10 +386,10 @@ export class SpacesService {
       fileObj.editors.includes(userId) ||
       fileObj.managers.includes(userId)
     )
-      return fileObj.fileName;
+      return fileObj;
 
     // check parent dirs for access
-    const actualName = fileObj.fileName;
+    // const actualName = fileObj.fileName;
     console.log('checking parent dires for acc');
     while (fileObj.spaceParent != '/') {
       const { spaceParent, fileName } = splitSpacePath(fileObj.spaceParent);
@@ -402,7 +403,7 @@ export class SpacesService {
       });
       console.log(fileObj);
       if (fileObj.viewers.includes(userId) || fileObj.editors.includes(userId))
-        return actualName;
+        return fileObj;
     }
     return null;
   }
@@ -434,8 +435,8 @@ export class SpacesService {
 
     const cpFileObj = await copiedFileObj.save();
     await fs.copyFile(
-      path.join(fileStorageRootDir, fileObj.id),
-      path.join(fileStorageRootDir, cpFileObj.id),
+      path.join(spacesConfig.fileStorageRootDir, fileObj.id),
+      path.join(spacesConfig.fileStorageRootDir, cpFileObj.id),
     );
     await this.usersService.consumeStorageSpace(ownerId, fileObj.size);
     return cpFileObj;

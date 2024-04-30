@@ -28,8 +28,6 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 
-import { fileStorageRootDir } from './constants';
-
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { FileUploadDto } from './dto/file-upload.dto';
@@ -48,6 +46,7 @@ import { UsersService } from 'src/users/users.service';
 import { RevokeFileAccessDto } from './dto/revoke-file-access.dto';
 import { UpdateFileAccessResponseDto } from './dto/update-file-access-response.dto';
 import { AuthorizedRequest } from 'src/auth/entities/authorized-request.entity';
+import { spacesConfig } from './config';
 
 @ApiCookieAuth()
 @ApiBearerAuth()
@@ -121,7 +120,10 @@ export class SpacesController {
       });
       createdFiles.push(createdFile);
       console.log(createdFile._id);
-      const diskPath = path.join(fileStorageRootDir, String(createdFile._id));
+      const diskPath = path.join(
+        spacesConfig.fileStorageRootDir,
+        String(createdFile._id),
+      );
       await writeFile(diskPath, file.buffer);
       await this.usersService.consumeStorageSpace(req.perms._id, file.size);
     }
@@ -259,57 +261,70 @@ export class SpacesController {
     return await this.service.moveFile(String(req.perms._id), moveFileDto);
   }
 
-  @Post('stream/')
+  @Get('stream/:fileID')
   @ApiOperation({
     summary: 'Stream a file by ID if user has access',
   })
   @Header('Content-Type', 'application/octet-stream')
   async streamFile(
     @Req() req: AuthorizedRequest,
-    @Body() data: FileIdentifier,
+    @Param('fileID') fileID: string,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<StreamableFile> {
-    const canRead = await this.service.checkReadPerms(
+  ): Promise<any> {
+    const fileObj = await this.service.checkReadPerms(
       String(req.perms._id),
-      data.fileID,
+      fileID,
       false,
     );
-    console.log(canRead);
+    console.log(fileObj);
 
-    if (!canRead) throw new UnauthorizedException();
+    if (!fileObj) throw new UnauthorizedException();
 
-    const file = createReadStream(join(fileStorageRootDir, data.fileID));
+    const diskPath = path.resolve(spacesConfig.fileStorageRootDir, fileID);
+    console.log(diskPath);
+    const file = createReadStream(diskPath);
+    console.log(fileObj.mimeType);
     res.set({
-      'Content-Disposition': `attachment; filename="${canRead}"`,
+      'Content-Disposition': `attachment; filename="${fileObj.fileName}"`,
+      'Content-Type': fileObj.mimeType,
     });
     return new StreamableFile(file);
+    // file.pipe(res);
+    // res.sendFile(diskPath);
   }
 
-  @Post('get/')
-  @ApiOperation({
-    summary: 'Stream a file by ID if user has access',
-  })
-  @Header('Content-Type', 'application/octet-stream')
-  async getFile(
-    @Req() req: AuthorizedRequest,
-    @Body() data: FileIdentifier,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<StreamableFile> {
-    const canRead = await this.service.checkReadPerms(
-      String(req.perms._id),
-      data.fileID,
-      false,
-    );
-    console.log(canRead);
+  // @Get('get/:fileID')
+  // @ApiOperation({
+  //   summary: 'Send entire file if user has access',
+  // })
+  // async getFile(
+  //   @Req() req: AuthorizedRequest,
+  //   @Param('fileID') fileID: string,
+  //   @Res({ passthrough: true }) res: Response,
+  // ): Promise<any> {
+  //   const fileIDD = fileID.split('.')[0];
+  //   console.log(fileIDD);
+  //   const fileObj = await this.service.checkReadPerms(
+  //     String(req.perms._id),
+  //     fileIDD,
+  //     false,
+  //   );
+  //   console.log(fileObj);
 
-    if (!canRead) throw new UnauthorizedException();
-
-    const file = createReadStream(join(fileStorageRootDir, data.fileID));
-    res.set({
-      'Content-Disposition': `attachment; filename="${canRead}"`,
-    });
-    return new StreamableFile(file);
-  }
+  //   if (!fileObj) throw new UnauthorizedException();
+  //   const diskPath = path.resolve(spacesConfig.fileStorageRootDir, fileIDD);
+  //   // const file = createReadStream(
+  //   //   ,
+  //   // );
+  //   res.set({
+  //     'Content-Disposition': `inline; filename="${fileObj.fileName}"`,
+  //     'Content-Type': fileObj.mimeType,
+  //   });
+  //   // return new StreamableFile(file);
+  //   console.log(diskPath);
+  //   console.log(fileObj.mimeType);
+  //   return res.sendFile(diskPath);
+  // }
 
   /*
    * endpoints related to spaces quota
