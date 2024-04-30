@@ -174,7 +174,7 @@ export class SpacesService {
 
   async findFileById(userId: string, fileId: FileIdentifier) {
     const fileObj = await this.filesModel.findOne({
-      _id: fileId.fileID,
+      _id: fileId.fileId,
       $or: [
         { owner: userId },
         { viewers: userId },
