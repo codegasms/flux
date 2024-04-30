@@ -139,6 +139,20 @@ export class SpacesService {
     return await createdFileObject.save();
   }
 
+  async findIdBySpacePath(ownerId: string, spacePath: SpacePath) {
+    const fileId = await this.filesModel.findOne(
+      {
+        owner: ownerId,
+        spaceParent: spacePath.spaceParent,
+        fileName: spacePath.fileName,
+        inTrash: false,
+      },
+      { _id: true },
+    );
+    if (!fileId)
+      throw new NotFoundException('No file found for requested space path');
+  }
+
   async findMeta(
     ownerId: string,
     spacePath: SpacePath,
@@ -182,15 +196,9 @@ export class SpacesService {
   }
 
   async findFileById(userId: string, fileId: FileIdentifier) {
-    const fileObj = await this.filesModel.findOne({
-      _id: fileId.fileId,
-      $or: [
-        { owner: userId },
-        { viewers: userId },
-        { editors: userId },
-        { managers: userId },
-      ],
-    });
+    // check permissions on parent folder
+
+    const fileObj = await this.checkReadPerms(userId, fileId.fileId, 'any');
     if (!fileObj)
       throw new NotFoundException(
         'File with given id not found, or not shared with you',
@@ -380,13 +388,16 @@ export class SpacesService {
   async checkReadPerms(
     userId: string,
     fileId: string,
-    isDir: boolean,
+    type: 'dir' | 'file' | 'any',
   ): Promise<FileObject | null> {
-    let fileObj = await this.filesModel.findOne({
+    const query = {
       _id: fileId,
-      isDir: isDir,
       inTrash: false,
-    });
+    };
+    if (type == 'dir') query['isDir'] = true;
+    else if (type == 'file') query['isDir'] = false;
+
+    let fileObj = await this.filesModel.findOne({ ...query });
     console.log(fileObj);
     if (
       fileObj.owner === userId ||
@@ -396,6 +407,7 @@ export class SpacesService {
     )
       return fileObj;
 
+    const orgFileObj = fileObj;
     // check parent dirs for access
     // const actualName = fileObj.fileName;
     console.log('checking parent dires for acc');
@@ -411,7 +423,7 @@ export class SpacesService {
       });
       console.log(fileObj);
       if (fileObj.viewers.includes(userId) || fileObj.editors.includes(userId))
-        return fileObj;
+        return orgFileObj;
     }
     return null;
   }
@@ -520,6 +532,7 @@ export class SpacesService {
     return await this.spacesQuotaModel.findOneAndUpdate(
       { quotaID: quotaID },
       updateSpacesQuotaDto,
+      { new: true },
     );
   }
 

@@ -30,7 +30,6 @@ import {
 import { Response } from 'express';
 
 import { createReadStream } from 'fs';
-import { join } from 'path';
 import { FileUploadDto } from './dto/file-upload.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { URoles } from 'src/users/users.schema';
@@ -42,13 +41,12 @@ import { splitSpacePath, trimSlashes } from 'src/utils/space-paths';
 import { SpacePath } from './dto/space-path.dto';
 import { CopyFileDto } from './dto/copy-file.dto';
 import { MoveFileDto } from './dto/move-file.dto';
-import { FileIdentifier } from './dto/file-id.dto';
 import { UsersService } from 'src/users/users.service';
 import { RevokeFileAccessDto } from './dto/revoke-file-access.dto';
 import { UpdateFileAccessResponseDto } from './dto/update-file-access-response.dto';
 import { AuthorizedRequest } from 'src/auth/entities/authorized-request.entity';
 import { spacesConfig } from './config';
-import fs from 'node:fs/promises';
+import { SpacesQuotaOutDto } from './dto/spaces-quota-out.dto';
 
 @ApiCookieAuth()
 @ApiBearerAuth()
@@ -210,6 +208,24 @@ export class SpacesController {
     );
   }
 
+  @Post('get-id/')
+  @ApiOperation({
+    summary: 'Get the file id of a file in user space, from its space path',
+  })
+  async getIdBySpacePath(
+    @Req() req: AuthorizedRequest,
+    @Body() spacePath: SpacePath,
+  ) {
+    spacePath.spaceParent = trimSlashes(spacePath.spaceParent);
+    return await this.service.findIdBySpacePath(
+      String(req.perms._id),
+      spacePath,
+    );
+    // return await this.service.findFileById(String(req.perms._id), {
+    //   fileId: fileId,
+    // });
+  }
+
   @Get('meta/:fileId')
   @ApiOperation({
     summary: 'Get metadata about a file or directory identified by its ID',
@@ -276,7 +292,7 @@ export class SpacesController {
     const fileObj = await this.service.checkReadPerms(
       String(req.perms._id),
       fileId,
-      false,
+      'file',
     );
     console.log(fileObj);
 
@@ -306,7 +322,7 @@ export class SpacesController {
     const fileObj = await this.service.checkReadPerms(
       String(req.perms._id),
       fileId,
-      false,
+      'file',
     );
     console.log(fileObj);
     if (!fileObj) throw new UnauthorizedException();
@@ -342,41 +358,45 @@ export class SpacesController {
   @Public()
   @Get('/quotas')
   @ApiOperation({ summary: 'Get list of all space quotas availaible.' })
-  async findAllSpaceQuotas() {
+  async findAllSpaceQuotas(): Promise<SpacesQuotaOutDto[]> {
     return await this.service.findAllSpaceQuotas();
   }
 
   @Public()
   @Get('/quotas/:quotaID')
   @ApiOperation({ summary: 'Get all details of a specific spaces quota.' })
-  async findSpacesQuota(@Param('quotaID') quotaID: string) {
+  async findSpacesQuota(
+    @Param('quotaID') quotaID: string,
+  ): Promise<SpacesQuotaOutDto> {
     return await this.service.findSpacesQuota(quotaID);
   }
 
   @Roles(URoles.superuser, URoles.admin)
   @Post('/quotas/:quotaID')
   @ApiOperation({ summary: 'Create a new spaces quota' })
-  createSpacesQuota(
+  async createSpacesQuota(
     @Param('quotaID') quotaID: string,
     @Body() createSpacesQuotaDto: CreateSpacesQuotaDto,
-  ) {
-    return this.service.createSpacesQuota(quotaID, createSpacesQuotaDto);
+  ): Promise<SpacesQuotaOutDto> {
+    return await this.service.createSpacesQuota(quotaID, createSpacesQuotaDto);
   }
 
   @Roles(URoles.superuser, URoles.admin)
   @Patch('/quotas/:quotaID')
   @ApiOperation({ summary: 'Update and existing spaces quota' })
-  updateSpacesQuota(
+  async updateSpacesQuota(
     @Param('quotaID') quotaID: string,
     @Body() updateSpacesQuotaDto: UpdateSpacesQuotaDto,
-  ) {
-    return this.service.updateSpacesQuota(quotaID, updateSpacesQuotaDto);
+  ): Promise<SpacesQuotaOutDto> {
+    return await this.service.updateSpacesQuota(quotaID, updateSpacesQuotaDto);
   }
 
   @Roles(URoles.superuser, URoles.admin)
   @Delete('/quotas/:quotaID')
   @ApiOperation({ summary: 'Remove an existing spaces quota' })
-  removeSpacesQuota(@Param('quotaID') quotaID: string) {
-    return this.service.removeSpacesQuota(quotaID);
+  async removeSpacesQuota(
+    @Param('quotaID') quotaID: string,
+  ): Promise<SpacesQuotaOutDto> {
+    return await this.service.removeSpacesQuota(quotaID);
   }
 }

@@ -35,10 +35,6 @@ export class ModTokenPlans {
   planID: string;
   // a unique short slug/identifier for this plan
 
-  @Prop()
-  icon: string;
-  // url for plan icon
-
   @Prop({ required: true })
   title: string;
 
@@ -48,6 +44,9 @@ export class ModTokenPlans {
 
   @Prop({ required: true })
   pricing: PricingPolicy;
+
+  @Prop()
+  summary: string;
 }
 
 export type ModsDocument = HydratedDocument<Mods>;
