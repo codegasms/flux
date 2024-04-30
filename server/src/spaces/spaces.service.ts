@@ -151,6 +151,7 @@ export class SpacesService {
     );
     if (!fileId)
       throw new NotFoundException('No file found for requested space path');
+    return fileId;
   }
 
   async findMeta(
