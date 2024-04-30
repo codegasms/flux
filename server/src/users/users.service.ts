@@ -80,8 +80,9 @@ export class UsersService {
     return await this.model.findById(id, project);
   }
 
-  async findIDFromEmail(email: string): Promise<string> {
+  async findIDFromEmail(email: string): Promise<string | null> {
     const user = await this.model.findOne({ email: email });
+    if (!user) return null;
     return String(user._id);
   }
 
