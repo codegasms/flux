@@ -14,6 +14,7 @@ import {
   UseInterceptors,
   UploadedFiles,
   UnauthorizedException,
+  NotImplementedException,
 } from '@nestjs/common';
 import { SpacesService } from './spaces.service';
 import { CreateSpacesQuotaDto } from './dto/create-spaces-quota.dto';
@@ -47,6 +48,7 @@ import { RevokeFileAccessDto } from './dto/revoke-file-access.dto';
 import { UpdateFileAccessResponseDto } from './dto/update-file-access-response.dto';
 import { AuthorizedRequest } from 'src/auth/entities/authorized-request.entity';
 import { spacesConfig } from './config';
+import fs from 'node:fs/promises';
 
 @ApiCookieAuth()
 @ApiBearerAuth()
@@ -261,14 +263,14 @@ export class SpacesController {
     return await this.service.moveFile(String(req.perms._id), moveFileDto);
   }
 
-  @Get('stream/:fileID')
+  @Get('stream/:fileId')
   @ApiOperation({
     summary: 'Stream a file by ID if user has access',
   })
   @Header('Content-Type', 'application/octet-stream')
   async streamFile(
     @Req() req: AuthorizedRequest,
-    @Param('fileID') fileID: string,
+    @Param('fileId') fileId: string,
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
     const fileObj = await this.service.checkReadPerms(
@@ -280,52 +282,59 @@ export class SpacesController {
 
     if (!fileObj) throw new UnauthorizedException();
 
-    const diskPath = path.resolve(spacesConfig.fileStorageRootDir, fileID);
+    const diskPath = path.resolve(spacesConfig.fileStorageRootDir, fileId);
     console.log(diskPath);
+    console.log(fileObj.fileName);
+
     const file = createReadStream(diskPath);
     console.log(fileObj.mimeType);
     res.set({
-      'Content-Disposition': `attachment; filename="${fileObj.fileName}"`,
+      'Content-Disposition': `inline; filename="${fileObj.fileName}"`,
       'Content-Type': fileObj.mimeType,
     });
     return new StreamableFile(file);
-    // file.pipe(res);
-    // res.sendFile(diskPath);
   }
 
-  // @Get('get/:fileID')
-  // @ApiOperation({
-  //   summary: 'Send entire file if user has access',
-  // })
-  // async getFile(
-  //   @Req() req: AuthorizedRequest,
-  //   @Param('fileID') fileID: string,
-  //   @Res({ passthrough: true }) res: Response,
-  // ): Promise<any> {
-  //   const fileIDD = fileID.split('.')[0];
-  //   console.log(fileIDD);
-  //   const fileObj = await this.service.checkReadPerms(
-  //     String(req.perms._id),
-  //     fileIDD,
-  //     false,
-  //   );
-  //   console.log(fileObj);
-
-  //   if (!fileObj) throw new UnauthorizedException();
-  //   const diskPath = path.resolve(spacesConfig.fileStorageRootDir, fileIDD);
-  //   // const file = createReadStream(
-  //   //   ,
-  //   // );
-  //   res.set({
-  //     'Content-Disposition': `inline; filename="${fileObj.fileName}"`,
-  //     'Content-Type': fileObj.mimeType,
-  //   });
-  //   // return new StreamableFile(file);
-  //   console.log(diskPath);
-  //   console.log(fileObj.mimeType);
-  //   return res.sendFile(diskPath);
-  // }
-
+  @Get('get/:fileID')
+  @ApiOperation({
+    summary: 'Send entire file if user has access',
+  })
+  async getFile(
+    @Req() req: AuthorizedRequest,
+    @Param('fileID') fileId: string,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<any> {
+    const fileObj = await this.service.checkReadPerms(
+      String(req.perms._id),
+      fileId,
+      false,
+    );
+    console.log(fileObj);
+    if (!fileObj) throw new UnauthorizedException();
+    const diskPath = path.resolve(spacesConfig.fileStorageRootDir, fileId);
+    console.log(diskPath);
+    console.log(fileObj.fileName);
+    console.log(fileObj.mimeType);
+    res.set({
+      'Content-Disposition': `inline; filename="${fileObj.fileName}"`,
+      'Content-Type': fileObj.mimeType,
+    });
+    throw new NotImplementedException(
+      'Serving a single file like static assets is suffering from unknown bugs',
+    );
+    res.sendFile(
+      '/home/aahnik/Projects/fsd/flux/server/storage/public/avatar/aahnikdaw.png',
+      // {
+      //   // headers: {
+      //   //   'Content-Disposition': `inline; filename="aahnikdaw.png"`,
+      //   //   'Content-Type': 'image/png',
+      //   // },
+      // },
+      (err) => {
+        console.log(err);
+      },
+    );
+  }
 
   /*
    * endpoints related to spaces quota
