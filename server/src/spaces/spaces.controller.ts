@@ -46,6 +46,7 @@ import { RevokeFileAccessDto } from './dto/revoke-file-access.dto';
 import { UpdateFileAccessResponseDto } from './dto/update-file-access-response.dto';
 import { AuthorizedRequest } from 'src/auth/entities/authorized-request.entity';
 import { spacesConfig } from './config';
+import { SpacesQuotaOutDto } from './dto/spaces-quota-out.dto';
 
 @ApiCookieAuth()
 @ApiBearerAuth()
@@ -339,14 +340,16 @@ export class SpacesController {
   @Public()
   @Get('/quotas')
   @ApiOperation({ summary: 'Get list of all space quotas availaible.' })
-  async findAllSpaceQuotas() {
+  async findAllSpaceQuotas(): Promise<SpacesQuotaOutDto[]> {
     return await this.service.findAllSpaceQuotas();
   }
 
   @Public()
   @Get('/quotas/:quotaID')
   @ApiOperation({ summary: 'Get all details of a specific spaces quota.' })
-  async findSpacesQuota(@Param('quotaID') quotaID: string) {
+  async findSpacesQuota(
+    @Param('quotaID') quotaID: string,
+  ): Promise<SpacesQuotaOutDto> {
     return await this.service.findSpacesQuota(quotaID);
   }
 
@@ -356,7 +359,7 @@ export class SpacesController {
   async createSpacesQuota(
     @Param('quotaID') quotaID: string,
     @Body() createSpacesQuotaDto: CreateSpacesQuotaDto,
-  ) {
+  ): Promise<SpacesQuotaOutDto> {
     return await this.service.createSpacesQuota(quotaID, createSpacesQuotaDto);
   }
 
@@ -366,14 +369,16 @@ export class SpacesController {
   async updateSpacesQuota(
     @Param('quotaID') quotaID: string,
     @Body() updateSpacesQuotaDto: UpdateSpacesQuotaDto,
-  ) {
+  ): Promise<SpacesQuotaOutDto> {
     return await this.service.updateSpacesQuota(quotaID, updateSpacesQuotaDto);
   }
 
   @Roles(URoles.superuser, URoles.admin)
   @Delete('/quotas/:quotaID')
   @ApiOperation({ summary: 'Remove an existing spaces quota' })
-  async removeSpacesQuota(@Param('quotaID') quotaID: string) {
+  async removeSpacesQuota(
+    @Param('quotaID') quotaID: string,
+  ): Promise<SpacesQuotaOutDto> {
     return await this.service.removeSpacesQuota(quotaID);
   }
 }
