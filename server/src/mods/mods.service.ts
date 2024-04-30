@@ -11,9 +11,9 @@ import { SpacesService } from '../spaces/spaces.service';
 import { converterFromName, setupConversion } from './convertor/main';
 import path from 'path';
 import fs from 'node:fs';
-import { fileStorageRootDir } from 'src/spaces/constants';
 import { UsersService } from 'src/users/users.service';
 import { lookup } from 'mime-types';
+import { spacesConfig } from 'src/spaces/config';
 
 @Injectable()
 export class ModsService {
@@ -95,7 +95,7 @@ export class ModsService {
     try {
       const [inputPath, outputPath, scratch] = setupConversion(
         file.fileName,
-        path.join(fileStorageRootDir, String(file._id)),
+        path.join(spacesConfig.fileStorageRootDir, String(file._id)),
         ext,
       );
       console.log(inputPath, outputPath, scratch, ext);
@@ -132,7 +132,10 @@ export class ModsService {
       console.log(createdFile);
 
       // Write the converted file to the server storage.
-      const diskPath = path.join(fileStorageRootDir, String(createdFile._id));
+      const diskPath = path.join(
+        spacesConfig.fileStorageRootDir,
+        String(createdFile._id),
+      );
       fs.copyFileSync(outputPath, diskPath);
 
       // Update the consumed storage data.
