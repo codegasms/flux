@@ -19,19 +19,12 @@
     <div class="px-8 py-6 w-full">
       <h1 class="text-[24px] font-['Quicksand'] font-bold">My Files</h1>
       <!-- Breadcrumbs -->
-      <div class="text-sm breadcrumbs">
-        <ul>
-          <li><a>Home</a></li>
-          <li><a>Documents</a></li>
-          <li>Add Document</li>
-        </ul>
-      </div>
-      <!-- Folders -->
-      <div class="flex flex-wrap mt-4 gap-x-4">
-        <%
+      <%
           var folderData = [];
+          var pwd = null;
+          var response = null;
           async function fetchData1() { 
-            const response = await fetch(params.server_url + '/spaces/meta', { 
+            response = await fetch(params.server_url + '/spaces/meta', { 
               method: 'POST', 
               headers: {
                 'accept': 'application/json',
@@ -45,7 +38,7 @@
             folderData = response;
           }
           async function fetchData2() {
-            const response = await fetch(params.server_url + '/spaces/meta/' + path, {
+            response = await fetch(params.server_url + '/spaces/meta/' + path, {
               method: 'GET',
               headers: {
               'accept': 'application/json',
@@ -53,15 +46,36 @@
               },
             })
             .then((res) => res.json());
-            // console.log(response.slice(1));
             folderData = response.slice(1);
+            console.log(response[0].spaceParent);
+            if (response[0].spaceParent === "/") {
+              pwd = response[0].fileName;
+            }else{
+              pwd = response[0].spaceParent+"/"+response[0].fileName;
+            }
           }
           if(path === "/"){
             await fetchData1();
           } else {
             await fetchData2();
-          }
+          } %>
+      <div class="text-sm breadcrumbs">
+        <ul>
+          <li><a href="/space">Home</a></li>
+          <% 
+            if(path !== "/"){
+              pwd = pwd.split("/");
+              pwd.forEach((dir) => {
+          %>
+          <li><a href="/space"><%= dir %></a></li>
+          <%})} %>
+        </ul>
+      </div>
+      <!-- Folders -->
+      <div class="flex flex-wrap mt-4 gap-x-4">
 
+
+        <% 
           function formatBytes(bytes, decimals = 2) {
           if (bytes === 0) return '0 Bytes';
 
@@ -72,7 +86,6 @@
 
           return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
           }
-
         folderData.forEach(folder => { 
             if(folder.isDir){ %>
         <button class="btn btn-ghost btn-xs sm:btn-sm md:btn-md lg:btn-lg border-2 border-base-200 flex gap-4 my-2" onclick="window.location.href='/space/<%= folder._id %>'">
@@ -95,7 +108,7 @@
           <% folderData.forEach( entry => { %>
           <% if(!entry.isDir){ %>
           <tr>
-            <td><a class="download" href="#" id="<%= entry._id %>"><%= entry.fileName %></a></td>
+            <td><a class="download" href="<%= params.server_url+"/spaces/stream/"+entry._id %>"><%= entry.fileName %></a></td>
             <td><%= entry.visibility %></td>
             <td><%= entry.created.slice(0, 10) %></td>
             <td><%= entry.spaceParent %></td>

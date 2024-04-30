@@ -7,23 +7,6 @@
     <!-- Search bar -->
     <%- await include("../../components/space/topbar.ejs", {username: params.fileID}) %>
     <!-- Main page -->
-    <%# await include("../../components/space/main.ejs", {path: params.fileID}) %>
-    <%#
-    var folderData = [];
-    async function fetchData() { 
-      const response = await fetch(params.server_url + '/spaces/meta/' + params.fileID, { 
-        method: 'GET', 
-        headers: {
-          'accept': 'application/json',
-          'Authorization': 'Bearer ' + params.cookies.accessToken,
-        },
-     })
-      .then((res) => res.json());
-      console.log(response);
-      folderData = response;
-    } 
-    await fetchData();
-    %>
     <%- await include("../../components/space/main.ejs", {path: params.fileID}) %>
     <!-- Right panel -->
     <%#- await include("../components/space/rightpanel.ejs") %>
