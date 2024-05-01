@@ -1,25 +1,4 @@
-<div class="px-8 w-full overflow-y-scroll no-scrollbar">
-  <!-- My Storage Header -->
-  <div class="flex justify-between w-full my-4">
-    <h1 class="text-[24px] font-['Quicksand'] font-bold">My Storage</h1>
-    <button class="btn btn-ghost bg-base-100 font-bold rounded-full flex justify-center items-center " id="toggleAnalytics">
-      <span class="material-symbols-outlined"> insert_chart </span>
-    </button>
-  </div>
-  <!-- Analytics -->
-  <div class="bg-base-100 rounded-[16px] p-6 scale-1 transition-all" id="analytics">
-    <div class="w-full">
-      <h1 class="text-[24px] font-['Quicksand'] font-bold">Overview</h1>
-    </div>
-    <canvas id="myChart" height="60" aria-label="Graph for storage analytics">
-      <p>Your browser does not support the canvas element.</p>
-    </canvas>
-  </div>
-  <div class="w-full rounded-[16px] mt-5 bg-base-100 mb-6 transition-all">
-    <div class="px-8 py-6 w-full">
-      <h1 class="text-[24px] font-['Quicksand'] font-bold">My Files</h1>
-      <!-- Breadcrumbs -->
-      <%
+<%
           var folderData = [];
           var pwd = null;
           var response = null;
@@ -74,7 +53,48 @@
             await fetchData1();
           } else {
             await fetchData2();
-          } %>
+          } 
+          %>
+
+<div class="px-8 w-full overflow-y-scroll no-scrollbar">
+  <!-- My Storage Header -->
+  <div class="flex justify-between w-full my-4">
+    <h1 class="text-[24px] font-['Quicksand'] font-bold">My Storage</h1>
+    <button class="btn btn-ghost bg-base-100 font-bold rounded-full flex justify-center items-center " id="toggleAnalytics">
+      <span class="material-symbols-outlined"> insert_chart </span>
+    </button>
+  </div>
+  <!-- Analytics -->
+  <div class="bg-base-100 rounded-[16px] p-6 scale-1 transition-all" id="analytics">
+    <div class="w-full">
+      <h1 class="text-[24px] font-['Quicksand'] font-bold">Overview</h1>
+    </div>
+    <canvas id="myChart" height="60" aria-label="Graph for storage analytics">
+      <p>Your browser does not support the canvas element.</p>
+    </canvas>
+  </div>
+  <div class="w-full rounded-[16px] mt-5 bg-base-100 mb-6 transition-all">
+    <div class="px-8 py-6 w-full">
+      <div class="flex items-center justify-between">
+        <h1 class="text-[24px] font-['Quicksand'] font-bold">My Files</h1>
+        <button class="btn btn-primary" onclick="my_modal_2.showModal()">Create Folder</button>
+        <dialog id="my_modal_2" class="modal">
+          <div class="modal-box">
+            <h3 class="font-bold text-lg">Create Folder</h3>
+            <p class="py-4">Please enter the name of the folder</p>
+            <!-- <form action="http://localhost:3000/spaces/create" method="POST" enctype="multipart/form-data" onsubmit="prependPwd()"> -->
+            <!-- <input type="hidden" name="variable" id="spaceParentForm" value="<%#=pwd ? pwd : "/"%>"> -->
+            <input type="text" required placeholder="Folder name" class="input input-bordered w-full max-w-xs mx-3" id="folderName" name="spaceParent" />
+            <button type="submit" class="btn btn-primary createFolder" id="<%=pwd ? pwd : "/"%>"> Create </button>
+            <!-- </form> -->
+          </div>
+          <form method=" dialog" class="modal-backdrop">
+            <button>close</button>
+          </form>
+        </dialog>
+      </div>
+      <!-- Breadcrumbs -->
+
       <div class="text-sm breadcrumbs">
         <ul>
           <li><a href="/space">Home</a></li>
