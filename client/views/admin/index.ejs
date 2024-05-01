@@ -1,4 +1,5 @@
-<%- await include("../layouts/header.ejs", {title: 'FLUX ADMIN'}) %>
+<%- await include("../layouts/header.ejs", {title: 'FLUX Admin'}) %>
+
 <div class="flex">
   <div class="flex flex-col flex-grow justify-start items-center box-content h-[100vh]">
     <div class="p-5">
@@ -73,41 +74,48 @@
         <h1 class="text-[24px] font-['Quicksand'] font-bold">Users</h1>
         <button class="btn btn-outline " id="editButton">Create Users</button>
       </div>
+
       <!-- Analytics -->
-      <% const users = [
-      {
-        index: 0,
-        name: 'Bishwajeet Sahoo',
-        country: 'India',
-        company: 'User',
-        jobTitle: 'Free User',
-        avatar: '/images/free-plan.png'
-      },
-      {
-        index: 1,
-        name: 'Bishwajeet Sahoo',
-        country: 'India',
-        company: 'User',
-        jobTitle: 'Free User',
-        avatar: '/images/free-plan.png'
-      },
-      {
-        index: 2,
-        name: 'Bishwajeet Sahoo',
-        country: 'India',
-        company: 'User',
-        jobTitle: 'Free User',
-        avatar: '/images/free-plan.png'
-      },
-      {
-        index: 3,
-        name: 'Bishwajeet Sahoo',
-        country: 'India',
-        company: 'User',
-        jobTitle: 'Free User',
-        avatar: '/images/free-plan.png'
+      <%
+      function fetchUsers() {
+        const users = [
+        {
+          "_id": "662fb5e1cbdcd92ce527ffda",
+            "email": "saur@proton.me",
+            "fullName": "Saurabh2",
+            "role": "free",
+            "isActive": true,
+            "storageUsed": 0,
+            "spacesQuota": "0",
+            "modTokensRemaining": 0,
+            "__v": 0
+        },
+        {
+          "_id": "662fc72167fdbfa4cabe904c",
+          "email": "saur@saur.saur",
+          "fullName": "Saur",
+          "role": "admin",
+          "isActive": true,
+          "storageUsed": 3775802,
+          "spacesQuota": "0",
+          "modTokensRemaining": 0,
+          "__v": 0
+        }
+        ];
+          return users
+            .map((user, index) => {
+              return {
+                index: index,
+                name: user.fullName,
+                company: 'User',
+                jobTitle: user.role,
+                avatar: '/images/free-plan.png'
+              };
+            });
       }
-    ]; %>
+
+      const users = fetchUsers(); %>
+
       <div class="flex flex-col">
         <div class="overflow-x-auto bg-base-100">
           <%- await include('../partials/admin/admin-table.ejs', { users }) %>
@@ -118,4 +126,4 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="/js/space/space.js"></script>
         <script src="/js/admin/create.js"></script>
-        <%- await include("../layouts/end.ejs") %>
+<%- await include("../layouts/end.ejs") %>
