@@ -1,28 +1,44 @@
-<%- await include("../layouts/header.ejs", {title: 'Flux Mods'}) %>
+<%- await include("../layouts/header.ejs", { title: 'Flux Mods' }) %>
+<%- await include("../components/space/contextmenu.ejs") %>
+<%- await include("../components/space/topbar.ejs", {username:"test"}) %>
 
-<%- await include("../layouts/flux-mods/navbar.ejs") %>
-<%- await include("../components/flux-mods/info-container.ejs",{fileType: "FREE"}) %>
-<%- await include("../components/flux-mods/searchbox.ejs") %>
+<%#- await include("../layouts/flux-mods/navbar.ejs") %>
+<%#- await include("../components/flux-mods/info-container.ejs", { fileType: "FREE" }) %>
+<%#- await include("../components/flux-mods/searchbox.ejs") %>
 <div
   class="py-20 flex items-center justify-around flex-wrap"
   style="perspective: 1000px"
 >
-  <% const items = [
-        { imagepath: "/images/flux-mods/head-card-img/placeholder.avif", title: "PDF",},
-        { imagepath: "/images/flux-mods/head-card-img/placeholder.avif", title: "IMAGE",},
-        { imagepath: "/images/flux-mods/head-card-img/placeholder.avif", title: "VIDEO",},
-        { imagepath: "/images/flux-mods/head-card-img/placeholder.avif", title: "FILE",},
-        { imagepath: "/images/flux-mods/head-card-img/placeholder.avif", title: "DOCUMENT",},
-        { imagepath: "/images/flux-mods/head-card-img/placeholder.avif", title: "OTHER UTILITY",},
-        // Add more items as needed
-    ];
-    %>
-  <% for (const item of items) { %>
+
+  <%
+  const imagepath = '/images/flux-mods/head-card-img/placeholder.avif';
+
+  const mods_cards = [
+    { title: 'Markdown to PDF', modId: 'md-to-pdf' },
+    { title: 'Text to PDF', modId: 'text-to-pdf' },
+    { title: 'JPEG to PDF', modId: 'jpeg-to-pdf' },
+    { title: 'PNG to PDF', modId: 'png-to-pdf' },
+    { title: 'PDF to JPEG', modId: 'pdf-to-jpeg' },
+    { title: 'PDF to PNG', modId: 'pdf-to-png' },
+    { title: 'DOC to PDF', modId: 'doc-to-pdf' },
+    { title: 'PDF to DOC', modId: 'pdf-to-doc' },
+    { title: 'PPT to PDF', modId: 'ppt-to-pdf' },
+    { title: 'PDF to PPT', modId: 'pdf-to-ppt' },
+    { title: 'PNG to JPEG', modId: 'png-to-jpeg' },
+    { title: 'JPEG to PNG', modId: 'jpeg-to-png' },
+    { title: 'GIF to PNG', modId: 'gif-to-png' },
+    { title: 'PNG to GIF', modId: 'png-to-gif' },
+  ];
+  %>
+
+  <% for (const item of mods_cards) { %>
+  <% item.imagepath = imagepath; %>
   <%- await include("../components/flux-mods/main-card.ejs", {item: item}) %>
   <% } %>
 </div>
 
 <script src="/js/flux-mods/card-anim.js"></script>
+<script src="/js/flux-mods/mods.js"></script>
 
 <%- await include("../layouts/footer.ejs") %>
 
