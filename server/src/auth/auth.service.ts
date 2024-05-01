@@ -7,12 +7,14 @@ import { RegisterDto } from './dto/register.dto';
 import { RegisterResponseDto } from './dto/register-response.dto';
 import { saltRounds } from './constants';
 import { SignInResponseDto } from './dto/sign-in-response.dto';
+import { MailerService } from 'src/mailer/mailer.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private mailer: MailerService,
   ) {}
 
   async login(email: string, password: string): Promise<SignInResponseDto> {
@@ -26,6 +28,13 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
+    await this.mailer.sendTemplateMail({
+      templateType: 'login',
+      recipients: [email],
+      subject: 'Flux@Codegasms New Login Detected',
+      username: user.fullName,
+    });
+
     return {
       access_token: await this.generateJwtToken(email),
     };
@@ -37,6 +46,13 @@ export class AuthService {
       email: registerDto.email,
       fullName: registerDto.fullName,
       hashedPassword: hashedPassword,
+    });
+
+    await this.mailer.sendTemplateMail({
+      templateType: 'register',
+      recipients: [user.email],
+      subject: 'Welcome to Flux@Codegasms',
+      username: user.fullName,
     });
 
     return {
