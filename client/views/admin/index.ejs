@@ -5,44 +5,24 @@
       <img src="/images/space/logo.png" class="dark:contrast-0" />
     </div>
     <div class="flex flex-col p-8">
-      
+
       <ul class="menu w-56 flex gap-2">
         <li>
-            <a class="active:scale-[0.95]" href="#">
-                <img src="/icons/group.svg" class="dark:contrast-0" />
-                Users
-              </a>
-        </li>
-        <li>
-            <a class="active:scale-[0.95]" href="../spaces/index.ejs">
-                <img src="/icons/spaces.svg" class="dark:contrast-0" />
-                Spaces
-              </a>
-        </li>
-        <li>
-            <a class="active:scale-[0.95]" href="../mods/index.ejs">
-                <img src="/icons/conversion.svg" class="dark:contrast-0" />
-                Mods
-              </a>
-        </li>
-      </ul>
-    </div>
-    <div class="w-3/4">
-      <div class="divider divider-neutral my-0"></div>
-    </div>
-    <div class="flex justify-start flex-col">
-      <div class="text-xl text-center my-2">Quick Access</div>
-      <ul class="menu w-56 flex gap-2">
-        <li>
-          <a class="active:scale-[0.95]">
-            <img src="/images/space/viewrecents.png" class="dark:contrast-0" />
-            Viewed Recently
+          <a class="active:scale-[0.95]" href="#">
+            <img src="/icons/group.svg" class="dark:contrast-0" />
+            Users
           </a>
         </li>
         <li>
-          <a class="active:scale-[0.95]">
-            <img src="/images/space/starred.png" class="dark:contrast-0" />
-            Favorites
+          <a class="active:scale-[0.95]" href="../spaces/index.ejs">
+            <img src="/icons/spaces.svg" class="dark:contrast-0" />
+            Spaces
+          </a>
+        </li>
+        <li>
+          <a class="active:scale-[0.95]" href="../mods/index.ejs">
+            <img src="/icons/conversion.svg" class="dark:contrast-0" />
+            Mods
           </a>
         </li>
       </ul>
@@ -83,9 +63,9 @@
             <img src="/images/space/logout.png" class="contrast-0" />
           </button>
         </div>
+      </div>
     </div>
-    </div>
-    
+
     <!-- Main page -->
     <div class="px-8 w-full overflow-y-scroll no-scrollbar">
       <!-- My Storage Header -->
@@ -128,14 +108,14 @@
         avatar: '/images/free-plan.png'
       }
     ]; %>
-    <div class="flex flex-col">
-      <div class="overflow-x-auto bg-base-100">
-        <%- await include('../partials/admin/admin-table.ejs', { users }) %>
-      </div>
+      <div class="flex flex-col">
+        <div class="overflow-x-auto bg-base-100">
+          <%- await include('../partials/admin/admin-table.ejs', { users }) %>
+        </div>
 
-  <!-- Right panel -->
-  
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="/js/space/space.js"></script>
-<script src="/js/admin/create.js"></script>
-<%- await include("../layouts/end.ejs") %>
+        <!-- Right panel -->
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="/js/space/space.js"></script>
+        <script src="/js/admin/create.js"></script>
+        <%- await include("../layouts/end.ejs") %>

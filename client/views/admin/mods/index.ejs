@@ -5,25 +5,25 @@
       <img src="/images/space/logo.png" class="dark:contrast-0" />
     </div>
     <div class="flex flex-col p-8">
-      
+
       <ul class="menu w-56 flex gap-2">
         <li>
-            <a class="active:scale-[0.95]" href="#">
-                <img src="/icons/group.svg" class="dark:contrast-0" />
-                Users
-              </a>
+          <a class="active:scale-[0.95]" href="#">
+            <img src="/icons/group.svg" class="dark:contrast-0" />
+            Users
+          </a>
         </li>
         <li>
-            <a class="active:scale-[0.95]" href="../spaces/index.ejs">
-                <img src="/icons/spaces.svg" class="dark:contrast-0" />
-                Spaces
-              </a>
+          <a class="active:scale-[0.95]" href="../spaces/index.ejs">
+            <img src="/icons/spaces.svg" class="dark:contrast-0" />
+            Spaces
+          </a>
         </li>
         <li>
-            <a class="active:scale-[0.95]" href="../mods/index.ejs">
-                <img src="/icons/conversion.svg" class="dark:contrast-0" />
-                Mods
-              </a>
+          <a class="active:scale-[0.95]" href="../mods/index.ejs">
+            <img src="/icons/conversion.svg" class="dark:contrast-0" />
+            Mods
+          </a>
         </li>
       </ul>
     </div>
@@ -83,15 +83,21 @@
             <img src="/images/space/logout.png" class="contrast-0" />
           </button>
         </div>
+      </div>
     </div>
-    </div>
-    
+
     <!-- Main page -->
     <div class="px-8 w-full overflow-y-scroll no-scrollbar">
       <!-- My Storage Header -->
       <div class="flex justify-between w-full my-4">
         <h1 class="text-[24px] font-['Quicksand'] font-bold">Users</h1>
-        <button class="btn btn-outline">Create Plan</button>
+        <button class="btn btn-outline" id="createPlan">Create Plan</button>
+        <script>
+          const createPlan = document.querySelector('#createPlan');
+          createPlan.addEventListener('click', () => {
+            window.location.href = '/admin/tokenplans';
+          });
+        </script>
       </div>
       <!-- Analytics -->
       <% const users = [
@@ -128,13 +134,13 @@
         avatar: '/images/premium-plus-plan.png'
       }
     ]; %>
-    <div class="flex flex-col">
-      <div class="overflow-x-auto bg-base-100">
-        <%- await include('../../partials/admin/admin-table.ejs', { users }) %>
-      </div>
+      <div class="flex flex-col">
+        <div class="overflow-x-auto bg-base-100">
+          <%- await include('../../partials/admin/admin-table.ejs', { users }) %>
+        </div>
 
-  <!-- Right panel -->
-  
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="/js/space/space.js"></script>
-<%- await include("../../layouts/end.ejs") %>
+        <!-- Right panel -->
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="/js/space/space.js"></script>
+        <%- await include("../../layouts/end.ejs") %>
