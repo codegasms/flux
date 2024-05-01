@@ -108,6 +108,40 @@ analButton.addEventListener('click', () => {
   anal.classList.toggle('hidden');
 });
 
+// function prependPwd() {
+//   let pwd = document.getElementById('spaceParentForm').value;
+//   let input = document.getElementById('folderName');
+//   input.value = pwd + '/' + input.value;
+// }
+
+let createFolderButton = document.querySelector('.createFolder');
+
+createFolderButton.addEventListener('click', async (e) => {
+  let folderName = document.querySelector('#folderName').value;
+  if (folderName) {
+    const form = new FormData();
+
+    form.append('spaceParent', createFolderButton.id + '/' + folderName);
+
+    await fetch(SERVER_URL + '/spaces/create', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        accept: 'application/json',
+      },
+      body: form,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        // return data;
+      });
+    location.reload();
+  } else {
+    console.log("user didn't enter a valid name");
+  }
+});
+
 // let downloadButtons = document.querySelectorAll('.download');
 // downloadButtons = Array.from(downloadButtons);
 // downloadButtons.forEach((button) => {
