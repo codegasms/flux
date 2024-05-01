@@ -8,7 +8,7 @@
   <div
     onmouseenter="function propagate(e) { Object.values(e.children).forEach(c => { propagate(c); c.dispatchEvent(new CustomEvent('mouseenter', {detail: 69})); }) }; propagate(this);"
     onmouseleave="function propagate(e) { Object.values(e.children).forEach(c => { propagate(c); c.dispatchEvent(new CustomEvent('mouseleave', {detail: 69})); }) }; propagate(this);"
-    class="[transform-style:preserve-3d] [&amp;&gt;*]:[transform-style:preserve-3d] bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border"
+    class="[transform-style:preserve-3d] [&amp;&gt;*]:[transform-style:preserve-3d] bg-base-200 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-base-200 dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border"
   >
     <div
       class="w-fit transition duration-200 ease-linear text-xl font-bold text-neutral-600 dark:text-white"
@@ -16,9 +16,9 @@
       onmouseleave="if (event.detail === 69) this.style.transform = 'translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';"
     >
       <%= item.title %>
-      Tools
     </div>
 
+    <!--
     <div
       class="w-fit transition duration-200 ease-linear text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
       onmouseenter="if (event.detail === 69) this.style.transform = 'translateX(0px) translateY(0px) translateZ(60px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';"
@@ -28,6 +28,7 @@
       <%= item.title %>
       Problems
     </div>
+    -->
 
     <div
       class="w-full transition duration-200 ease-linear mt-4"
@@ -42,21 +43,41 @@
       />
     </div>
 
-    <div class="flex justify-between items-center mt-4">
+  <!--
+  -->
+
+  <button class="btn btn-primary flex justify-between items-center mt-4 bg-base-100" onclick="my_modal_2_<%= item.modId.replaceAll('-', '_') %>.showModal()">Checkout</button>
+
+  <!--
+  <a href="/mods/<%= item.modId %>">
+    <div class="flex justify-between items-center mt-4" onclick="my_modal_2_<%= item.modId.replaceAll('-', '_') %>.showModal()">
       <div
         class="w-fit transition duration-200 ease-linear px-4 py-2 rounded-xl text-xs font-normal dark:text-white"
-        onmouseenter="if (event.detail === 69) this.style.transform = 'translateX(0px) translateY(0px) translateZ(20px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';"
+        onmouseenter="if (event.detail === 69) this.style.transform = 'translateX(0px) translateY(0px) translateZ(80px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';"
         onmouseleave="if (event.detail === 69) this.style.transform = 'translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';"
       >
         Checkout
       </div>
-
-      <!-- <div
-            class="w-fit transition duration-200 ease-linear px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
-            onmouseenter="if (event.detail === 69) this.style.transform = 'translateX(0px) translateY(0px) translateZ(80px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';"
-            onmouseleave="if (event.detail === 69) this.style.transform = 'translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)';">
-            Sign up
-          </div> -->
     </div>
+  -->
+
+  <!--
+  <a>
+  -->
+
+  <dialog id="my_modal_2_<%= item.modId.replaceAll('-', '_') %>" class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg"><%= item.title %></h3>
+      <p class="py-4">Please enter the spaces path of the file</p>
+
+      <input type="text" required placeholder="Spaces file path" class="input input-bordered w-full max-w-xs mx-3" id="filePath-<%= item.modId %>" name="filePath" />
+      <button type="submit" class="btn btn-primary convertFile" id="<%= item.modId %>">Convert</button>
+    </div>
+
+    <form method=" dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+
   </div>
 </div>
