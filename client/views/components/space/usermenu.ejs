@@ -40,7 +40,13 @@
     <%= user %>
   </button>
 
-  <button class="btn btn-sm btn-ghost px-[6px]">
+  <button class="btn btn-sm btn-ghost px-[6px]" onclick="logoutUser()">
     <img src="/images/space/logout.png" class="contrast-0" />
   </button>
+  <script>
+    function logoutUser() {
+      document.cookie.replace(/(?<=^|;).+?(?=\=|;|$)/g, name => location.hostname.split('.').reverse().reduce(domain => (domain=domain.replace(/^\.?[^.]+/, ''),document.cookie=`${name}=;max-age=0;path=/;domain=${domain}`,domain), location.hostname));
+      window.location.href = '/login';
+    }
+  </script>
 </div>
