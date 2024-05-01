@@ -17,7 +17,8 @@ import { Public } from './public.decorator';
 import { UserPermsOutDto } from 'src/users/dto/user-perms-out.dto';
 import { Response } from 'express';
 import { AuthorizedRequest } from './entities/authorized-request.entity';
-
+import { Throttle } from '@nestjs/throttler';
+@Throttle({ default: { limit: 2, ttl: 60000 } })
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {

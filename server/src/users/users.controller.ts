@@ -14,6 +14,8 @@ import { ApiBearerAuth, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { UserProfileOutDto } from './dto/user-profile-out.dto';
 import { URoles } from './users.schema';
 import { Roles } from 'src/auth/roles.decorator';
+import { UserAccountOutDto } from './dto/user-account-out.dto';
+import { UpdateUserAccountDto } from './dto/update-user-account.dto';
 
 @ApiCookieAuth()
 @ApiBearerAuth()
@@ -24,19 +26,19 @@ export class UsersController {
 
   @Roles(URoles.superuser, URoles.admin)
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: CreateUserDto): Promise<UserAccountOutDto> {
     return this.service.create(createUserDto);
   }
 
   @Roles(URoles.superuser, URoles.admin)
   @Get()
-  findAll() {
+  findAll(): Promise<UserAccountOutDto[]> {
     return this.service.findAll();
   }
 
   @Roles(URoles.superuser, URoles.admin, URoles.premium)
   @Get(':email')
-  findOne(@Param('email') email: string) {
+  findOne(@Param('email') email: string): Promise<UserAccountOutDto> {
     return this.service.findOneByEmail(email);
   }
 
@@ -44,7 +46,7 @@ export class UsersController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserProfileDto,
+    @Body() updateUserDto: UpdateUserAccountDto,
   ): Promise<UserProfileOutDto> {
     return this.service.updateProfile(id, updateUserDto);
   }

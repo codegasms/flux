@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import { appConfig } from './config';
 import fs from 'node:fs/promises';
 import { spacesConfig } from './spaces/config';
+import { ValidationPipe } from '@nestjs/common';
 
 declare const module: any;
 
@@ -17,6 +18,7 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
+  app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
     .setTitle('Flux Server')
