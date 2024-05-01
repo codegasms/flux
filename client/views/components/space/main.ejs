@@ -77,21 +77,90 @@
     <div class="px-8 py-6 w-full">
       <div class="flex items-center justify-between">
         <h1 class="text-[24px] font-['Quicksand'] font-bold">My Files</h1>
-        <button class="btn btn-primary" onclick="my_modal_2.showModal()">Create Folder</button>
-        <dialog id="my_modal_2" class="modal">
-          <div class="modal-box">
-            <h3 class="font-bold text-lg">Create Folder</h3>
-            <p class="py-4">Please enter the name of the folder</p>
-            <!-- <form action="http://localhost:3000/spaces/create" method="POST" enctype="multipart/form-data" onsubmit="prependPwd()"> -->
-            <!-- <input type="hidden" name="variable" id="spaceParentForm" value="<%#=pwd ? pwd : "/"%>"> -->
-            <input type="text" required placeholder="Folder name" class="input input-bordered w-full max-w-xs mx-3" id="folderName" name="spaceParent" />
-            <button type="submit" class="btn btn-primary createFolder" id="<%=pwd ? pwd : "/"%>"> Create </button>
-            <!-- </form> -->
-          </div>
-          <form method=" dialog" class="modal-backdrop">
-            <button>close</button>
-          </form>
-        </dialog>
+        <div class="flex gap-3">
+          <button class="btn btn-primary" onclick="my_modal_2.showModal()">Create Folder</button>
+          <dialog id="my_modal_2" class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Create Folder</h3>
+              <p class="py-4">Please enter the name of the folder</p>
+              <!-- <form action="http://localhost:3000/spaces/create" method="POST" enctype="multipart/form-data" onsubmit="prependPwd()"> -->
+              <!-- <input type="hidden" name="variable" id="spaceParentForm" value="<%#=pwd ? pwd : "/"%>"> -->
+              <input type="text" required placeholder="Folder name" class="input input-bordered w-full max-w-xs mx-3" id="folderName" name="spaceParent" />
+              <button type="submit" class="btn btn-primary createFolder" id="<%=pwd ? pwd : "/"%>"> Create </button>
+              <!-- </form> -->
+            </div>
+            <form method=" dialog" class="modal-backdrop">
+              <button>close</button>
+            </form>
+          </dialog>
+          <button class="btn btn-primary" onclick="my_modal_3.showModal()">Upload File</button>
+          <dialog id="my_modal_3" class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Upload Your File!</h3>
+              <h1 class="text-5xl font-bold text-center mt-12 mb-5 px-20 text-gray-700 dark:text-gray-200">
+                Upload file
+              </h1>
+              <h2 class="text-2xl text-center m-5 px-20 text-gray-500 dark:text-gray-400 min-w-24">
+                Upload one file at a time or multiple files at once.
+              </h2>
+              <form action="" method="" enctype="multipart/form-data" id="uploadfile">
+                <div class="mt-10 mb-1">
+                  <label for="dropzone-file1" class="flex flex-col items-center w-full max-w-sm p-5 mx-auto mt-2 text-center bg-red-600 hover:bg-red-700 cursor-pointer dark:bg-gray-900 rounded-xl">
+                    <span class="flex">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-200 dark:text-gray-400 mx-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                      </svg>
+
+                      <h2 class="text-2xl font-bold tracking-wide text-gray-200 dark:text-gray-200 mx-1">
+                        Select a file
+                      </h2>
+                    </span>
+
+                    <input id="dropzone-file1" type="file" class="hidden" accept=".pdf, application/pdf, application/x-pdf application/x-bzpdf application/x-gzpdf" <% if (true) { %> multiple <% } %> />
+                  </label>
+                </div>
+
+                <p class="mt-1 font-medium tracking-wide text-gray-700 dark:text-gray-200 text-center">…or drag a file here</p>
+              </form>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+              <button>close</button>
+            </form>
+          </dialog>
+          <script>
+            const fileitems = document.querySelector('#dropzone-file1');
+            const uploadfile = document.querySelector('#uploadfile');
+            fileitems.addEventListener('change', async (e) => {
+              console.log("submitting");
+              e.preventDefault();
+
+              let formData = new FormData();
+
+              // Append all files to FormData
+              formData.append('spaceParent', '<%= pwd ? pwd : "/"%>');
+              for (let i = 0; i < fileitems.files.length; i++) {
+                formData.append('files', fileitems.files[i]);
+              }
+
+              await fetch('<%= params.server_url %>/spaces/create', {
+                  method: 'POST',
+                  credentials: 'include',
+                  body: formData
+                })
+                .then(response => {
+                  console.log(response.json());
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                });
+              location.reload();
+            });
+            fileitems.addEventListener('change', (e) => {
+              // Submit the form just as the file is uploaded.
+              e.target.form.submit();
+            });
+          </script>
+        </div>
       </div>
       <!-- Breadcrumbs -->
 
@@ -100,10 +169,10 @@
           <li><a href="/space">Home</a></li>
           <% 
             if(path !== "/"){
-              pwd = pwd.split("/");
+              pwdarr = pwd.split("/");
               let prevdir = "/";
               
-              for( dir of pwd) {
+              for( dir of pwdarr) {
                 let id = await fetchData(prevdir, dir);
           %>
           <li><a href="/space/<%= id._id%>"><%= dir %></a></li>

@@ -1,0 +1,39 @@
+<h1 class="text-5xl font-bold text-center mt-12 mb-5 px-20 text-gray-700 dark:text-gray-200">
+  <%= props.title %>
+</h1>
+
+<h2 class="text-2xl text-center m-5 px-20 text-gray-500 dark:text-gray-400 min-w-24">
+  <%= props.description %>
+</h2>
+
+<form action="" method="POST" enctype="multipart/form-data">
+  <div class="mt-10 mb-1">
+    <label for="dropzone-file" class="flex flex-col items-center w-full max-w-sm p-5 mx-auto mt-2 text-center bg-red-600 hover:bg-red-700 cursor-pointer dark:bg-gray-900 rounded-xl">
+      <span class="flex">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-200 dark:text-gray-400 mx-1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+        </svg>
+
+        <h2 class="text-2xl font-bold tracking-wide text-gray-200 dark:text-gray-200 mx-1">
+          <%= props.label %>
+        </h2>
+      </span>
+
+      <input id="dropzone-file1" type="file" class="hidden" accept="<%= props.accept %>" <% if (props.multiple) { %> multiple <% } %> />
+    </label>
+  </div>
+
+  <p class="mt-1 font-medium tracking-wide text-gray-700 dark:text-gray-200 text-center"><%= props.sublabel %></p>
+</form>
+
+
+<script>
+  const file = document.querySelector('#dropzone-file1');
+  file.addEventListener('submit', (e) => {
+    e.preventDefault();
+  });
+  file.addEventListener('change', (e) => {
+    // Submit the form just as the file is uploaded.
+    e.target.form.submit();
+  });
+</script>
