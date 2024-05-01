@@ -81,6 +81,18 @@ const averageYearlyDiscount = parseInt(yearlyDiscounts / updatedPlans.length);
 const averageHalfYearlyDiscount = parseInt(halfYearlyDiscounts / updatedPlans.length);
 %>
 
+<!-- Modal -->
+<div id="razorpayModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg">
+    <!-- Razorpay button -->
+    <p id="planModal" class="text-center text-xl font-bold text-gray-800"></p>
+    <p id="priceModal" class="text-center text-xl font-bold text-gray-800"></p>
+    <button id="rzp-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      Pay With Razorpay
+    </button>
+  </div>
+</div>
+
 <section class="bg-white dark:bg-gray-900">
   <div class="container px-6 py-8 mx-auto">
     <div class="max-w-2xl p-1.5 mx-auto overflow-hidden bg-gray-100 rounded-lg dark:bg-gray-800">
@@ -114,5 +126,6 @@ const averageHalfYearlyDiscount = parseInt(halfYearlyDiscounts / updatedPlans.le
   </div>
   </div>
 </section>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script type="module" src="/js/flux-mods/pricing.js"></script>
 <%- await include("../../layouts/end.ejs") %>
