@@ -1,7 +1,10 @@
-export class UpdateUserEmailDto {
-  email: string;
-}
+import { UserProfile } from '../entities/user-profile.entity';
 
-export class UpdateUsernameDto {
-  username: string;
+export class UpdateUserAccountDto {
+  fullName: string;
+  role: string;
+  isActive: boolean;
+  modTokensRemaining: number;
+  spacesQuota: string;
+  profile: UserProfile;
 }

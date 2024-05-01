@@ -310,7 +310,7 @@ export class SpacesController {
     return new StreamableFile(file);
   }
 
-  @Get('get/:fileID')
+  @Get('get/:fileID/:fileName')
   @ApiOperation({
     summary: 'Send entire file if user has access',
   })

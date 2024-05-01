@@ -1,5 +1,4 @@
 export class UserProfile {
-  fullName: string;
   profilePic?: string;
   bio?: string;
   personalSite?: string;

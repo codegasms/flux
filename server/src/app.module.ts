@@ -19,6 +19,7 @@ import { appConfig } from './config';
 import { MailerModule } from './mailer/mailer.module';
 import { spacesConfig } from './spaces/config';
 import path from 'node:path';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   controllers: [AppController],
@@ -32,6 +33,10 @@ import path from 'node:path';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
   imports: [
     MongooseModule.forRoot(appConfig.mongoConStr),
@@ -39,6 +44,12 @@ import path from 'node:path';
       rootPath: path.resolve(spacesConfig.fileStorageRootDir, 'public'),
       serveRoot: '/assets',
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 20,
+      },
+    ]),
     AuthModule,
     OauthModule,
     UsersModule,

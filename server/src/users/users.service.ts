@@ -14,6 +14,7 @@ import { UserProfileOutDto } from './dto/user-profile-out.dto';
 import { UserAccountOutDto } from './dto/user-account-out.dto';
 import { StorageSpaceDto } from './dto/storage-space.dto';
 import { FindOrCreateUserDto } from './dto/find-or-create-user.dto';
+import { UpdateUserAccountDto } from './dto/update-user-account.dto';
 
 // import { UpdateUserAccountDto } from './dto/update-user-account.dto';
 
@@ -64,13 +65,13 @@ export class UsersService {
     return connectedUser;
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.model(createUserDto);
     return await createdUser.save();
   }
 
-  async findAll() {
-    return await this.model.find().exec();
+  async findAll(): Promise<User[]> {
+    return await this.model.find({}, { hashedPassword: false }).exec();
   }
 
   async findOneById(
@@ -116,17 +117,16 @@ export class UsersService {
     return await this.model.findById(id, '-profile -hashedPassword');
   }
 
-  // async updateAccount(
-  //   id: string,
-  //   updateAccountDto: UpdateUserAccountDto,
-  // ): Promise<UserAccountOutDto | undefined> {
-  //   return await this.model.findByIdAndUpdate(id, updateAccountDto, {
-  //     upsert: true,
-  //     projection: '-profile -hashedPassword',
-  //   });
-  // }
+  async updateAccount(
+    id: string,
+    updateAccountDto: UpdateUserAccountDto,
+  ): Promise<UserAccountOutDto | undefined> {
+    return await this.model.findByIdAndUpdate(id, updateAccountDto, {
+      projection: '-hashedPassword',
+      new: true,
+    });
+  }
 
-  // update email and update username
   async remove(id: string) {
     return await this.model.findByIdAndDelete(id);
   }

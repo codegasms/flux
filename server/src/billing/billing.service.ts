@@ -29,7 +29,7 @@ export class BillingService {
       return {
         key: rzpConfig.keyId,
         order: response,
-        verifyUrl: 'orders/verify',
+        verifyUrl: 'billing/verify',
       };
     } catch (err) {
       console.log(err);
