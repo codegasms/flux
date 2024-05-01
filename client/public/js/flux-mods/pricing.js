@@ -71,6 +71,8 @@ const updatedPlans = updateFeaturesArray(plans);
 // console.log(updatedPlans);
 
 window.onload = () => {
+  var currentType = 'monthly';
+
   // Get references to the buttons and card elements
   const monthlyButton = document.querySelector('#monthlyButton');
   const biannuallyButton = document.querySelector('#biannuallyButton');
@@ -82,6 +84,8 @@ window.onload = () => {
   annuallyButton.addEventListener('click', () => updatePrices('annually'));
 
   function updatePrices(subscriptionType) {
+    currentType = subscriptionType;
+    // console.log('updatePrices');
     // Loop over the plans
     updatedPlans.forEach((plan) => {
       const planID = plan.title;
@@ -145,4 +149,113 @@ window.onload = () => {
       }
     });
   }
+
+  // Function to show the modal
+  function showModal(planName, planPrice, rzp1) {
+    const modal = document.getElementById('razorpayModal');
+    const planModal = document.getElementById('planModal');
+    const priceModal = document.getElementById('priceModal');
+
+    // Set the plan name and price in the modal
+    planModal.textContent = planName;
+    priceModal.textContent = `Price: ₹${planPrice.toFixed(2)}`;
+
+    document.getElementById('rzp-button').onclick = function (e) {
+      rzp1.open();
+      e.preventDefault();
+    };
+
+    // Remove the 'hidden' class to show the modal
+    modal.classList.remove('hidden');
+  }
+
+  // Function to hide the modal
+  function hideModal() {
+    document.getElementById('razorpayModal').classList.add('hidden');
+  }
+
+  updatedPlans.forEach((plan) => {
+    const planID = plan.title;
+    const planButton = document.querySelector(`#${planID}`);
+
+    planButton.addEventListener('click', async function () {
+      // Show the modal
+      const title = plan.title;
+      const price = calculateDiscountedPrice(plan, currentType);
+
+      var data = null;
+      const baseUrl = 'http://localhost:3000/billing/create';
+
+      try {
+        const response = await fetch(baseUrl, {
+          method: 'POST',
+          headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            amount: price * 100,
+            currency: 'INR',
+            receipt: title,
+          }),
+        });
+        // console.log(response.status);
+        if (!response.ok) {
+          // console.log(response.status);
+          // console.log(response.statusText);
+          alert('Could not create order! Make sure setup is correct');
+        } else {
+          data = await response.json();
+          // console.log(data);
+          console.log('end of flow');
+        }
+        // console.log(response.body);
+      } catch (err) {
+        console.log('error happened');
+        // console.log(err);
+        if (err?.response) {
+          console.log(await err.response.json());
+        }
+      }
+      // alert(`Order created: id: ${data.order.id}. Click on Pay with Razorpay`);
+
+      var options = {
+        key: data.key,
+        amount: data.order.amount,
+        // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        currency: data.order.currency,
+        name: 'Flux@Codegasms',
+        description: 'Thank You For Ordering!',
+        image: 'https://i.ibb.co/ZJG2pG2/download-7.jpg',
+        order_id: data.order.id,
+        callback_url: `http://localhost:3000/${data.verifyUrl}?frontendBase=http://localhost:8000&successRedirect=/mods/success&failureRedirect=/mods/failure`,
+
+        notes: {
+          'custom-data': 'data',
+        },
+        theme: {
+          color: '#3399cc',
+        },
+      };
+      if (data.prefill) {
+        options['prefill'] = data.prefill;
+      }
+
+      var rzp1 = new Razorpay(options);
+      // document.getElementById('rzp-button1').onclick = function (e) {
+      //   rzp1.open();
+      //   e.preventDefault();
+      // };
+
+      showModal(title, price, rzp1);
+    });
+  });
+
+  const modal = document.getElementById('razorpayModal');
+  modal.addEventListener('click', (event) => {
+    if (!event.target.closest('.modal-content')) {
+      hideModal();
+    }
+  });
 };
