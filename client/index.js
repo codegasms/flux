@@ -55,13 +55,27 @@ function dynamicRoutes(directory, route, routeList = []) {
 
 function renderEjsAt(filePath, route) {
   server.get(route, (req, res) => {
-    return res.render(filePath.slice('views/'.length, filePath.length - 4), {
-      params: {
-        ...req.params,
-        server_url: process.env.SERVER,
-        cookies: req.cookies,
-      },
-    });
+    try {
+      return res.render(
+        filePath.slice('views/'.length, filePath.length - 4),
+        {
+          params: {
+            ...req.params,
+            server_url: process.env.SERVER,
+            cookies: req.cookies,
+          },
+        },
+        (err, html) => {
+          if (err) {
+            console.error(err);
+            return res.render('unauthorized/index.ejs');
+          }
+          return res.send(html);
+        }
+      );
+    } catch (err) {
+      return res.render('unauthorized/index.ejs');
+    }
   });
 }
 
