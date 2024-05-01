@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.7",
+    "chart.js": "^4.4.2",
     "chartjs": "^0.3.24",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",

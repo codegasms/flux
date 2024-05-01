@@ -1,0 +1,44 @@
+<table class="table">
+  <!-- head -->
+  <thead>
+    <tr>
+      <th>S.No.</th>
+      <th>Plan</th>
+      <th>Description</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Loop through the users to generate rows -->
+    <% users.forEach(function(user) { %>
+      <tr>
+        <th><%= user.index + 1 %></th>
+        <td>
+          <div class="flex items-center gap-3">
+            <div class="avatar">
+              <div class="mask mask-squircle w-12 h-12">
+                <img src="<%= user.avatar %>" alt="Plan" />
+              </div>
+            </div>
+            <div>
+              <div class="font-bold"><%= user.name %></div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <%= user.company %>
+          <br/>
+          <span class="badge badge-ghost badge-sm"><%= user.jobTitle %></span>
+        </td>
+        <td>
+            <button class="btn btn-outline btn-sm">Edit</button>
+        </td>
+        <td>
+            <button class="btn btn-active btn-neutral btn-sm">Delete</button>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+  <!-- foot -->
+</table>
