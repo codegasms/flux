@@ -31,7 +31,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const token = await this.service.login(loginDto.email, loginDto.password);
-    res.cookie('accessToken', token.access_token, { sameSite: 'strict' });
+    res.cookie('accessToken', token.access_token, { sameSite: 'none' });
     return token;
   }
 
@@ -43,7 +43,7 @@ export class AuthController {
   ): Promise<RegisterResponseDto> {
     const token = await this.service.register(registerDto);
     res.cookie('accessToken', token.access_token, {
-      sameSite: 'strict',
+      sameSite: 'none',
     });
     return token;
   }

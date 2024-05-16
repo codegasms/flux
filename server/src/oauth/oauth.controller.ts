@@ -39,7 +39,7 @@ export class OauthController {
     });
 
     const token = await this.authService.generateJwtToken(user.email);
-    res.cookie('accessToken', token, { sameSite: 'strict' });
+    res.cookie('accessToken', token, { sameSite: 'none' });
     res.redirect(oauthConfig.frontendUrl);
   }
 
@@ -61,7 +61,7 @@ export class OauthController {
       email: req.user.emails[0].value,
     });
     const token = await this.authService.generateJwtToken(user.email);
-    res.cookie('accessToken', token, { sameSite: 'strict' });
+    res.cookie('accessToken', token, { sameSite: 'none' });
     res.redirect(oauthConfig.frontendUrl);
   }
 }
