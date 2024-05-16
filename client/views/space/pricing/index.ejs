@@ -1,7 +1,7 @@
 <%- await include("../../layouts/header.ejs", {title: 'FLUX Spaces Pricing' }) %>
 
-<% 
-const response = await fetch('http://localhost:3000/spaces/quotas', {
+<%
+const response = await fetch('https://api.flux.codegasms.com/spaces/quotas', {
   method: 'GET',
   headers: {
     accept: 'application/json',
@@ -98,7 +98,7 @@ const averageHalfYearlyDiscount = parseInt(halfYearlyDiscounts / updatedPlans.le
       <div class="grid gap-3 md:grid-cols-3">
         <button id="monthlyButton" class="px-3 py-2 font-medium text-gray-800 uppercase transition-colors duration-300 transform bg-gray-200 rounded-lg dark:bg-gray-700 focus:outline-none dark:text-gray-200">Monthly</button>
 
-          <button id="biannuallyButton" class="flex items-center justify-center px-3 py-2 font-medium text-gray-800 uppercase transition-colors duration-300 transform bg-transparent rounded-lg focus:outline-none dark:text-gray-200 dark:hover:bg-gray-600 hover:bg-gray-200">
+        <button id="biannuallyButton" class="flex items-center justify-center px-3 py-2 font-medium text-gray-800 uppercase transition-colors duration-300 transform bg-transparent rounded-lg focus:outline-none dark:text-gray-200 dark:hover:bg-gray-600 hover:bg-gray-200">
           <span class="mx-1">Biannually</span>
           <span class="text-xs mx-1 font-normal text-white bg-blue-500 rounded-full py-0.5 px-1.5">save
             <%= averageHalfYearlyDiscount %>%

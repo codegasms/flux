@@ -1,9 +1,12 @@
-const response = await fetch('http://localhost:3000/mods/token-plans', {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-  },
-});
+const response = await fetch(
+  'https://api.flux.codegasms.com/mods/token-plans',
+  {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+    },
+  }
+);
 
 const defaultPlans = [
   {
@@ -184,7 +187,7 @@ window.onload = () => {
       const price = calculateDiscountedPrice(plan, currentType);
 
       var data = null;
-      const baseUrl = 'http://localhost:3000/billing/create';
+      const baseUrl = 'https://api.flux.codegasms.com/billing/create';
 
       try {
         const response = await fetch(baseUrl, {
@@ -229,7 +232,7 @@ window.onload = () => {
         description: 'Thank You For Ordering!',
         image: 'https://i.ibb.co/ZJG2pG2/download-7.jpg',
         order_id: data.order.id,
-        callback_url: `http://localhost:3000/${data.verifyUrl}?frontendBase=http://localhost:8000&successRedirect=/mods/success&failureRedirect=/mods/failure`,
+        callback_url: `https://api.flux.codegasms.com/${data.verifyUrl}?frontendBase=http://localhost:8000&successRedirect=/mods/success&failureRedirect=/mods/failure`,
 
         notes: {
           'custom-data': 'data',

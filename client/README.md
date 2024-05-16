@@ -19,7 +19,7 @@ npm run fmt # format your code
 
 ## Routing
 
-(Assuming your app is running on [localhost:3000](http://localhost:3000))
+(Assuming your app is running on [localhost:3000](https://api.flux.codegasms.com))
 
 - `views`: all the `/pages` of our app live here
   - `views/index.ejs` is available at `localhost:3000/`

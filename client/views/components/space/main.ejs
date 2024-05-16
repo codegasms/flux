@@ -2,13 +2,13 @@
           var folderData = [];
           var pwd = null;
           var response = null;
-          async function fetchData(parentPath, currentDir) { 
-            const response = await fetch(params.server_url + '/spaces/get-id', { 
-              method: 'POST', 
+          async function fetchData(parentPath, currentDir) {
+            const response = await fetch(params.server_url + '/spaces/get-id', {
+              method: 'POST',
               headers: {
                 'accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + params.cookies.accessToken, 
+                'Authorization': 'Bearer ' + params.cookies.accessToken,
             },
             body: JSON.stringify({spaceParent: parentPath, fileName:currentDir}),
            })
@@ -18,13 +18,13 @@
             });
             return response;
           }
-          async function fetchData1() { 
-            response = await fetch(params.server_url + '/spaces/meta', { 
-              method: 'POST', 
+          async function fetchData1() {
+            response = await fetch(params.server_url + '/spaces/meta', {
+              method: 'POST',
               headers: {
                 'accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + params.cookies.accessToken, 
+                'Authorization': 'Bearer ' + params.cookies.accessToken,
             },
             body: JSON.stringify({spaceParent: path, fileName:""}),
            })
@@ -53,7 +53,7 @@
             await fetchData1();
           } else {
             await fetchData2();
-          } 
+          }
           %>
 
 <div class="px-8 w-full overflow-y-scroll no-scrollbar">
@@ -83,7 +83,7 @@
             <div class="modal-box">
               <h3 class="font-bold text-lg">Create Folder</h3>
               <p class="py-4">Please enter the name of the folder</p>
-              <!-- <form action="http://localhost:3000/spaces/create" method="POST" enctype="multipart/form-data" onsubmit="prependPwd()"> -->
+              <!-- <form action="https://api.flux.codegasms.com/spaces/create" method="POST" enctype="multipart/form-data" onsubmit="prependPwd()"> -->
               <!-- <input type="hidden" name="variable" id="spaceParentForm" value="<%#=pwd ? pwd : "/"%>"> -->
               <input type="text" required placeholder="Folder name" class="input input-bordered w-full max-w-xs mx-3" id="folderName" name="spaceParent" />
               <button type="submit" class="btn btn-primary createFolder" id="<%=pwd ? pwd : "/"%>"> Create </button>
@@ -167,11 +167,11 @@
       <div class="text-sm breadcrumbs">
         <ul>
           <li><a href="/space">Home</a></li>
-          <% 
+          <%
             if(path !== "/"){
               pwdarr = pwd.split("/");
               let prevdir = "/";
-              
+
               for( dir of pwdarr) {
                 let id = await fetchData(prevdir, dir);
           %>
@@ -185,7 +185,7 @@
       <div class="flex flex-wrap mt-4 gap-x-4">
 
 
-        <% 
+        <%
           function formatBytes(bytes, decimals = 2) {
           if (bytes === 0) return '0 Bytes';
 
@@ -196,7 +196,7 @@
 
           return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
           }
-        folderData.forEach(folder => { 
+        folderData.forEach(folder => {
             if(folder.isDir){ %>
         <button class="btn btn-ghost btn-xs sm:btn-sm md:btn-md lg:btn-lg border-2 border-base-200 flex gap-4 my-2" onclick="window.location.href='/space/<%= folder._id %>'">
           <img src="/images/space/folder_closed.png" />
