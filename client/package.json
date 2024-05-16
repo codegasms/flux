@@ -2,7 +2,7 @@
   "type": "module",
   "scripts": {
     "tailwind": "npx tailwindcss -i ./public/styles.css -o ./public/vendor/tailwind.css --watch",
-    "start": "node index.js",
+    "start": "HOST=0.0.0.0 node index.js",
     "dev": "nodemon index.js -w views/**/* public/**/*",
     "fmt": "npx prettier --plugin=prettier-plugin-ejs --write .",
     "lint": "npx ejs-lint views"
