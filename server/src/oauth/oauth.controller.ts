@@ -9,7 +9,6 @@ import { AuthService } from 'src/auth/auth.service';
 import { OAuthProvider } from 'src/users/dto/find-or-create-user.dto';
 import { Response } from 'express';
 import { oauthConfig } from './config';
-import { appConfig } from 'src/config';
 
 @ApiTags('oauth')
 @Public()
@@ -41,8 +40,7 @@ export class OauthController {
 
     const token = await this.authService.generateJwtToken(user.email);
     res.cookie('accessToken', token, {
-      sameSite: 'none',
-      domain: appConfig.frontendDomain,
+      sameSite: 'strict',
     });
     res.redirect(oauthConfig.frontendUrl);
   }
@@ -66,8 +64,7 @@ export class OauthController {
     });
     const token = await this.authService.generateJwtToken(user.email);
     res.cookie('accessToken', token, {
-      sameSite: 'none',
-      domain: appConfig.frontendDomain,
+      sameSite: 'strict',
     });
     res.redirect(oauthConfig.frontendUrl);
   }
