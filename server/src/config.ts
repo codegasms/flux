@@ -23,6 +23,8 @@ export const appConfig = {
     port: parseInt(fromEnv('REDIS_PORT')),
   },
 
+  frontendDomain: fromEnv('FRONTEND_DOMAIN'),
+
   debug: fromEnv('DEBUG', 'false').toLowerCase() === 'true',
 };
 
