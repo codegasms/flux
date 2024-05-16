@@ -50,7 +50,7 @@ const chart = new Chart(ctx, {
     datasets: [
       {
         label: 'Personal',
-        data: [12, 19, 3, 5, 2],
+        data: [1, 1, 3, 5, 2],
         showLine: true,
         backgroundColor: [
           'rgba(255, 99, 132, 0.6)',
