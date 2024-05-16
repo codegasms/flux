@@ -18,7 +18,6 @@ import { UserPermsOutDto } from 'src/users/dto/user-perms-out.dto';
 import { Response } from 'express';
 import { AuthorizedRequest } from './entities/authorized-request.entity';
 import { Throttle } from '@nestjs/throttler';
-import { appConfig } from 'src/config';
 
 @Throttle({ default: { limit: 2, ttl: 60000 } })
 @ApiTags('auth')
@@ -34,9 +33,9 @@ export class AuthController {
   ) {
     const token = await this.service.login(loginDto.email, loginDto.password);
     res.cookie('accessToken', token.access_token, {
-      sameSite: 'none',
-      domain: appConfig.frontendDomain,
+      sameSite: 'strict',
     });
+
     return token;
   }
 
@@ -48,8 +47,7 @@ export class AuthController {
   ): Promise<RegisterResponseDto> {
     const token = await this.service.register(registerDto);
     res.cookie('accessToken', token.access_token, {
-      sameSite: 'none',
-      domain: appConfig.frontendDomain,
+      sameSite: 'strict',
     });
     return token;
   }
