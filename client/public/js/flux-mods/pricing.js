@@ -232,7 +232,7 @@ window.onload = () => {
         description: 'Thank You For Ordering!',
         image: 'https://i.ibb.co/ZJG2pG2/download-7.jpg',
         order_id: data.order.id,
-        callback_url: `https://api.flux.codegasms.com/${data.verifyUrl}?frontendBase=http://localhost:8000&successRedirect=/mods/success&failureRedirect=/mods/failure`,
+        callback_url: `https://api.flux.codegasms.com/${data.verifyUrl}?frontendBase=https://flux.codegasms.com&successRedirect=/mods/success&failureRedirect=/mods/failure`,
 
         notes: {
           'custom-data': 'data',
