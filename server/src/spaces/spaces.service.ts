@@ -113,6 +113,7 @@ export class SpacesService {
     );
 
     const existingFileObject = await this.filesModel.findOne({
+      owner: createFileDto.owner,
       spaceParent: createFileDto.spaceParent,
       fileName: createFileDto.fileName,
     });
