@@ -42,7 +42,11 @@ import {
 } from './archives';
 */
 
-export function setupConversion(inputFileName: string, blobPath: string, outputExt: string) {
+export function setupConversion(
+  inputFileName: string,
+  blobPath: string,
+  outputExt: string,
+) {
   const extension = path.extname(inputFileName);
   if (extension === '') {
     throw new Error('Input file must have an extension');
