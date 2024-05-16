@@ -3,7 +3,6 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import pug from 'pug';
 
-import nodemailer from 'nodemailer';
 import { appConfig } from 'src/config';
 import { SendMailDto } from './dto/send-mail.dto';
 import { SendTemplateDto } from './dto/send-template.dto';
