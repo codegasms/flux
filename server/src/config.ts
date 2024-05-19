@@ -24,6 +24,7 @@ export const appConfig = {
   },
 
   debug: fromEnv('DEBUG', 'false').toLowerCase() === 'true',
+  enableMail: fromEnv('ENABLE_EMAIL_NOTIFICATIONS', 'true').toLowerCase() === 'true',
 };
 
 console.log(appConfig);

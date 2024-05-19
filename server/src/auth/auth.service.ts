@@ -8,6 +8,7 @@ import { RegisterResponseDto } from './dto/register-response.dto';
 import { saltRounds } from './constants';
 import { SignInResponseDto } from './dto/sign-in-response.dto';
 import { MailerService } from 'src/mailer/mailer.service';
+import { appConfig } from 'src/config';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private mailer: MailerService,
-  ) {}
+  ) { }
 
   async login(email: string, password: string): Promise<SignInResponseDto> {
     const user = await this.usersService.findOneByEmail(email);
@@ -28,12 +29,16 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    await this.mailer.sendTemplateMail({
-      templateType: 'login',
-      recipients: [email],
-      subject: 'Flux@Codegasms New Login Detected',
-      username: user.fullName,
-    });
+    if (appConfig.enableMail) {
+      await this.mailer.sendTemplateMail({
+        templateType: 'login',
+        recipients: [email],
+        subject: 'Flux@Codegasms New Login Detected',
+        username: user.fullName,
+      });
+    } else {
+      console.log(`Simulating sending login mail to ${email}!`)
+    }
 
     return {
       access_token: await this.generateJwtToken(email),
@@ -48,12 +53,16 @@ export class AuthService {
       hashedPassword: hashedPassword,
     });
 
-    await this.mailer.sendTemplateMail({
-      templateType: 'register',
-      recipients: [user.email],
-      subject: 'Welcome to Flux@Codegasms',
-      username: user.fullName,
-    });
+    if (appConfig.enableMail) {
+      await this.mailer.sendTemplateMail({
+        templateType: 'register',
+        recipients: [user.email],
+        subject: 'Welcome to Flux@Codegasms',
+        username: user.fullName,
+      });
+    } else {
+      console.log(`Simulating sending registration mail to ${user.email}!`)
+    }
 
     return {
       access_token: await this.generateJwtToken(user.email),
