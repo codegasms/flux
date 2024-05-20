@@ -67,7 +67,6 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const now = new Date();
-
     const createdUser = new this.model({
       ...createUserDto,
       lastLogin: now,

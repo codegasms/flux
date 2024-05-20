@@ -25,7 +25,7 @@ export class AuthService {
     const match = await bcrypt.compare(password, user?.hashedPassword);
 
     if (!match) {
-      throw new UnauthorizedException("Password or email doesn't match");
+      throw new UnauthorizedException('Password or email does not match');
     }
 
     user.lastLogin = new Date();
