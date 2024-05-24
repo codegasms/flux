@@ -66,7 +66,12 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const createdUser = new this.model(createUserDto);
+    const now = new Date();
+    const createdUser = new this.model({
+      ...createUserDto,
+      lastLogin: now,
+      joined: now,
+    });
     return await createdUser.save();
   }
 
@@ -87,7 +92,7 @@ export class UsersService {
     return String(user._id);
   }
 
-  async findOneByEmail(email: string): Promise<User | undefined> {
+  async findOneByEmail(email: string): Promise<UserDocument | undefined> {
     return await this.model.findOne({ email: email });
   }
 
