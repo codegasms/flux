@@ -1,0 +1,41 @@
+# path: ./docker-compose.yaml
+version: '3.9'
+
+services:
+  flux-server:
+    depends_on:
+      - redis
+      - mongo
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flux-server
+    env_file:
+      - .env
+    environment:
+      - MONGO_CON_STR=mongodb://mongo:27017/flux
+      - REDIS_HOST=redis
+    ports:
+      - 3000:3000
+    volumes:
+      - flux-server:/app
+
+  redis:
+    image: 'redis:alpine'
+    command: redis-server
+    ports:
+      - 6379:6379
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - 27017:27017
+
+volumes:
+  mongo-data:
+  flux-server:

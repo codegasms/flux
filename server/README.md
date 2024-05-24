@@ -45,6 +45,13 @@ To start the backend server with hot-reload:
 npm run dev
 ```
 
+### Using Docker Compose
+
+```shell
+docker compose up
+```
+
 ## Production Deployment
 
-Nginx + PM2 + Certbot
+Raw Deployments on Ubuntu VMs: Nginx + PM2 + Certbot
+Managed Platforms: Docker Compose
