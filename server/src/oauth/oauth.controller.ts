@@ -1,14 +1,14 @@
 import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { OauthService } from './oauth.service';
-import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from 'src/auth/public.decorator';
-import { GithubOauthGuard } from './guards/github-oauth.guard';
-import { UsersService } from 'src/users/users.service';
-import { AuthService } from 'src/auth/auth.service';
-import { OAuthProvider } from 'src/users/dto/find-or-create-user.dto';
 import { Response } from 'express';
+import { AuthService } from 'src/auth/auth.service';
+import { Public } from 'src/auth/public.decorator';
+import { OAuthProvider } from 'src/users/dto/find-or-create-user.dto';
+import { UsersService } from 'src/users/users.service';
 import { oauthConfig } from './config';
+import { GithubOauthGuard } from './guards/github-oauth.guard';
+import { GoogleOauthGuard } from './guards/google-oauth.guard';
+import { OauthService } from './oauth.service';
 
 @ApiTags('oauth')
 @Public()
@@ -18,11 +18,11 @@ export class OauthController {
     private readonly oauthService: OauthService,
     private usersService: UsersService,
     private authService: AuthService,
-  ) {}
+  ) { }
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
-  async googleOAuth() {}
+  async googleOAuth() { }
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
@@ -42,13 +42,13 @@ export class OauthController {
     res.cookie('accessToken', token, {
       sameSite: 'none',
     });
-    return user;
-    // res.redirect(oauthConfig.frontendUrl);
+
+    return res.redirect(oauthConfig.frontendUrl);
   }
 
   @Get('github')
   @UseGuards(GithubOauthGuard)
-  async githubOAuth() {}
+  async githubOAuth() { }
 
   @Get('github/callback')
   @UseGuards(GithubOauthGuard)
@@ -67,6 +67,6 @@ export class OauthController {
     res.cookie('accessToken', token, {
       sameSite: 'none',
     });
-    res.redirect(oauthConfig.frontendUrl);
+    return res.redirect(oauthConfig.frontendUrl);
   }
 }
