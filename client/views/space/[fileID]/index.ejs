@@ -7,7 +7,7 @@
     <!-- Search bar -->
     <%- await include("../../components/space/topbar.ejs", {username: params.fileID}) %>
     <!-- Main page -->
-    <%- await include("../../components/space/main.ejs", {path: params.fileID}) %>
+    <%- await include("../../components/space/main.ejs", {path: params.fileID, params: params}) %>
     <!-- Right panel -->
     <%#- await include("../components/space/rightpanel.ejs") %>
   </div>

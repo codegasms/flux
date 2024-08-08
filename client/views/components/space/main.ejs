@@ -83,7 +83,7 @@
             <div class="modal-box">
               <h3 class="font-bold text-lg">Create Folder</h3>
               <p class="py-4">Please enter the name of the folder</p>
-              <!-- <form action="https://api.flux.codegasms.com/spaces/create" method="POST" enctype="multipart/form-data" onsubmit="prependPwd()"> -->
+              <!-- <form action="<%- params.server_api %>/spaces/create" method="POST" enctype="multipart/form-data" onsubmit="prependPwd()"> -->
               <!-- <input type="hidden" name="variable" id="spaceParentForm" value="<%#=pwd ? pwd : "/"%>"> -->
               <input type="text" required placeholder="Folder name" class="input input-bordered w-full max-w-xs mx-3" id="folderName" name="spaceParent" />
               <button type="submit" class="btn btn-primary createFolder" id="<%=pwd ? pwd : "/"%>"> Create </button>
