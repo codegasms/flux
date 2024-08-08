@@ -1,7 +1,7 @@
 <%- await include("../../layouts/header.ejs", {title: 'FLUX Mods Pricing' }) %>
 
 <%
-const response = await fetch('https://api.flux.codegasms.com/mods/token-plans', {
+const response = await fetch(`${params.server_api}/mods/token-plans`, {
   method: 'GET',
   headers: {
     accept: 'application/json',

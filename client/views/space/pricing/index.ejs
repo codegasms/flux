@@ -1,7 +1,7 @@
 <%- await include("../../layouts/header.ejs", {title: 'FLUX Spaces Pricing' }) %>
 
 <%
-const response = await fetch('https://api.flux.codegasms.com/spaces/quotas', {
+const response = await fetch(`${params.server_api}/spaces/quotas`, {
   method: 'GET',
   headers: {
     accept: 'application/json',

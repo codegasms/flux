@@ -7,8 +7,6 @@ import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || 'localhost';
 const server = express();
 
 server.use(cookieParser());
@@ -62,7 +60,8 @@ function renderEjsAt(filePath, route) {
         {
           params: {
             ...req.params,
-            server_url: process.env.SERVER,
+            server_url: process.env.SERVER_URL,
+            server_api: process.env.SERVER_API,
             cookies: req.cookies,
           },
         },
@@ -89,6 +88,9 @@ console.log(routes);
 routes.forEach(([file, route]) => renderEjsAt(file, route));
 
 server.use(express.static('public'));
+
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || 'localhost';
 
 server.listen(PORT, HOST, () => {
   console.log(`Serving ejs from ${PORT}`);
