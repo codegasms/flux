@@ -9,6 +9,7 @@ import { oauthConfig } from './config';
 import { GithubOauthGuard } from './guards/github-oauth.guard';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { OauthService } from './oauth.service';
+import { appConfig } from 'src/config';
 
 @ApiTags('oauth')
 @Public()
@@ -18,11 +19,11 @@ export class OauthController {
     private readonly oauthService: OauthService,
     private usersService: UsersService,
     private authService: AuthService,
-  ) { }
+  ) {}
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
-  async googleOAuth() { }
+  async googleOAuth() {}
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
@@ -41,6 +42,7 @@ export class OauthController {
     const token = await this.authService.generateJwtToken(user.email);
     res.cookie('accessToken', token, {
       sameSite: 'none',
+      secure: appConfig.environment === 'production',
     });
 
     return res.redirect(oauthConfig.frontendUrl);
@@ -48,7 +50,7 @@ export class OauthController {
 
   @Get('github')
   @UseGuards(GithubOauthGuard)
-  async githubOAuth() { }
+  async githubOAuth() {}
 
   @Get('github/callback')
   @UseGuards(GithubOauthGuard)
@@ -66,6 +68,7 @@ export class OauthController {
     const token = await this.authService.generateJwtToken(user.email);
     res.cookie('accessToken', token, {
       sameSite: 'none',
+      secure: appConfig.environment === 'production',
     });
     return res.redirect(oauthConfig.frontendUrl);
   }
