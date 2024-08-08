@@ -40,9 +40,10 @@ export class OauthController {
 
     const token = await this.authService.generateJwtToken(user.email);
     res.cookie('accessToken', token, {
-      sameSite: 'strict',
+      sameSite: 'none',
     });
-    res.redirect(oauthConfig.frontendUrl);
+    return user;
+    // res.redirect(oauthConfig.frontendUrl);
   }
 
   @Get('github')
@@ -64,7 +65,7 @@ export class OauthController {
     });
     const token = await this.authService.generateJwtToken(user.email);
     res.cookie('accessToken', token, {
-      sameSite: 'strict',
+      sameSite: 'none',
     });
     res.redirect(oauthConfig.frontendUrl);
   }
