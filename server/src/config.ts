@@ -24,6 +24,8 @@ export const appConfig = {
   },
 
   debug: fromEnv('DEBUG', 'false').toLowerCase() === 'true',
+
+  environment: fromEnv('NODE_ENV', 'development'),
 };
 
 console.log(appConfig);
