@@ -25,6 +25,8 @@ _*For quick start, copy the `template.env` file to `.env`. The values given in `
 | MAILER_SENDER_EMAIL        | Email address for sending emails                                                               |
 | MAILER_SENDER_PASS         | Password for authenticating with SMTP Host                                                     |
 | MAILER_HOST                | SMTP Host supporting TLS which will send our emails                                            |
+| DEBUG                      | Enable debugging mode - disables some features and enables debugging features (dev only)       |
+| ENABLE_EMAIL_NOTIFICATIONS | Set this flag to enable emails to be sent, if set to false emails will not be sent,default true|
 
 
 ### Cors and Cookies
