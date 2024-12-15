@@ -25,8 +25,11 @@ export class AuthService {
     const match = await bcrypt.compare(password, user?.hashedPassword);
 
     if (!match) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Password or email does not match');
     }
+
+    user.lastLogin = new Date();
+    await user.save();
 
     await this.mailer.sendTemplateMail({
       templateType: 'login',
